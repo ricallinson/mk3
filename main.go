@@ -31,18 +31,18 @@ func main() {
 		log.Println(serialError)
 		return
 	}
-	writeBytes(serialPort, []byte("s.\n\r"))
+	writeBytes(serialPort, []byte("1s.\n\r"))
 	log.Println(string(readBytes(serialPort, 0)))
 }
 
 func readBytes(serialPort SerialPort, delim byte) []byte {
-	limit := 1000
+	limit := 100
 	buff := make([]byte, 1)
 	data := make([]byte, 0)
 	for limit > 0 {
 		i, _ := serialPort.Read(buff)
 		// log.Println(i, buff[0], delim)
-		if buff[0] == delim || i == 0 {
+		if i == 0 {
 			break
 		}
 		data = append(data, buff[0])
