@@ -10,6 +10,55 @@ type Mk3 struct {
 	serialPort SerialPort
 }
 
+type Status struct {
+	Type         string
+	Version      string
+	Unit         string
+	SerialNumber string
+}
+
+type Commands struct {
+	Status
+	SetStopTemp               bool
+	GetStopTemp               bool
+	DisableStopTemp           bool
+	ChangeAddr                bool
+	DisableShunt              bool
+	EnableShunt               bool
+	ForceFan                  bool
+	GetFirstPosition          bool
+	SetFirstPosition          bool
+	GetHighVoltage            bool
+	ClearMaxVolageHistory     bool
+	ClearMinVolageHistory     bool
+	ClearVolageHistory        bool
+	TriggerLights             bool
+	GetMaxVolage              bool
+	GetMinVolage              bool
+	SetStopChargeUnderVoltage bool
+	GetRealTimeVoltage        bool
+	GetLowVoltage             bool
+	SetMaxVoltage             bool
+	SetMinVoltage             bool
+	SetOverVoltage            bool
+	GetStatus                 bool
+	GetAddrTemp               bool
+	SetFanMaxTemp             bool
+	SetStopDissipatingTemp    bool
+	SetFanLowTemp             bool
+	GetCellsTemp              bool
+}
+
+type LightsStatus struct {
+	OverTempRegulator bool
+	OverTempCellAddr  int
+	MinVoltageSeen    bool
+	MaxVoltage        bool
+	MinVoltage        bool
+	HighVoltage       bool
+	ShuntDisabled     bool
+}
+
 func NewMk3(p SerialPort) *Mk3 {
 	this := &Mk3{
 		serialPort: p,
@@ -75,9 +124,10 @@ func (this *Mk3) ChangeAddr(addr int, newAddr int) bool {
 	return false
 }
 
-func (this *Mk3) GetCommands(addr int) {
+func (this *Mk3) GetCommands(addr int) Commands {
 	this.execCmd(addr, "", "")
 	// Retrun commands listed as a Struct.
+	return Commands{}
 }
 
 func (this *Mk3) DisableShunt(addr int) bool {
@@ -133,9 +183,10 @@ func (this *Mk3) ClearVolageHistory(addr int) {
 	this.execCmd(addr, "h", "")
 }
 
-func (this *Mk3) TriggerLights(addr int) {
+func (this *Mk3) TriggerLights(addr int) LightsStatus {
 	this.execCmd(addr, "l", "")
 	// Return data as a Struct.
+	return LightsStatus{}
 }
 
 func (this *Mk3) GetMaxVolage(addr int) float32 {
@@ -194,7 +245,7 @@ func (this *Mk3) GetStatus(addr int) {
 	// Return data as a Struct.
 }
 
-func (this *Mk3) GetUintTemp(addr int) int {
+func (this *Mk3) GetAddrTemp(addr int) int {
 	this.execCmd(addr, "t", "")
 	// Return the temp as int.
 	return 0
