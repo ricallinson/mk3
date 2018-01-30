@@ -30,8 +30,8 @@ func main() {
 		log.Println(serialError)
 		return
 	}
-	mk3 := NewMk3(serialPort)
-	mk3.GetMaxVolage(1)
+	mk3DT := NewMk3DT(serialPort)
+	mk3DT.GetMaxVolage(1)
 }
 
 func connectToDongle(path string) (error, *serial.Port) {

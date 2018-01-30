@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-type Mk3 struct {
+type Mk3DT struct {
 	serialPort SerialPort
 }
 
@@ -65,14 +65,14 @@ type Response struct {
 	Value   string
 }
 
-func NewMk3(p SerialPort) *Mk3 {
-	this := &Mk3{
+func NewMk3DT(p SerialPort) *Mk3DT {
+	this := &Mk3DT{
 		serialPort: p,
 	}
 	return this
 }
 
-func (this *Mk3) readBytes(delim byte) []byte {
+func (this *Mk3DT) readBytes(delim byte) []byte {
 	limit := 100
 	buff := make([]byte, 1)
 	data := make([]byte, 0)
@@ -88,14 +88,14 @@ func (this *Mk3) readBytes(delim byte) []byte {
 	return data
 }
 
-func (this *Mk3) writeBytes(b []byte) {
+func (this *Mk3DT) writeBytes(b []byte) {
 	_, e := this.serialPort.Write(b)
 	if e != nil {
 		log.Println(e)
 	}
 }
 
-func (this *Mk3) execCmd(addr int, cmd string, value string) Response {
+func (this *Mk3DT) execCmd(addr int, cmd string, value string) Response {
 	// Clear the Dongle Terminator buffer.
 	this.readBytes(0)
 	// Send the command.
@@ -124,63 +124,63 @@ func (this *Mk3) execCmd(addr int, cmd string, value string) Response {
 }
 
 // temp 32-180 F
-func (this *Mk3) SetStopTemp(addr int, temp int) bool {
+func (this *Mk3DT) SetStopTemp(addr int, temp int) bool {
 	this.execCmd(addr, "bt", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
 	return false
 }
 
-func (this *Mk3) GetStopTemp(addr int) int {
+func (this *Mk3DT) GetStopTemp(addr int) int {
 	this.execCmd(addr, "bt", "")
 	// Return value as an int.
 	return 0
 }
 
-func (this *Mk3) DisableStopTemp(addr int) bool {
+func (this *Mk3DT) DisableStopTemp(addr int) bool {
 	this.execCmd(addr, "btd", "")
 	// Check that the returned value equals "DISABLE".
 	return false
 }
 
 // addr 0-255
-func (this *Mk3) ChangeAddr(addr int, newAddr int) bool {
+func (this *Mk3DT) ChangeAddr(addr int, newAddr int) bool {
 	this.execCmd(addr, "ch", strconv.Itoa(newAddr))
 	// Check that the returned value is the same as the sent addr.
 	return false
 }
 
-func (this *Mk3) GetCommands(addr int) Commands {
+func (this *Mk3DT) GetCommands(addr int) Commands {
 	this.execCmd(addr, "", "")
 	// Return value as Commands.
 	return Commands{}
 }
 
-func (this *Mk3) DisableShunt(addr int) bool {
+func (this *Mk3DT) DisableShunt(addr int) bool {
 	this.execCmd(addr, "d", "")
 	// Check that the returned value equals "Disable".
 	return false
 }
 
-func (this *Mk3) EnableShunt(addr int) bool {
+func (this *Mk3DT) EnableShunt(addr int) bool {
 	this.execCmd(addr, "e", "")
 	// Check that the returned value equals "Enable".
 	return false
 }
 
 // level 0-8
-func (this *Mk3) ForceFan(addr int, level int) bool {
+func (this *Mk3DT) ForceFan(addr int, level int) bool {
 	this.execCmd(addr, "f", strconv.Itoa(level))
 	// Check that the returned value is the same as the sent level.
 	return false
 }
 
-func (this *Mk3) GetFirstPosition(addr int) bool {
+func (this *Mk3DT) GetFirstPosition(addr int) bool {
 	this.execCmd(addr, "fi", "")
 	// Return the value as a bool.
 	return false
 }
 
-func (this *Mk3) SetFirstPosition(addr int, value bool) bool {
+func (this *Mk3DT) SetFirstPosition(addr int, value bool) bool {
 	v := "0"
 	if value {
 		v = "1"
@@ -190,118 +190,118 @@ func (this *Mk3) SetFirstPosition(addr int, value bool) bool {
 	return false
 }
 
-func (this *Mk3) GetHighVoltage(addr int) float32 {
+func (this *Mk3DT) GetHighVoltage(addr int) float32 {
 	this.execCmd(addr, "g", "")
 	// Return the value as float32.
 	return 0.0
 }
 
-func (this *Mk3) ClearMaxVolageHistory(addr int) {
+func (this *Mk3DT) ClearMaxVolageHistory(addr int) {
 	this.execCmd(addr, "hma", "")
 	// Nothing to return.
 }
 
-func (this *Mk3) ClearMinVolageHistory(addr int) {
+func (this *Mk3DT) ClearMinVolageHistory(addr int) {
 	this.execCmd(addr, "hmi", "")
 	// Nothing to return.
 }
 
-func (this *Mk3) ClearVolageHistory(addr int) {
+func (this *Mk3DT) ClearVolageHistory(addr int) {
 	this.execCmd(addr, "h", "")
 	// Nothing to return.
 }
 
-func (this *Mk3) TriggerLights(addr int) LightsStatus {
+func (this *Mk3DT) TriggerLights(addr int) LightsStatus {
 	this.execCmd(addr, "l", "")
 	// Return value as LightsStatus.
 	return LightsStatus{}
 }
 
-func (this *Mk3) GetMaxVolage(addr int) float32 {
+func (this *Mk3DT) GetMaxVolage(addr int) float32 {
 	this.execCmd(addr, "ma", "")
 	// Return the value as float32.
 	return 0.0
 }
 
-func (this *Mk3) GetMinVolage(addr int) float32 {
+func (this *Mk3DT) GetMinVolage(addr int) float32 {
 	this.execCmd(addr, "mi", "")
 	// Return the value as float32.
 	return 0.0
 }
 
-func (this *Mk3) SetStopChargeUnderVoltage(addr int, stop bool) float32 {
+func (this *Mk3DT) SetStopChargeUnderVoltage(addr int, stop bool) float32 {
 	this.execCmd(addr, "p", strconv.FormatBool(stop))
 	// Return the value as float32.
 	return 0.0
 }
 
-func (this *Mk3) GetRealTimeVoltage(addr int) float32 {
+func (this *Mk3DT) GetRealTimeVoltage(addr int) float32 {
 	this.execCmd(addr, "q", "")
 	// Return the value as float32.
 	return 0.0
 }
 
-func (this *Mk3) GetLowVoltage(addr int) float32 {
+func (this *Mk3DT) GetLowVoltage(addr int) float32 {
 	this.execCmd(addr, "r", "")
 	// Return the value as float32.
 	return 0.0
 }
 
 // volts 0.000-9.999
-func (this *Mk3) SetMaxVoltage(addr int, volts int) bool {
+func (this *Mk3DT) SetMaxVoltage(addr int, volts int) bool {
 	this.execCmd(addr, "seth", strconv.Itoa(volts))
 	// Check that the returned value is the same as the sent volts.
 	return false
 }
 
 // volts 0.000-9.999
-func (this *Mk3) SetMinVoltage(addr int, volts int) bool {
+func (this *Mk3DT) SetMinVoltage(addr int, volts int) bool {
 	this.execCmd(addr, "setl", strconv.Itoa(volts))
 	// Check that the returned value is the same as the sent volts.
 	return false
 }
 
 // volts 0.000-9.999
-func (this *Mk3) SetOverVoltage(addr int, volts int) bool {
+func (this *Mk3DT) SetOverVoltage(addr int, volts int) bool {
 	this.execCmd(addr, "seto", strconv.Itoa(volts))
 	// Check that the returned value is the same as the sent volts.
 	return false
 }
 
-func (this *Mk3) GetStatus(addr int) Status {
+func (this *Mk3DT) GetStatus(addr int) Status {
 	this.execCmd(addr, "s", "")
 	// Return the value as Status.
 	return Status{}
 }
 
-func (this *Mk3) GetAddrTemp(addr int) int {
+func (this *Mk3DT) GetAddrTemp(addr int) int {
 	this.execCmd(addr, "t", "")
 	// Return the value as int.
 	return 0
 }
 
 // temp 32-181
-func (this *Mk3) SetFanMaxTemp(addr int, temp int) bool {
+func (this *Mk3DT) SetFanMaxTemp(addr int, temp int) bool {
 	this.execCmd(addr, "temph", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
 	return false
 }
 
 // temp 32-181
-func (this *Mk3) SetStopDissipatingTemp(addr int, temp int) bool {
+func (this *Mk3DT) SetStopDissipatingTemp(addr int, temp int) bool {
 	this.execCmd(addr, "tempo", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
 	return false
 }
 
 // temp 32-181
-func (this *Mk3) SetFanLowTemp(addr int, temp int) bool {
+func (this *Mk3DT) SetFanLowTemp(addr int, temp int) bool {
 	this.execCmd(addr, "tempw", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
 	return false
 }
 
-func (this *Mk3) GetCellsTemp(addr int) int {
+func (this *Mk3DT) GetCellsTemp(addr int) int {
 	this.execCmd(addr, "x", "")
 	// Return the value as int (or string)?
 	return 0
