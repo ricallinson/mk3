@@ -59,6 +59,12 @@ type LightsStatus struct {
 	ShuntDisabled     bool
 }
 
+type Response struct {
+	Addr    int
+	Command string
+	Value   string
+}
+
 func NewMk3(p SerialPort) *Mk3 {
 	this := &Mk3{
 		serialPort: p,
@@ -89,25 +95,44 @@ func (this *Mk3) writeBytes(b []byte) {
 	}
 }
 
-func (this *Mk3) execCmd(addr int, cmd string, value string) string {
+func (this *Mk3) execCmd(addr int, cmd string, value string) Response {
 	// Clear the Dongle Terminator buffer.
 	this.readBytes(0)
 	// Send the command.
 	this.writeBytes([]byte(strconv.Itoa(addr) + cmd + "." + value + "\n\r"))
-	// Read and return the response.
-	return string(this.readBytes(0))
+	// Read and return a Response.
+	buf := this.readBytes(0)
+	cur := 0
+	addrNum := []byte{}
+	r := Response{}
+	for cur < len(buf) {
+		if buf[cur] >= 48 && buf[cur] <= 57 {
+			// If 0-9, append to Addr.
+			addrNum = append(addrNum, buf[cur])
+		} else if buf[cur] >= 65 && buf[cur] <= 122 {
+			// Id A-Z, append to Command.
+			r.Command += string(buf[cur])
+		} else if buf[cur] == 32 || buf[cur] == 45 {
+			// After a space or - append to Value.
+			r.Value = string(buf[cur:])
+			break
+		}
+		cur++
+	}
+	r.Addr, _ = strconv.Atoi(string(addrNum))
+	return r
 }
 
 // temp 32-180 F
 func (this *Mk3) SetStopTemp(addr int, temp int) bool {
 	this.execCmd(addr, "bt", strconv.Itoa(temp))
-	// Check that the returned temp is the same as the sent temp.
+	// Check that the returned value is the same as the sent temp.
 	return false
 }
 
 func (this *Mk3) GetStopTemp(addr int) int {
 	this.execCmd(addr, "bt", "")
-	// Returned the given temp as an int.
+	// Return value as an int.
 	return 0
 }
 
@@ -120,13 +145,13 @@ func (this *Mk3) DisableStopTemp(addr int) bool {
 // addr 0-255
 func (this *Mk3) ChangeAddr(addr int, newAddr int) bool {
 	this.execCmd(addr, "ch", strconv.Itoa(newAddr))
-	// Check that the returned addr is the same as the sent addr.
+	// Check that the returned value is the same as the sent addr.
 	return false
 }
 
 func (this *Mk3) GetCommands(addr int) Commands {
 	this.execCmd(addr, "", "")
-	// Retrun commands listed as a Struct.
+	// Return value as Commands.
 	return Commands{}
 }
 
@@ -145,7 +170,7 @@ func (this *Mk3) EnableShunt(addr int) bool {
 // level 0-8
 func (this *Mk3) ForceFan(addr int, level int) bool {
 	this.execCmd(addr, "f", strconv.Itoa(level))
-	// Check that the returned level is the same as the sent level.
+	// Check that the returned value is the same as the sent level.
 	return false
 }
 
@@ -167,113 +192,117 @@ func (this *Mk3) SetFirstPosition(addr int, value bool) bool {
 
 func (this *Mk3) GetHighVoltage(addr int) float32 {
 	this.execCmd(addr, "g", "")
-	// Return the voltage as float.
+	// Return the value as float32.
 	return 0.0
 }
 
 func (this *Mk3) ClearMaxVolageHistory(addr int) {
 	this.execCmd(addr, "hma", "")
+	// Nothing to return.
 }
 
 func (this *Mk3) ClearMinVolageHistory(addr int) {
 	this.execCmd(addr, "hmi", "")
+	// Nothing to return.
 }
 
 func (this *Mk3) ClearVolageHistory(addr int) {
 	this.execCmd(addr, "h", "")
+	// Nothing to return.
 }
 
 func (this *Mk3) TriggerLights(addr int) LightsStatus {
 	this.execCmd(addr, "l", "")
-	// Return data as a Struct.
+	// Return value as LightsStatus.
 	return LightsStatus{}
 }
 
 func (this *Mk3) GetMaxVolage(addr int) float32 {
 	this.execCmd(addr, "ma", "")
-	// Return the voltage as float32.
+	// Return the value as float32.
 	return 0.0
 }
 
 func (this *Mk3) GetMinVolage(addr int) float32 {
 	this.execCmd(addr, "mi", "")
-	// Return the voltage as float32.
+	// Return the value as float32.
 	return 0.0
 }
 
 func (this *Mk3) SetStopChargeUnderVoltage(addr int, stop bool) float32 {
 	this.execCmd(addr, "p", strconv.FormatBool(stop))
-	// Return the voltage as float32.
+	// Return the value as float32.
 	return 0.0
 }
 
 func (this *Mk3) GetRealTimeVoltage(addr int) float32 {
 	this.execCmd(addr, "q", "")
-	// Return the voltage as float32.
+	// Return the value as float32.
 	return 0.0
 }
 
 func (this *Mk3) GetLowVoltage(addr int) float32 {
 	this.execCmd(addr, "r", "")
-	// Return the voltage as float32.
+	// Return the value as float32.
 	return 0.0
 }
 
 // volts 0.000-9.999
 func (this *Mk3) SetMaxVoltage(addr int, volts int) bool {
 	this.execCmd(addr, "seth", strconv.Itoa(volts))
-	// Check that the returned volts is the same as the sent volts.
+	// Check that the returned value is the same as the sent volts.
 	return false
 }
 
 // volts 0.000-9.999
 func (this *Mk3) SetMinVoltage(addr int, volts int) bool {
 	this.execCmd(addr, "setl", strconv.Itoa(volts))
-	// Check that the returned volts is the same as the sent volts.
+	// Check that the returned value is the same as the sent volts.
 	return false
 }
 
 // volts 0.000-9.999
 func (this *Mk3) SetOverVoltage(addr int, volts int) bool {
 	this.execCmd(addr, "seto", strconv.Itoa(volts))
-	// Check that the returned volts is the same as the sent volts.
+	// Check that the returned value is the same as the sent volts.
 	return false
 }
 
-func (this *Mk3) GetStatus(addr int) {
+func (this *Mk3) GetStatus(addr int) Status {
 	this.execCmd(addr, "s", "")
-	// Return data as a Struct.
+	// Return the value as Status.
+	return Status{}
 }
 
 func (this *Mk3) GetAddrTemp(addr int) int {
 	this.execCmd(addr, "t", "")
-	// Return the temp as int.
+	// Return the value as int.
 	return 0
 }
 
 // temp 32-181
 func (this *Mk3) SetFanMaxTemp(addr int, temp int) bool {
 	this.execCmd(addr, "temph", strconv.Itoa(temp))
-	// Check that the returned temp is the same as the sent temp.
+	// Check that the returned value is the same as the sent temp.
 	return false
 }
 
 // temp 32-181
 func (this *Mk3) SetStopDissipatingTemp(addr int, temp int) bool {
 	this.execCmd(addr, "tempo", strconv.Itoa(temp))
-	// Check that the returned temp is the same as the sent temp.
+	// Check that the returned value is the same as the sent temp.
 	return false
 }
 
 // temp 32-181
 func (this *Mk3) SetFanLowTemp(addr int, temp int) bool {
 	this.execCmd(addr, "tempw", strconv.Itoa(temp))
-	// Check that the returned temp is the same as the sent temp.
+	// Check that the returned value is the same as the sent temp.
 	return false
 }
 
 func (this *Mk3) GetCellsTemp(addr int) int {
 	this.execCmd(addr, "x", "")
-	// Return the temp as int or string?
+	// Return the value as int (or string)?
 	return 0
 }
