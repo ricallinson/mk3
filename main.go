@@ -5,7 +5,6 @@ import (
 	"github.com/tarm/serial"
 	"log"
 	"time"
-	"bytes"
 )
 
 type SerialPort interface {
@@ -31,35 +30,8 @@ func main() {
 		log.Println(serialError)
 		return
 	}
-	writeBytes(serialPort, []byte("1s.\n\r"))
-	log.Println(string(readBytes(serialPort, 0)))
-}
-
-func readBytes(serialPort SerialPort, delim byte) []byte {
-	limit := 100
-	buff := make([]byte, 1)
-	data := make([]byte, 0)
-	for limit > 0 {
-		i, _ := serialPort.Read(buff)
-		// log.Println(i, buff[0], delim)
-		if i == 0 {
-			break
-		}
-		data = append(data, buff[0])
-		// log.Println(i, string(buff[0]))
-		// log.Println(string(data))
-		limit--
-	}
-	data = bytes.TrimSpace(data)
-	// log.Println(string(data))
-	return data
-}
-
-func writeBytes(serialPort SerialPort, b []byte) {
-	_, e := serialPort.Write(b)
-	if e != nil {
-		log.Println(e)
-	}
+	mk3 := NewMk3(serialPort)
+	mk3.GetMaxVolage(1)
 }
 
 func connectToDongle(path string) (error, *serial.Port) {
