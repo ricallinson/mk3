@@ -41,6 +41,7 @@ func (this *Mk3) writeBytes(b []byte) {
 }
 
 func (this *Mk3) execCmd(unit int, cmd string, value string) string {
+	this.readBytes(0) // Clear the buffer.
 	this.writeBytes([]byte(strconv.Itoa(unit) + cmd + "." + value + "\n\r"))
 	return string(this.readBytes(0))
 }
