@@ -27,11 +27,12 @@ func main() {
 		serialError, serialPort = connectToDongle(dongle)
 	}
 	if serialError != nil {
+		log.Print("ERROR: ")
 		log.Println(serialError)
 		return
 	}
 	mk3DT := NewMk3DT(serialPort)
-	mk3DT.GetMaxVolage(1)
+	log.Println(mk3DT.GetMaxVolage(1))
 }
 
 func connectToDongle(path string) (error, *serial.Port) {
