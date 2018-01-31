@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	// "log"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -61,11 +61,13 @@ func (this *MockPort) Close() error {
 
 // Checks the request and updates the buffer if needed.
 func (this *MockPort) processRequest(r *request) {
+	// log.Print("Mock Request Recived:")
+	// log.Println(r)
 	switch {
-	case strings.HasPrefix(r.Command, "bt"):
-		this.GetSetStopTemp(r)
 	case strings.HasPrefix(r.Command, "btd"):
 		this.DisableStopTemp(r)
+	case strings.HasPrefix(r.Command, "bt"):
+		this.GetSetStopTemp(r)
 	case strings.HasPrefix(r.Command, "ch"):
 		this.ChangeAddr(r)
 	case r.Command == "":
@@ -74,18 +76,18 @@ func (this *MockPort) processRequest(r *request) {
 		this.DisableShunt(r)
 	case strings.HasPrefix(r.Command, "e"):
 		this.EnableShunt(r)
-	case strings.HasPrefix(r.Command, "f"):
-		this.ForceFan(r)
 	case strings.HasPrefix(r.Command, "fi"):
 		this.GetFirstPosition(r)
+	case strings.HasPrefix(r.Command, "f"):
+		this.ForceFan(r)
 	case strings.HasPrefix(r.Command, "g"):
 		this.GetHighVoltage(r)
+	case strings.HasPrefix(r.Command, "h"):
+		this.ClearVolageHistory(r)
 	case strings.HasPrefix(r.Command, "hma"):
 		this.ClearMaxVolageHistory(r)
 	case strings.HasPrefix(r.Command, "hmi"):
 		this.ClearMinVolageHistory(r)
-	case strings.HasPrefix(r.Command, "h"):
-		this.ClearVolageHistory(r)
 	case strings.HasPrefix(r.Command, "l"):
 		this.TriggerLights(r)
 	case strings.HasPrefix(r.Command, "ma"):
@@ -98,14 +100,14 @@ func (this *MockPort) processRequest(r *request) {
 		this.GetRealTimeVoltage(r)
 	case strings.HasPrefix(r.Command, "r"):
 		this.GetLowVoltage(r)
+	case strings.HasPrefix(r.Command, "s"):
+		this.GetStatus(r)
 	case strings.HasPrefix(r.Command, "seth"):
 		this.SetMaxVoltage(r)
 	case strings.HasPrefix(r.Command, "setl"):
 		this.SetMinVoltage(r)
 	case strings.HasPrefix(r.Command, "seto"):
 		this.SetOverVoltage(r)
-	case strings.HasPrefix(r.Command, "s"):
-		this.GetStatus(r)
 	case strings.HasPrefix(r.Command, "t"):
 		this.GetAddrTemp(r)
 	case strings.HasPrefix(r.Command, "temph"):
@@ -119,18 +121,30 @@ func (this *MockPort) processRequest(r *request) {
 	}
 }
 
+func (this *MockPort) bufferResponse(addr int, value string) {
+	this.buffer = append(this.buffer, []byte(padInt(addr)+value)...)
+	log.Println(string(this.buffer))
+}
+
 // temp 32-180 F
 func (this *MockPort) GetSetStopTemp(r *request) {
-	// Check that the returned value is the same as the sent temp.
+	if (r.Value == "") {
+		this.bufferResponse(r.Addr, "BT 180F")
+	} else {
+		// Check that the returned value is the same as the sent temp.
+		this.bufferResponse(r.Addr, "BT "+r.Value+"F")
+	}	
 }
 
 func (this *MockPort) DisableStopTemp(r *request) {
 	// Check that the returned value equals "DISABLE".
+	this.bufferResponse(r.Addr, "BT DISABLE")
 }
 
 // addr 0-255
 func (this *MockPort) ChangeAddr(r *request) {
 	// Check that the returned value is the same as the sent addr.
+	this.bufferResponse(r.Addr, "BT 00"+r.Value)
 }
 
 func (this *MockPort) GetCommands(r *request) {

@@ -111,7 +111,7 @@ func (this *Mk3DT) execCmd(addr int, cmd string, value string) Response {
 			// If 0-9, append to Addr.
 			addrNum = append(addrNum, buf[cur])
 		} else if buf[cur] >= 65 && buf[cur] <= 122 {
-			// Id A-Z, append to Command.
+			// Id a-zA-Z, append to Command.
 			r.Command += string(buf[cur])
 		} else if buf[cur] == 32 || buf[cur] == 45 {
 			// After a space or - append to Value.
@@ -126,28 +126,33 @@ func (this *Mk3DT) execCmd(addr int, cmd string, value string) Response {
 
 // temp 32-180 F
 func (this *Mk3DT) SetStopTemp(addr int, temp int) bool {
-	this.execCmd(addr, "bt", strconv.Itoa(temp))
+	r := this.execCmd(addr, "bt", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
-	return false
+	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
+	// log.Println(temp, r.Value, t)
+	return int(t) == temp
 }
 
 func (this *Mk3DT) GetStopTemp(addr int) int {
-	this.execCmd(addr, "bt", "")
+	r := this.execCmd(addr, "bt", "")
 	// Return value as an int.
-	return 0
+	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
+	return int(t)
 }
 
 func (this *Mk3DT) DisableStopTemp(addr int) bool {
-	this.execCmd(addr, "btd", "")
+	r := this.execCmd(addr, "btd", "")
 	// Check that the returned value equals "DISABLE".
-	return false
+	// log.Print(r)
+	return r.Value == "DISABLE"
 }
 
 // addr 0-255
 func (this *Mk3DT) ChangeAddr(addr int, newAddr int) bool {
-	this.execCmd(addr, "ch", strconv.Itoa(newAddr))
+	r := this.execCmd(addr, "ch", strconv.Itoa(newAddr))
 	// Check that the returned value is the same as the sent addr.
-	return false
+	n, _ := strconv.ParseInt(r.Value, 10, 32)
+	return newAddr == int(n)
 }
 
 func (this *Mk3DT) GetCommands(addr int) Commands {
