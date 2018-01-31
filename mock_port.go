@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"log"
+	// "log"
 	"strconv"
 	"strings"
 )
@@ -61,8 +61,6 @@ func (this *MockPort) Close() error {
 
 // Checks the request and updates the buffer if needed.
 func (this *MockPort) processRequest(r *request) {
-	log.Print("Mock Request: ")
-	log.Println(r)
 	switch {
 	case strings.HasPrefix(r.Command, "bt"):
 		this.GetSetStopTemp(r)

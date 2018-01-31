@@ -6,6 +6,7 @@ Command line interface for the Manzanita Micro USB Dongle Terminator.
 Requires a [Go](https://golang.org/dl/) environment.
 
     go get github.com/tarm/serial
+    go get github.com/ricallinson/simplebdd
 
 ## Notes
 
