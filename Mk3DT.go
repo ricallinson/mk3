@@ -162,22 +162,26 @@ func (this *Mk3DT) GetCommands(addr int) Commands {
 }
 
 func (this *Mk3DT) DisableShunt(addr int) bool {
-	this.execCmd(addr, "d", "")
+	r := this.execCmd(addr, "d", "")
 	// Check that the returned value equals "Disable".
-	return false
+	return r.Command == "Disable"
 }
 
 func (this *Mk3DT) EnableShunt(addr int) bool {
-	this.execCmd(addr, "e", "")
+	r := this.execCmd(addr, "e", "")
 	// Check that the returned value equals "Enable".
-	return false
+	return r.Command == "Enable"
 }
 
 // level 0-8
 func (this *Mk3DT) ForceFan(addr int, level int) bool {
-	this.execCmd(addr, "f", strconv.Itoa(level))
+	if level < 0 || level > 8{
+		return false
+	}
+	r := this.execCmd(addr, "f", strconv.Itoa(level))
 	// Check that the returned value is the same as the sent level.
-	return false
+	l, _ := strconv.ParseInt(r.Value, 10, 32)
+	return level == int(l)
 }
 
 func (this *Mk3DT) GetFirstPosition(addr int) bool {

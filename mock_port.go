@@ -153,15 +153,18 @@ func (this *MockPort) GetCommands(r *request) {
 
 func (this *MockPort) DisableShunt(r *request) {
 	// Check that the returned value equals "Disable".
+	this.bufferResponse(r.Addr, "Disable")
 }
 
 func (this *MockPort) EnableShunt(r *request) {
 	// Check that the returned value equals "Enable".
+	this.bufferResponse(r.Addr, "Enable")
 }
 
 // level 0-8
 func (this *MockPort) ForceFan(r *request) {
 	// Check that the returned value is the same as the sent level.
+	this.bufferResponse(r.Addr, "F "+r.Value)
 }
 
 func (this *MockPort) GetFirstPosition(r *request) {

@@ -28,12 +28,31 @@ func TestMk3DT(t *testing.T) {
 			AssertEqual(mk3DT.GetStopTemp(1), 180)
 		})
 
-		It("should return the sent value from DisableStopTemp()", func() {
+		It("should return 'true' from DisableStopTemp()", func() {
 			AssertEqual(mk3DT.DisableStopTemp(1), true)
 		})
 
 		It("should return the sent value from ChangeAddr()", func() {
 			AssertEqual(mk3DT.ChangeAddr(1, 100), true)
+		})
+
+		// Todo
+		It("should return the Commands from GetCommands()", func() {
+			AssertEqual(mk3DT.GetCommands(1), true)
+		})
+
+		It("should return 'true' from DisableShunt()", func() {
+			AssertEqual(mk3DT.DisableShunt(1), true)
+		})
+
+		It("should return 'true' from EnableShunt()", func() {
+			AssertEqual(mk3DT.EnableShunt(1), true)
+		})
+
+		It("should return 'true' from ForceFan() if it's in range", func() {
+			AssertEqual(mk3DT.ForceFan(1, -9), false)
+			AssertEqual(mk3DT.ForceFan(1, 9), false)
+			AssertEqual(mk3DT.ForceFan(1, 5), true)
 		})
 
 		// Here
