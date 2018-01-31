@@ -21,13 +21,12 @@ func main() {
 	var serialPort SerialPort
 	var serialError error
 	if dongle == "" {
-		log.Println("You must provide the serial port the Dongle Terminator is connected to.")
-		return
+		serialPort = NewMockPort()
 	} else {
 		serialError, serialPort = connectToDongle(dongle)
 	}
 	if serialError != nil {
-		log.Print("ERROR: ")
+		log.Print("Error opening port: ")
 		log.Println(serialError)
 		return
 	}

@@ -114,7 +114,7 @@ func (this *Mk3DT) execCmd(addr int, cmd string, value string) Response {
 			r.Command += string(buf[cur])
 		} else if buf[cur] == 32 || buf[cur] == 45 {
 			// After a space or - append to Value.
-			r.Value = string(buf[cur:])
+			r.Value = string(bytes.TrimSpace(buf[cur+1:]))
 			break
 		}
 		cur++
