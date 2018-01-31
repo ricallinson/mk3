@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 func copyIntoArray(s []byte, d []byte) int {
 	for i, _ := range d {
 		if i >= len(s) || i >= len(d) {
@@ -16,4 +20,9 @@ func Btoi(b bool) int {
 		return 1
 	}
 	return 0
+}
+
+// Pad an int to three places and returns as string.
+func padInt(value int) string {
+	return fmt.Sprintf("%03d", value)
 }

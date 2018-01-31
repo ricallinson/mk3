@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"log"
 	"strconv"
+	"strings"
 )
 
 type Mk3DT struct {
@@ -218,13 +219,20 @@ func (this *Mk3DT) TriggerLights(addr int) LightsStatus {
 }
 
 func (this *Mk3DT) GetMaxVolage(addr int) float32 {
-	this.execCmd(addr, "ma", "")
+	r := this.execCmd(addr, "ma", "")
 	// Return the value as float32.
-	return 0.0
+	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
+	return float32(f)
 }
 
 func (this *Mk3DT) GetMinVolage(addr int) float32 {
 	this.execCmd(addr, "mi", "")
+	// Return the value as float32.
+	return 0.0
+}
+
+func (this *Mk3DT) GetStopChargeUnderVoltage(addr int) float32 {
+	this.execCmd(addr, "p", "")
 	// Return the value as float32.
 	return 0.0
 }
