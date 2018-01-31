@@ -175,7 +175,7 @@ func (this *Mk3DT) EnableShunt(addr int) bool {
 
 // level 0-8
 func (this *Mk3DT) ForceFan(addr int, level int) bool {
-	if level < 0 || level > 8{
+	if level < 0 || level > 8 {
 		return false
 	}
 	r := this.execCmd(addr, "f", strconv.Itoa(level))
@@ -185,9 +185,9 @@ func (this *Mk3DT) ForceFan(addr int, level int) bool {
 }
 
 func (this *Mk3DT) GetFirstPosition(addr int) bool {
-	this.execCmd(addr, "fi", "")
+	r := this.execCmd(addr, "fi", "")
 	// Return the value as a bool.
-	return false
+	return r.Value == "0"
 }
 
 func (this *Mk3DT) SetFirstPosition(addr int, value bool) bool {
@@ -195,15 +195,17 @@ func (this *Mk3DT) SetFirstPosition(addr int, value bool) bool {
 	if value {
 		v = "1"
 	}
-	this.execCmd(addr, "fi", v)
+	r := this.execCmd(addr, "fi", v)
 	// Check that the returned value is the same as the sent value.
-	return false
+	log.Println(r)
+	return r.Value == v
 }
 
 func (this *Mk3DT) GetHighVoltage(addr int) float32 {
-	this.execCmd(addr, "g", "")
+	r := this.execCmd(addr, "g", "")
 	// Return the value as float32.
-	return 0.0
+	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
+	return float32(f)
 }
 
 func (this *Mk3DT) ClearMaxVolageHistory(addr int) {
@@ -221,6 +223,7 @@ func (this *Mk3DT) ClearVolageHistory(addr int) {
 	// Nothing to return.
 }
 
+// todo
 func (this *Mk3DT) TriggerLights(addr int) LightsStatus {
 	this.execCmd(addr, "l", "")
 	// Return value as LightsStatus.
@@ -235,33 +238,40 @@ func (this *Mk3DT) GetMaxVolage(addr int) float32 {
 }
 
 func (this *Mk3DT) GetMinVolage(addr int) float32 {
-	this.execCmd(addr, "mi", "")
+	r := this.execCmd(addr, "mi", "")
 	// Return the value as float32.
-	return 0.0
+	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
+	return float32(f)
 }
 
-func (this *Mk3DT) GetStopChargeUnderVoltage(addr int) float32 {
-	this.execCmd(addr, "p", "")
-	// Return the value as float32.
-	return 0.0
+func (this *Mk3DT) GetStopChargeUnderVoltage(addr int) bool {
+	r := this.execCmd(addr, "p", "")
+	// Return the value as bool.
+	return r.Value == "1"
 }
 
-func (this *Mk3DT) SetStopChargeUnderVoltage(addr int, stop bool) float32 {
-	this.execCmd(addr, "p", strconv.FormatBool(stop))
-	// Return the value as float32.
-	return 0.0
+func (this *Mk3DT) SetStopChargeUnderVoltage(addr int, stop bool) bool {
+	v := "0"
+	if stop {
+		v = "1"
+	}
+	r := this.execCmd(addr, "p", v)
+	// Return the value as bool.
+	return r.Value == "1"
 }
 
 func (this *Mk3DT) GetRealTimeVoltage(addr int) float32 {
-	this.execCmd(addr, "q", "")
+	r := this.execCmd(addr, "q", "")
 	// Return the value as float32.
-	return 0.0
+	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
+	return float32(f)
 }
 
 func (this *Mk3DT) GetLowVoltage(addr int) float32 {
-	this.execCmd(addr, "r", "")
+	r := this.execCmd(addr, "r", "")
 	// Return the value as float32.
-	return 0.0
+	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
+	return float32(f)
 }
 
 // volts 0.000-9.999
@@ -292,9 +302,10 @@ func (this *Mk3DT) GetStatus(addr int) Status {
 }
 
 func (this *Mk3DT) GetAddrTemp(addr int) int {
-	this.execCmd(addr, "t", "")
+	r := this.execCmd(addr, "t", "")
 	// Return the value as int.
-	return 0
+	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
+	return int(t)
 }
 
 // temp 32-181
@@ -319,7 +330,8 @@ func (this *Mk3DT) SetFanLowTemp(addr int, temp int) bool {
 }
 
 func (this *Mk3DT) GetCellsTemp(addr int) int {
-	this.execCmd(addr, "x", "")
+	r := this.execCmd(addr, "x", "")
 	// Return the value as int (or string)?
-	return 0
+	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
+	return int(t)
 }

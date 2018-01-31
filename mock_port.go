@@ -77,17 +77,17 @@ func (this *MockPort) processRequest(r *request) {
 	case strings.HasPrefix(r.Command, "e"):
 		this.EnableShunt(r)
 	case strings.HasPrefix(r.Command, "fi"):
-		this.GetFirstPosition(r)
+		this.GetSetFirstPosition(r)
 	case strings.HasPrefix(r.Command, "f"):
 		this.ForceFan(r)
 	case strings.HasPrefix(r.Command, "g"):
 		this.GetHighVoltage(r)
-	case strings.HasPrefix(r.Command, "h"):
-		this.ClearVolageHistory(r)
 	case strings.HasPrefix(r.Command, "hma"):
 		this.ClearMaxVolageHistory(r)
 	case strings.HasPrefix(r.Command, "hmi"):
 		this.ClearMinVolageHistory(r)
+	case strings.HasPrefix(r.Command, "h"):
+		this.ClearVolageHistory(r)
 	case strings.HasPrefix(r.Command, "l"):
 		this.TriggerLights(r)
 	case strings.HasPrefix(r.Command, "ma"):
@@ -100,21 +100,21 @@ func (this *MockPort) processRequest(r *request) {
 		this.GetRealTimeVoltage(r)
 	case strings.HasPrefix(r.Command, "r"):
 		this.GetLowVoltage(r)
-	case strings.HasPrefix(r.Command, "s"):
-		this.GetStatus(r)
 	case strings.HasPrefix(r.Command, "seth"):
 		this.SetMaxVoltage(r)
 	case strings.HasPrefix(r.Command, "setl"):
 		this.SetMinVoltage(r)
 	case strings.HasPrefix(r.Command, "seto"):
 		this.SetOverVoltage(r)
-	case strings.HasPrefix(r.Command, "t"):
-		this.GetAddrTemp(r)
+	case strings.HasPrefix(r.Command, "s"):
+		this.GetStatus(r)
 	case strings.HasPrefix(r.Command, "temph"):
 		this.SetFanMaxTemp(r)
 	case strings.HasPrefix(r.Command, "tempo"):
 		this.SetStopDissipatingTemp(r)
 	case strings.HasPrefix(r.Command, "tempw"):
+	case strings.HasPrefix(r.Command, "t"):
+		this.GetAddrTemp(r)
 		this.SetFanLowTemp(r)
 	case strings.HasPrefix(r.Command, "x"):
 		this.GetCellsTemp(r)
@@ -128,12 +128,12 @@ func (this *MockPort) bufferResponse(addr int, value string) {
 
 // temp 32-180 F
 func (this *MockPort) GetSetStopTemp(r *request) {
-	if (r.Value == "") {
+	if r.Value == "" {
 		this.bufferResponse(r.Addr, "BT 180F")
 	} else {
 		// Check that the returned value is the same as the sent temp.
 		this.bufferResponse(r.Addr, "BT "+r.Value+"F")
-	}	
+	}
 }
 
 func (this *MockPort) DisableStopTemp(r *request) {
@@ -167,16 +167,23 @@ func (this *MockPort) ForceFan(r *request) {
 	this.bufferResponse(r.Addr, "F "+r.Value)
 }
 
-func (this *MockPort) GetFirstPosition(r *request) {
-	// Return the value as a bool.
-}
-
-func (this *MockPort) SetFirstPosition(r *request) {
+func (this *MockPort) GetSetFirstPosition(r *request) {
+	if r.Value == "" {
+		// Return the value as a bool.
+		this.bufferResponse(r.Addr, "FP 0")
+		return
+	}
+	v := "0"
+	if r.Value == "1" {
+		v = "1"
+	}
 	// Check that the returned value is the same as the sent value.
+	this.bufferResponse(r.Addr, "FP "+v)
 }
 
 func (this *MockPort) GetHighVoltage(r *request) {
 	// Return the value as float32.
+	this.bufferResponse(r.Addr, "G 3.9V")
 }
 
 func (this *MockPort) ClearMaxVolageHistory(r *request) {
@@ -197,19 +204,31 @@ func (this *MockPort) TriggerLights(r *request) {
 
 func (this *MockPort) GetMaxVolage(r *request) {
 	// Return the value as float32.
-	this.buffer = append(this.buffer, []byte(padInt(r.Addr)+"MA 3.971V")...)
+	this.bufferResponse(r.Addr, "MA 3.971V")
 }
 
 func (this *MockPort) GetMinVolage(r *request) {
 	// Return the value as float32.
+	this.bufferResponse(r.Addr, "MA 2.432V")
 }
 
 func (this *MockPort) GetSetStopChargeUnderVoltage(r *request) {
-	// Return the value as float32.
+	if r.Value == "" {
+		// Return the value as a bool.
+		this.bufferResponse(r.Addr, "P 0")
+		return
+	}
+	v := "0"
+	if r.Value == "1" {
+		v = "1"
+	}
+	// Return the value as bool.
+	this.bufferResponse(r.Addr, "P "+v)
 }
 
 func (this *MockPort) GetRealTimeVoltage(r *request) {
 	// Return the value as float32.
+	this.bufferResponse(r.Addr, "MA 3.4V")
 }
 
 func (this *MockPort) GetLowVoltage(r *request) {

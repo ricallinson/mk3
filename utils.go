@@ -14,14 +14,6 @@ func copyIntoArray(s []byte, d []byte) int {
 	return len(d)
 }
 
-// Convert a boolean to an integer of 0 or 1.
-func Btoi(b bool) int {
-	if b {
-		return 1
-	}
-	return 0
-}
-
 // Pad an int to three places and returns as string.
 func padInt(value int) string {
 	return fmt.Sprintf("%03d", value)

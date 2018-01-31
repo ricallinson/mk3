@@ -55,10 +55,34 @@ func TestMk3DT(t *testing.T) {
 			AssertEqual(mk3DT.ForceFan(1, 5), true)
 		})
 
-		// Here
+		It("should return 'true' from GetFirstPosition()", func() {
+			AssertEqual(mk3DT.GetFirstPosition(1), true)
+		})
+
+		It("should return 'true' from SetFirstPosition()", func() {
+			AssertEqual(mk3DT.SetFirstPosition(1, false), true)
+			AssertEqual(mk3DT.SetFirstPosition(1, true), true)
+		})
+
+		It("should return 'true' from GetHighVoltage()", func() {
+			AssertEqual(mk3DT.GetHighVoltage(1), float32(3.9))
+		})
 
 		It("should return 3.971 from GetMaxVolage()", func() {
 			AssertEqual(mk3DT.GetMaxVolage(1), float32(3.971))
+		})
+
+		It("should return 2.432 from GetMinVolage()", func() {
+			AssertEqual(mk3DT.GetMinVolage(1), float32(2.432))
+		})
+
+		It("should return 'true' from GetChargeUnderVoltage()", func() {
+			AssertEqual(mk3DT.GetStopChargeUnderVoltage(1), false)
+		})
+
+		It("should return the sent value from SetChargeUnderVoltage()", func() {
+			AssertEqual(mk3DT.SetStopChargeUnderVoltage(1, false), false)
+			AssertEqual(mk3DT.SetStopChargeUnderVoltage(1, true), true)
 		})
 	})
 
