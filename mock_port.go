@@ -91,9 +91,9 @@ func (this *MockPort) processRequest(r *request) {
 	case strings.HasPrefix(r.Command, "l"):
 		this.TriggerLights(r)
 	case strings.HasPrefix(r.Command, "ma"):
-		this.GetMaxVolage(r)
+		this.GetMaxVoltage(r)
 	case strings.HasPrefix(r.Command, "mi"):
-		this.GetMinVolage(r)
+		this.GetMinVoltage(r)
 	case strings.HasPrefix(r.Command, "p"):
 		this.GetSetStopChargeUnderVoltage(r)
 	case strings.HasPrefix(r.Command, "q"):
@@ -113,9 +113,9 @@ func (this *MockPort) processRequest(r *request) {
 	case strings.HasPrefix(r.Command, "tempo"):
 		this.SetStopDissipatingTemp(r)
 	case strings.HasPrefix(r.Command, "tempw"):
+		this.SetFanLowTemp(r)
 	case strings.HasPrefix(r.Command, "t"):
 		this.GetAddrTemp(r)
-		this.SetFanLowTemp(r)
 	case strings.HasPrefix(r.Command, "x"):
 		this.GetCellsTemp(r)
 	}
@@ -202,12 +202,12 @@ func (this *MockPort) TriggerLights(r *request) {
 	// Return value as LightsStatus.
 }
 
-func (this *MockPort) GetMaxVolage(r *request) {
+func (this *MockPort) GetMaxVoltage(r *request) {
 	// Return the value as float32.
 	this.bufferResponse(r.Addr, "MA 3.971V")
 }
 
-func (this *MockPort) GetMinVolage(r *request) {
+func (this *MockPort) GetMinVoltage(r *request) {
 	// Return the value as float32.
 	this.bufferResponse(r.Addr, "MA 2.432V")
 }
@@ -228,26 +228,30 @@ func (this *MockPort) GetSetStopChargeUnderVoltage(r *request) {
 
 func (this *MockPort) GetRealTimeVoltage(r *request) {
 	// Return the value as float32.
-	this.bufferResponse(r.Addr, "MA 3.4V")
+	this.bufferResponse(r.Addr, "Q 3.4V")
 }
 
 func (this *MockPort) GetLowVoltage(r *request) {
 	// Return the value as float32.
+	this.bufferResponse(r.Addr, "R 2.432V")
 }
 
 // volts 0.000-9.999
 func (this *MockPort) SetMaxVoltage(r *request) {
 	// Check that the returned value is the same as the sent volts.
+	this.bufferResponse(r.Addr, "H "+r.Value+"V")
 }
 
 // volts 0.000-9.999
 func (this *MockPort) SetMinVoltage(r *request) {
 	// Check that the returned value is the same as the sent volts.
+	this.bufferResponse(r.Addr, "H "+r.Value+"V")
 }
 
 // volts 0.000-9.999
 func (this *MockPort) SetOverVoltage(r *request) {
 	// Check that the returned value is the same as the sent volts.
+	this.bufferResponse(r.Addr, "H "+r.Value+"V")
 }
 
 func (this *MockPort) GetStatus(r *request) {
@@ -256,23 +260,28 @@ func (this *MockPort) GetStatus(r *request) {
 
 func (this *MockPort) GetAddrTemp(r *request) {
 	// Return the value as int.
+	this.bufferResponse(r.Addr, "T 120F")
 }
 
 // temp 32-181
 func (this *MockPort) SetFanMaxTemp(r *request) {
 	// Check that the returned value is the same as the sent temp.
+	this.bufferResponse(r.Addr, "TH "+r.Value+"F")
 }
 
 // temp 32-181
 func (this *MockPort) SetStopDissipatingTemp(r *request) {
 	// Check that the returned value is the same as the sent temp.
+	this.bufferResponse(r.Addr, "TO "+r.Value+"F")
 }
 
 // temp 32-181
 func (this *MockPort) SetFanLowTemp(r *request) {
 	// Check that the returned value is the same as the sent temp.
+	this.bufferResponse(r.Addr, "W "+r.Value+"F")
 }
 
 func (this *MockPort) GetCellsTemp(r *request) {
 	// Return the value as int (or string)?
+	this.bufferResponse(r.Addr, "X Cold")
 }

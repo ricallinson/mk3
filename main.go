@@ -31,7 +31,7 @@ func main() {
 		return
 	}
 	mk3DT := NewMk3DT(serialPort)
-	log.Println(mk3DT.GetMaxVolage(1))
+	log.Println(mk3DT.GetMaxVoltage(1))
 }
 
 func connectToDongle(path string) (error, *serial.Port) {

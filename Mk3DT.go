@@ -126,10 +126,12 @@ func (this *Mk3DT) execCmd(addr int, cmd string, value string) Response {
 
 // temp 32-180 F
 func (this *Mk3DT) SetStopTemp(addr int, temp int) bool {
+	if temp < 32 || temp > 180 {
+		return false
+	}
 	r := this.execCmd(addr, "bt", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
 	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
-	// log.Println(temp, r.Value, t)
 	return int(t) == temp
 }
 
@@ -230,14 +232,14 @@ func (this *Mk3DT) TriggerLights(addr int) LightsStatus {
 	return LightsStatus{}
 }
 
-func (this *Mk3DT) GetMaxVolage(addr int) float32 {
+func (this *Mk3DT) GetMaxVoltage(addr int) float32 {
 	r := this.execCmd(addr, "ma", "")
 	// Return the value as float32.
 	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
 	return float32(f)
 }
 
-func (this *Mk3DT) GetMinVolage(addr int) float32 {
+func (this *Mk3DT) GetMinVoltage(addr int) float32 {
 	r := this.execCmd(addr, "mi", "")
 	// Return the value as float32.
 	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
@@ -275,24 +277,36 @@ func (this *Mk3DT) GetLowVoltage(addr int) float32 {
 }
 
 // volts 0.000-9.999
-func (this *Mk3DT) SetMaxVoltage(addr int, volts int) bool {
-	this.execCmd(addr, "seth", strconv.Itoa(volts))
+func (this *Mk3DT) SetMaxVoltage(addr int, volts float32) bool {
+	if volts < 0.000 || volts > 9.999 {
+		return false
+	}
+	r := this.execCmd(addr, "seth", strconv.FormatFloat(float64(volts), 'f', 3, 32))
 	// Check that the returned value is the same as the sent volts.
-	return false
+	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
+	return float32(f) == volts
 }
 
 // volts 0.000-9.999
-func (this *Mk3DT) SetMinVoltage(addr int, volts int) bool {
-	this.execCmd(addr, "setl", strconv.Itoa(volts))
+func (this *Mk3DT) SetMinVoltage(addr int, volts float32) bool {
+	if volts < 0.000 || volts > 9.999 {
+		return false
+	}
+	r := this.execCmd(addr, "setl", strconv.FormatFloat(float64(volts), 'f', 3, 32))
 	// Check that the returned value is the same as the sent volts.
-	return false
+	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
+	return float32(f) == volts
 }
 
 // volts 0.000-9.999
-func (this *Mk3DT) SetOverVoltage(addr int, volts int) bool {
-	this.execCmd(addr, "seto", strconv.Itoa(volts))
+func (this *Mk3DT) SetOverVoltage(addr int, volts float32) bool {
+	if volts < 0.000 || volts > 9.999 {
+		return false
+	}
+	r := this.execCmd(addr, "seto", strconv.FormatFloat(float64(volts), 'f', 3, 32))
 	// Check that the returned value is the same as the sent volts.
-	return false
+	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
+	return float32(f) == volts
 }
 
 func (this *Mk3DT) GetStatus(addr int) Status {
@@ -310,23 +324,35 @@ func (this *Mk3DT) GetAddrTemp(addr int) int {
 
 // temp 32-181
 func (this *Mk3DT) SetFanMaxTemp(addr int, temp int) bool {
-	this.execCmd(addr, "temph", strconv.Itoa(temp))
+	if temp < 32 || temp > 180 {
+		return false
+	}
+	r := this.execCmd(addr, "temph", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
-	return false
+	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
+	return int(t) == temp
 }
 
 // temp 32-181
 func (this *Mk3DT) SetStopDissipatingTemp(addr int, temp int) bool {
-	this.execCmd(addr, "tempo", strconv.Itoa(temp))
+	if temp < 32 || temp > 180 {
+		return false
+	}
+	r := this.execCmd(addr, "tempo", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
-	return false
+	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
+	return int(t) == temp
 }
 
 // temp 32-181
 func (this *Mk3DT) SetFanLowTemp(addr int, temp int) bool {
-	this.execCmd(addr, "tempw", strconv.Itoa(temp))
+	if temp < 32 || temp > 180 {
+		return false
+	}
+	r := this.execCmd(addr, "tempw", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
-	return false
+	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
+	return int(t) == temp
 }
 
 func (this *Mk3DT) GetCellsTemp(addr int) int {
