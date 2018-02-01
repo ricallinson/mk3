@@ -65,9 +65,9 @@ func (this *MockPort) processRequest(r *mk3DTRequest) {
 	// log.Println(r)
 	switch {
 	case strings.HasPrefix(r.Command, "btd"):
-		this.DisableStopTemp(r)
+		this.DisableStopChargeTemp(r)
 	case strings.HasPrefix(r.Command, "bt"):
-		this.GetSetStopTemp(r)
+		this.GetSetStopChargeTemp(r)
 	case strings.HasPrefix(r.Command, "ch"):
 		this.ChangeAddr(r)
 	case r.Command == "":
@@ -127,7 +127,7 @@ func (this *MockPort) bufferResponse(addr int, value string) {
 }
 
 // temp 32-180 F
-func (this *MockPort) GetSetStopTemp(r *mk3DTRequest) {
+func (this *MockPort) GetSetStopChargeTemp(r *mk3DTRequest) {
 	if r.Value == "" {
 		this.bufferResponse(r.Addr, "BT 180F")
 	} else {
@@ -136,7 +136,7 @@ func (this *MockPort) GetSetStopTemp(r *mk3DTRequest) {
 	}
 }
 
-func (this *MockPort) DisableStopTemp(r *mk3DTRequest) {
+func (this *MockPort) DisableStopChargeTemp(r *mk3DTRequest) {
 	// Check that the returned value equals "DISABLE".
 	this.bufferResponse(r.Addr, "BT DISABLE")
 }

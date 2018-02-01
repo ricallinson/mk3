@@ -20,18 +20,18 @@ func TestMk3DT(t *testing.T) {
 			AssertEqual(reflect.TypeOf(mk3DT).String(), "*main.Mk3DT")
 		})
 
-		It("should return the sent value from SetStopTemp()", func() {
-			AssertEqual(mk3DT.SetStopTemp(1, 31), false)
-			AssertEqual(mk3DT.SetStopTemp(1, 181), false)
-			AssertEqual(mk3DT.SetStopTemp(1, 170), true)
+		It("should return the sent value from SetStopChargeTemp()", func() {
+			AssertEqual(mk3DT.SetStopChargeTemp(1, 31), false)
+			AssertEqual(mk3DT.SetStopChargeTemp(1, 181), false)
+			AssertEqual(mk3DT.SetStopChargeTemp(1, 170), true)
 		})
 
 		It("should return the sent value of GetStopTemp()", func() {
 			AssertEqual(mk3DT.GetStopTemp(1), 180)
 		})
 
-		It("should return 'true' from DisableStopTemp()", func() {
-			AssertEqual(mk3DT.DisableStopTemp(1), true)
+		It("should return 'true' from DisableStopChargeTemp()", func() {
+			AssertEqual(mk3DT.DisableStopChargeTemp(1), true)
 		})
 
 		It("should return the sent value from ChangeAddr()", func() {

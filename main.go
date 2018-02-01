@@ -17,7 +17,13 @@ type SerialPort interface {
 func main() {
 	var dongle string
 	flag.StringVar(&dongle, "dongle", "", "Serial port that's connected to the Dongle Terminator")
+	var exeCmd string
+	flag.StringVar(&dongle, "exe", "", "Path to the YAML configuration file to execute")
 	flag.Parse()
+	if exeCmd == "" {
+		log.Println("You must provide a path to YAML file with the commands to execute")
+		return
+	}
 	var serialPort SerialPort
 	var serialError error
 	if dongle == "" {
@@ -30,8 +36,7 @@ func main() {
 		log.Println(serialError)
 		return
 	}
-	mk3DT := NewMk3DT(serialPort)
-	log.Println(mk3DT.GetMaxVoltage(1))
+	NewExecutor(NewMk3DT(serialPort), exeCmd)
 }
 
 func connectToDongle(path string) (error, *serial.Port) {

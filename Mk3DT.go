@@ -19,9 +19,9 @@ type Mk3DTStatus struct {
 
 type Mk3DTCommands struct {
 	Mk3DTStatus
-	SetStopTemp               bool
+	SetStopChargeTemp         bool
 	GetStopTemp               bool
-	DisableStopTemp           bool
+	DisableStopChargeTemp     bool
 	ChangeAddr                bool
 	DisableShunt              bool
 	EnableShunt               bool
@@ -124,7 +124,7 @@ func (this *Mk3DT) execCmd(addr int, cmd string, value string) Mk3DTResponse {
 }
 
 // temp 32-180 F
-func (this *Mk3DT) SetStopTemp(addr int, temp int) bool {
+func (this *Mk3DT) SetStopChargeTemp(addr int, temp int) bool {
 	if temp < 32 || temp > 180 {
 		return false
 	}
@@ -139,7 +139,7 @@ func (this *Mk3DT) GetStopTemp(addr int) int {
 	return tempToInt(r.Value)
 }
 
-func (this *Mk3DT) DisableStopTemp(addr int) bool {
+func (this *Mk3DT) DisableStopChargeTemp(addr int) bool {
 	r := this.execCmd(addr, "btd", "")
 	// Check that the returned value equals "DISABLE".
 	return r.Value == "DISABLE"

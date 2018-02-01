@@ -1,7 +1,9 @@
 package main
 
 import (
+	"io/ioutil"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -31,4 +33,13 @@ func tempToInt(s string) int {
 func voltToFloat32(s string) float32 {
 	f, _ := strconv.ParseFloat(strings.TrimSuffix(s, "V"), 32)
 	return float32(f)
+}
+
+// Reads a file into a byte array or exits.
+func readFileToByteArray(p string) []byte {
+	b, err := ioutil.ReadFile(p)
+    if err != nil {
+        log.Fatalf("Error reading file: #%v ", err)
+    }
+    return b
 }
