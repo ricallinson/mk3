@@ -1,8 +1,8 @@
 package main
 
 import (
-	"io/ioutil"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"strconv"
 	"strings"
@@ -38,8 +38,8 @@ func voltToFloat32(s string) float32 {
 // Reads a file into a byte array or exits.
 func readFileToByteArray(p string) []byte {
 	b, err := ioutil.ReadFile(p)
-    if err != nil {
-        log.Fatalf("Error reading file: #%v ", err)
-    }
-    return b
+	if err != nil {
+		log.Fatalf("Error reading file: #%v ", err)
+	}
+	return b
 }

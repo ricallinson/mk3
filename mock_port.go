@@ -83,11 +83,11 @@ func (this *MockPort) processRequest(r *mk3DTRequest) {
 	case strings.HasPrefix(r.Command, "g"):
 		this.GetHighVoltage(r)
 	case strings.HasPrefix(r.Command, "hma"):
-		this.ClearMaxVolageHistory(r)
+		this.ClearMaxVoltageHistory(r)
 	case strings.HasPrefix(r.Command, "hmi"):
-		this.ClearMinVolageHistory(r)
+		this.ClearMinVoltageHistory(r)
 	case strings.HasPrefix(r.Command, "h"):
-		this.ClearVolageHistory(r)
+		this.ClearVoltageHistory(r)
 	case strings.HasPrefix(r.Command, "l"):
 		this.TriggerLights(r)
 	case strings.HasPrefix(r.Command, "ma"):
@@ -186,15 +186,15 @@ func (this *MockPort) GetHighVoltage(r *mk3DTRequest) {
 	this.bufferResponse(r.Addr, "G 3.9V")
 }
 
-func (this *MockPort) ClearMaxVolageHistory(r *mk3DTRequest) {
+func (this *MockPort) ClearMaxVoltageHistory(r *mk3DTRequest) {
 	// Nothing to return.
 }
 
-func (this *MockPort) ClearMinVolageHistory(r *mk3DTRequest) {
+func (this *MockPort) ClearMinVoltageHistory(r *mk3DTRequest) {
 	// Nothing to return.
 }
 
-func (this *MockPort) ClearVolageHistory(r *mk3DTRequest) {
+func (this *MockPort) ClearVoltageHistory(r *mk3DTRequest) {
 	// Nothing to return.
 }
 

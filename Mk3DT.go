@@ -29,12 +29,12 @@ type Mk3DTCommands struct {
 	GetFirstPosition          bool
 	SetFirstPosition          bool
 	GetHighVoltage            bool
-	ClearMaxVolageHistory     bool
-	ClearMinVolageHistory     bool
-	ClearVolageHistory        bool
+	ClearMaxVoltageHistory    bool
+	ClearMinVoltageHistory    bool
+	ClearVoltageHistory       bool
 	TriggerLights             bool
-	GetMaxVolage              bool
-	GetMinVolage              bool
+	GetMaxVoltage             bool
+	GetMinVoltage             bool
 	SetStopChargeUnderVoltage bool
 	GetRealTimeVoltage        bool
 	GetLowVoltage             bool
@@ -204,19 +204,19 @@ func (this *Mk3DT) GetHighVoltage(addr int) float32 {
 	return voltToFloat32(r.Value)
 }
 
-func (this *Mk3DT) ClearMaxVolageHistory(addr int) bool {
+func (this *Mk3DT) ClearMaxVoltageHistory(addr int) bool {
 	this.execCmd(addr, "hma", "")
 	// Nothing to return.
 	return true
 }
 
-func (this *Mk3DT) ClearMinVolageHistory(addr int) bool {
+func (this *Mk3DT) ClearMinVoltageHistory(addr int) bool {
 	this.execCmd(addr, "hmi", "")
 	// Nothing to return.
 	return true
 }
 
-func (this *Mk3DT) ClearVolageHistory(addr int) bool {
+func (this *Mk3DT) ClearVoltageHistory(addr int) bool {
 	this.execCmd(addr, "h", "")
 	// Nothing to return.
 	return true
