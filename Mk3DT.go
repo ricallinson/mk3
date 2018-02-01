@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"log"
 	"strconv"
-	"strings"
 )
 
 type Mk3DT struct {
@@ -131,15 +130,13 @@ func (this *Mk3DT) SetStopTemp(addr int, temp int) bool {
 	}
 	r := this.execCmd(addr, "bt", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
-	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
-	return int(t) == temp
+	return tempToInt(r.Value) == temp
 }
 
 func (this *Mk3DT) GetStopTemp(addr int) int {
 	r := this.execCmd(addr, "bt", "")
 	// Return value as an int.
-	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
-	return int(t)
+	return tempToInt(r.Value)
 }
 
 func (this *Mk3DT) DisableStopTemp(addr int) bool {
@@ -206,23 +203,25 @@ func (this *Mk3DT) SetFirstPosition(addr int, value bool) bool {
 func (this *Mk3DT) GetHighVoltage(addr int) float32 {
 	r := this.execCmd(addr, "g", "")
 	// Return the value as float32.
-	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
-	return float32(f)
+	return voltToFloat32(r.Value)
 }
 
-func (this *Mk3DT) ClearMaxVolageHistory(addr int) {
+func (this *Mk3DT) ClearMaxVolageHistory(addr int) bool {
 	this.execCmd(addr, "hma", "")
 	// Nothing to return.
+	return true
 }
 
-func (this *Mk3DT) ClearMinVolageHistory(addr int) {
+func (this *Mk3DT) ClearMinVolageHistory(addr int) bool {
 	this.execCmd(addr, "hmi", "")
 	// Nothing to return.
+	return true
 }
 
-func (this *Mk3DT) ClearVolageHistory(addr int) {
+func (this *Mk3DT) ClearVolageHistory(addr int) bool {
 	this.execCmd(addr, "h", "")
 	// Nothing to return.
+	return true
 }
 
 // todo
@@ -235,15 +234,13 @@ func (this *Mk3DT) TriggerLights(addr int) LightsStatus {
 func (this *Mk3DT) GetMaxVoltage(addr int) float32 {
 	r := this.execCmd(addr, "ma", "")
 	// Return the value as float32.
-	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
-	return float32(f)
+	return voltToFloat32(r.Value)
 }
 
 func (this *Mk3DT) GetMinVoltage(addr int) float32 {
 	r := this.execCmd(addr, "mi", "")
 	// Return the value as float32.
-	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
-	return float32(f)
+	return voltToFloat32(r.Value)
 }
 
 func (this *Mk3DT) GetStopChargeUnderVoltage(addr int) bool {
@@ -265,15 +262,13 @@ func (this *Mk3DT) SetStopChargeUnderVoltage(addr int, stop bool) bool {
 func (this *Mk3DT) GetRealTimeVoltage(addr int) float32 {
 	r := this.execCmd(addr, "q", "")
 	// Return the value as float32.
-	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
-	return float32(f)
+	return voltToFloat32(r.Value)
 }
 
 func (this *Mk3DT) GetLowVoltage(addr int) float32 {
 	r := this.execCmd(addr, "r", "")
 	// Return the value as float32.
-	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
-	return float32(f)
+	return voltToFloat32(r.Value)
 }
 
 // volts 0.000-9.999
@@ -283,8 +278,7 @@ func (this *Mk3DT) SetMaxVoltage(addr int, volts float32) bool {
 	}
 	r := this.execCmd(addr, "seth", strconv.FormatFloat(float64(volts), 'f', 3, 32))
 	// Check that the returned value is the same as the sent volts.
-	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
-	return float32(f) == volts
+	return voltToFloat32(r.Value) == volts
 }
 
 // volts 0.000-9.999
@@ -294,8 +288,7 @@ func (this *Mk3DT) SetMinVoltage(addr int, volts float32) bool {
 	}
 	r := this.execCmd(addr, "setl", strconv.FormatFloat(float64(volts), 'f', 3, 32))
 	// Check that the returned value is the same as the sent volts.
-	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
-	return float32(f) == volts
+	return voltToFloat32(r.Value) == volts
 }
 
 // volts 0.000-9.999
@@ -305,8 +298,7 @@ func (this *Mk3DT) SetOverVoltage(addr int, volts float32) bool {
 	}
 	r := this.execCmd(addr, "seto", strconv.FormatFloat(float64(volts), 'f', 3, 32))
 	// Check that the returned value is the same as the sent volts.
-	f, _ := strconv.ParseFloat(strings.TrimSuffix(r.Value, "V"), 32)
-	return float32(f) == volts
+	return voltToFloat32(r.Value) == volts
 }
 
 func (this *Mk3DT) GetStatus(addr int) Status {
@@ -318,8 +310,7 @@ func (this *Mk3DT) GetStatus(addr int) Status {
 func (this *Mk3DT) GetAddrTemp(addr int) int {
 	r := this.execCmd(addr, "t", "")
 	// Return the value as int.
-	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
-	return int(t)
+	return tempToInt(r.Value)
 }
 
 // temp 32-181
@@ -329,8 +320,7 @@ func (this *Mk3DT) SetFanMaxTemp(addr int, temp int) bool {
 	}
 	r := this.execCmd(addr, "temph", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
-	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
-	return int(t) == temp
+	return tempToInt(r.Value) == temp
 }
 
 // temp 32-181
@@ -340,8 +330,7 @@ func (this *Mk3DT) SetStopDissipatingTemp(addr int, temp int) bool {
 	}
 	r := this.execCmd(addr, "tempo", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
-	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
-	return int(t) == temp
+	return tempToInt(r.Value) == temp
 }
 
 // temp 32-181
@@ -351,13 +340,11 @@ func (this *Mk3DT) SetFanLowTemp(addr int, temp int) bool {
 	}
 	r := this.execCmd(addr, "tempw", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
-	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
-	return int(t) == temp
+	return tempToInt(r.Value) == temp
 }
 
 func (this *Mk3DT) GetCellsTemp(addr int) int {
 	r := this.execCmd(addr, "x", "")
 	// Return the value as int (or string)?
-	t, _ := strconv.ParseInt(strings.TrimSuffix(r.Value, "F"), 10, 32)
-	return int(t)
+	return tempToInt(r.Value)
 }

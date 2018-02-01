@@ -70,6 +70,18 @@ func TestMk3DT(t *testing.T) {
 			AssertEqual(mk3DT.GetHighVoltage(1), float32(3.9))
 		})
 
+		It("should return 'true' from ClearMaxVolageHistory()", func() {
+			AssertEqual(mk3DT.ClearMaxVolageHistory(1), true)
+		})
+
+		It("should return 'true' from ClearMinVolageHistory()", func() {
+			AssertEqual(mk3DT.ClearMinVolageHistory(1), true)
+		})
+
+		It("should return 'true' from ClearVolageHistory()", func() {
+			AssertEqual(mk3DT.ClearVolageHistory(1), true)
+		})
+
 		// Todo
 		It("should return the LightsStatus from TriggerLights()", func() {
 			AssertEqual(mk3DT.TriggerLights(1), true)
