@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"log"
+	// "log"
 	"strconv"
 	"strings"
 )
@@ -11,7 +11,7 @@ type MockPort struct {
 	buffer []byte
 }
 
-type request struct {
+type mk3DTRequest struct {
 	Addr    int
 	Command string
 	Value   string
@@ -29,7 +29,7 @@ func (this *MockPort) Read(b []byte) (int, error) {
 }
 
 func (this *MockPort) Write(b []byte) (int, error) {
-	r := &request{}
+	r := &mk3DTRequest{}
 	cur := 0
 	addr := []byte{}
 	for cur < len(b) {
@@ -59,8 +59,8 @@ func (this *MockPort) Close() error {
 	return nil
 }
 
-// Checks the request and updates the buffer if needed.
-func (this *MockPort) processRequest(r *request) {
+// Checks the mk3DTRequest and updates the buffer if needed.
+func (this *MockPort) processRequest(r *mk3DTRequest) {
 	// log.Print("Mock Request Recived:")
 	// log.Println(r)
 	switch {
@@ -123,11 +123,11 @@ func (this *MockPort) processRequest(r *request) {
 
 func (this *MockPort) bufferResponse(addr int, value string) {
 	this.buffer = append(this.buffer, []byte(padInt(addr)+value)...)
-	log.Println(string(this.buffer))
+	// log.Println(string(this.buffer))
 }
 
 // temp 32-180 F
-func (this *MockPort) GetSetStopTemp(r *request) {
+func (this *MockPort) GetSetStopTemp(r *mk3DTRequest) {
 	if r.Value == "" {
 		this.bufferResponse(r.Addr, "BT 180F")
 	} else {
@@ -136,38 +136,38 @@ func (this *MockPort) GetSetStopTemp(r *request) {
 	}
 }
 
-func (this *MockPort) DisableStopTemp(r *request) {
+func (this *MockPort) DisableStopTemp(r *mk3DTRequest) {
 	// Check that the returned value equals "DISABLE".
 	this.bufferResponse(r.Addr, "BT DISABLE")
 }
 
 // addr 0-255
-func (this *MockPort) ChangeAddr(r *request) {
+func (this *MockPort) ChangeAddr(r *mk3DTRequest) {
 	// Check that the returned value is the same as the sent addr.
 	this.bufferResponse(r.Addr, "BT 00"+r.Value)
 }
 
-func (this *MockPort) GetCommands(r *request) {
+func (this *MockPort) GetCommands(r *mk3DTRequest) {
 	// Return value as Commands.
 }
 
-func (this *MockPort) DisableShunt(r *request) {
+func (this *MockPort) DisableShunt(r *mk3DTRequest) {
 	// Check that the returned value equals "Disable".
 	this.bufferResponse(r.Addr, "Disable")
 }
 
-func (this *MockPort) EnableShunt(r *request) {
+func (this *MockPort) EnableShunt(r *mk3DTRequest) {
 	// Check that the returned value equals "Enable".
 	this.bufferResponse(r.Addr, "Enable")
 }
 
 // level 0-8
-func (this *MockPort) ForceFan(r *request) {
+func (this *MockPort) ForceFan(r *mk3DTRequest) {
 	// Check that the returned value is the same as the sent level.
 	this.bufferResponse(r.Addr, "F "+r.Value)
 }
 
-func (this *MockPort) GetSetFirstPosition(r *request) {
+func (this *MockPort) GetSetFirstPosition(r *mk3DTRequest) {
 	if r.Value == "" {
 		// Return the value as a bool.
 		this.bufferResponse(r.Addr, "FP 0")
@@ -181,38 +181,38 @@ func (this *MockPort) GetSetFirstPosition(r *request) {
 	this.bufferResponse(r.Addr, "FP "+v)
 }
 
-func (this *MockPort) GetHighVoltage(r *request) {
+func (this *MockPort) GetHighVoltage(r *mk3DTRequest) {
 	// Return the value as float32.
 	this.bufferResponse(r.Addr, "G 3.9V")
 }
 
-func (this *MockPort) ClearMaxVolageHistory(r *request) {
+func (this *MockPort) ClearMaxVolageHistory(r *mk3DTRequest) {
 	// Nothing to return.
 }
 
-func (this *MockPort) ClearMinVolageHistory(r *request) {
+func (this *MockPort) ClearMinVolageHistory(r *mk3DTRequest) {
 	// Nothing to return.
 }
 
-func (this *MockPort) ClearVolageHistory(r *request) {
+func (this *MockPort) ClearVolageHistory(r *mk3DTRequest) {
 	// Nothing to return.
 }
 
-func (this *MockPort) TriggerLights(r *request) {
+func (this *MockPort) TriggerLights(r *mk3DTRequest) {
 	// Return value as LightsStatus.
 }
 
-func (this *MockPort) GetMaxVoltage(r *request) {
+func (this *MockPort) GetMaxVoltage(r *mk3DTRequest) {
 	// Return the value as float32.
 	this.bufferResponse(r.Addr, "MA 3.971V")
 }
 
-func (this *MockPort) GetMinVoltage(r *request) {
+func (this *MockPort) GetMinVoltage(r *mk3DTRequest) {
 	// Return the value as float32.
 	this.bufferResponse(r.Addr, "MA 2.432V")
 }
 
-func (this *MockPort) GetSetStopChargeUnderVoltage(r *request) {
+func (this *MockPort) GetSetStopChargeUnderVoltage(r *mk3DTRequest) {
 	if r.Value == "" {
 		// Return the value as a bool.
 		this.bufferResponse(r.Addr, "P 0")
@@ -226,62 +226,62 @@ func (this *MockPort) GetSetStopChargeUnderVoltage(r *request) {
 	this.bufferResponse(r.Addr, "P "+v)
 }
 
-func (this *MockPort) GetRealTimeVoltage(r *request) {
+func (this *MockPort) GetRealTimeVoltage(r *mk3DTRequest) {
 	// Return the value as float32.
 	this.bufferResponse(r.Addr, "Q 3.4V")
 }
 
-func (this *MockPort) GetLowVoltage(r *request) {
+func (this *MockPort) GetLowVoltage(r *mk3DTRequest) {
 	// Return the value as float32.
 	this.bufferResponse(r.Addr, "R 2.432V")
 }
 
 // volts 0.000-9.999
-func (this *MockPort) SetMaxVoltage(r *request) {
+func (this *MockPort) SetMaxVoltage(r *mk3DTRequest) {
 	// Check that the returned value is the same as the sent volts.
 	this.bufferResponse(r.Addr, "H "+r.Value+"V")
 }
 
 // volts 0.000-9.999
-func (this *MockPort) SetMinVoltage(r *request) {
+func (this *MockPort) SetMinVoltage(r *mk3DTRequest) {
 	// Check that the returned value is the same as the sent volts.
 	this.bufferResponse(r.Addr, "H "+r.Value+"V")
 }
 
 // volts 0.000-9.999
-func (this *MockPort) SetOverVoltage(r *request) {
+func (this *MockPort) SetOverVoltage(r *mk3DTRequest) {
 	// Check that the returned value is the same as the sent volts.
 	this.bufferResponse(r.Addr, "H "+r.Value+"V")
 }
 
-func (this *MockPort) GetStatus(r *request) {
+func (this *MockPort) GetStatus(r *mk3DTRequest) {
 	// Return the value as Status.
 }
 
-func (this *MockPort) GetAddrTemp(r *request) {
+func (this *MockPort) GetAddrTemp(r *mk3DTRequest) {
 	// Return the value as int.
 	this.bufferResponse(r.Addr, "T 120F")
 }
 
 // temp 32-181
-func (this *MockPort) SetFanMaxTemp(r *request) {
+func (this *MockPort) SetFanMaxTemp(r *mk3DTRequest) {
 	// Check that the returned value is the same as the sent temp.
 	this.bufferResponse(r.Addr, "TH "+r.Value+"F")
 }
 
 // temp 32-181
-func (this *MockPort) SetStopDissipatingTemp(r *request) {
+func (this *MockPort) SetStopDissipatingTemp(r *mk3DTRequest) {
 	// Check that the returned value is the same as the sent temp.
 	this.bufferResponse(r.Addr, "TO "+r.Value+"F")
 }
 
 // temp 32-181
-func (this *MockPort) SetFanLowTemp(r *request) {
+func (this *MockPort) SetFanLowTemp(r *mk3DTRequest) {
 	// Check that the returned value is the same as the sent temp.
 	this.bufferResponse(r.Addr, "W "+r.Value+"F")
 }
 
-func (this *MockPort) GetCellsTemp(r *request) {
+func (this *MockPort) GetCellsTemp(r *mk3DTRequest) {
 	// Return the value as int (or string)?
 	this.bufferResponse(r.Addr, "X Cold")
 }

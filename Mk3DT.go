@@ -10,15 +10,15 @@ type Mk3DT struct {
 	serialPort SerialPort
 }
 
-type Status struct {
+type Mk3DTStatus struct {
 	Type         string
 	Version      string
 	Unit         string
 	SerialNumber string
 }
 
-type Commands struct {
-	Status
+type Mk3DTCommands struct {
+	Mk3DTStatus
 	SetStopTemp               bool
 	GetStopTemp               bool
 	DisableStopTemp           bool
@@ -49,7 +49,7 @@ type Commands struct {
 	GetCellsTemp              bool
 }
 
-type LightsStatus struct {
+type Mk3DTLightsStatus struct {
 	OverTempRegulator bool
 	OverTempCellAddr  int
 	MinVoltageSeen    bool
@@ -59,7 +59,7 @@ type LightsStatus struct {
 	ShuntDisabled     bool
 }
 
-type Response struct {
+type Mk3DTResponse struct {
 	Addr    int
 	Command string
 	Value   string
@@ -95,16 +95,16 @@ func (this *Mk3DT) writeBytes(b []byte) {
 	}
 }
 
-func (this *Mk3DT) execCmd(addr int, cmd string, value string) Response {
+func (this *Mk3DT) execCmd(addr int, cmd string, value string) Mk3DTResponse {
 	// Clear the Dongle Terminator buffer.
 	this.readBytes(0)
 	// Send the command.
 	this.writeBytes([]byte(strconv.Itoa(addr) + cmd + "." + value + "\n\r"))
-	// Read and return a Response.
+	// Read and return a Mk3DTResponse.
 	buf := this.readBytes(0)
 	cur := 0
 	addrNum := []byte{}
-	r := Response{}
+	r := Mk3DTResponse{}
 	for cur < len(buf) {
 		if buf[cur] >= 48 && buf[cur] <= 57 {
 			// If 0-9, append to Addr.
@@ -142,7 +142,6 @@ func (this *Mk3DT) GetStopTemp(addr int) int {
 func (this *Mk3DT) DisableStopTemp(addr int) bool {
 	r := this.execCmd(addr, "btd", "")
 	// Check that the returned value equals "DISABLE".
-	// log.Print(r)
 	return r.Value == "DISABLE"
 }
 
@@ -154,10 +153,10 @@ func (this *Mk3DT) ChangeAddr(addr int, newAddr int) bool {
 	return newAddr == int(n)
 }
 
-func (this *Mk3DT) GetCommands(addr int) Commands {
+func (this *Mk3DT) GetCommands(addr int) Mk3DTCommands {
 	this.execCmd(addr, "", "")
-	// Return value as Commands.
-	return Commands{}
+	// Return value as Mk3DTCommands.
+	return Mk3DTCommands{}
 }
 
 func (this *Mk3DT) DisableShunt(addr int) bool {
@@ -196,7 +195,6 @@ func (this *Mk3DT) SetFirstPosition(addr int, value bool) bool {
 	}
 	r := this.execCmd(addr, "fi", v)
 	// Check that the returned value is the same as the sent value.
-	log.Println(r)
 	return r.Value == v
 }
 
@@ -225,10 +223,10 @@ func (this *Mk3DT) ClearVolageHistory(addr int) bool {
 }
 
 // todo
-func (this *Mk3DT) TriggerLights(addr int) LightsStatus {
+func (this *Mk3DT) TriggerLights(addr int) Mk3DTLightsStatus {
 	this.execCmd(addr, "l", "")
-	// Return value as LightsStatus.
-	return LightsStatus{}
+	// Return value as LightsMk3DTStatus.
+	return Mk3DTLightsStatus{}
 }
 
 func (this *Mk3DT) GetMaxVoltage(addr int) float32 {
@@ -301,10 +299,10 @@ func (this *Mk3DT) SetOverVoltage(addr int, volts float32) bool {
 	return voltToFloat32(r.Value) == volts
 }
 
-func (this *Mk3DT) GetStatus(addr int) Status {
+func (this *Mk3DT) GetStatus(addr int) Mk3DTStatus {
 	this.execCmd(addr, "s", "")
-	// Return the value as Status.
-	return Status{}
+	// Return the value as Mk3DTStatus.
+	return Mk3DTStatus{}
 }
 
 func (this *Mk3DT) GetAddrTemp(addr int) int {
