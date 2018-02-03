@@ -42,7 +42,7 @@ func main() {
 		log.Println(serialError)
 		return
 	}
-	NewExecutor(NewMk3DT(serialPort), exeCmd, addr)
+	NewExecutor(NewMk3DT(serialPort), exeCmd)
 }
 
 func connectToDongle(path string) (error, *serial.Port) {
