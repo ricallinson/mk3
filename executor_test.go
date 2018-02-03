@@ -14,6 +14,10 @@ func TestExecutor(t *testing.T) {
 		e = NewExecutor(NewMk3DT(NewMockPort()), "")
 	})
 
+	AfterEach(func() {
+		e.Close()
+	})
+
 	Describe("Executor()", func() {
 
 		It("should return an Executor object", func() {

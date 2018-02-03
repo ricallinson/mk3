@@ -90,6 +90,10 @@ func NewExecutor(mk3DT *Mk3DT, p string) *Executor {
 	return this
 }
 
+func (this *Executor) Close() {
+	this.mk3DT.Close()
+}
+
 func (this *Executor) ExecuteCommands() []*ExecutorCommandValues {
 	r := []*ExecutorCommandValues{}
 	for addr := 0; addr < 255; addr++ {

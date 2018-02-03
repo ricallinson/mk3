@@ -72,6 +72,10 @@ func NewMk3DT(p SerialPort) *Mk3DT {
 	return this
 }
 
+func (this *Mk3DT) Close() {
+	this.serialPort.Close()
+}
+
 func (this *Mk3DT) readBytes(delim byte) []byte {
 	limit := 100
 	buff := make([]byte, 1)
@@ -93,6 +97,7 @@ func (this *Mk3DT) writeBytes(b []byte) {
 	if e != nil {
 		log.Println(e)
 	}
+	this.serialPort.Flush()
 }
 
 func (this *Mk3DT) execCmd(addr int, cmd string, value string) Mk3DTResponse {
