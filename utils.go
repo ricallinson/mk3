@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -42,4 +43,15 @@ func readFileToByteArray(p string) []byte {
 		log.Fatalf("Error reading file: #%v ", err)
 	}
 	return b
+}
+
+func readYamlFileToExecutorCommands(p string) *ExecutorCommands {
+	r := &ExecutorCommands{}
+	if p != "" {
+		err := yaml.Unmarshal(readFileToByteArray(p), r)
+		if err != nil {
+			log.Fatalf("YAML Error: %v", err)
+		}
+	}
+	return r
 }

@@ -1,9 +1,6 @@
 package main
 
-import (
-	"gopkg.in/yaml.v2"
-	"log"
-)
+import ()
 
 type Executor struct {
 	mk3DT    *Mk3DT
@@ -43,7 +40,7 @@ type ExecutorCommands struct {
 	GetCellsTemp              bool    `yaml:"GetCellsTemp"`
 }
 
-type ExecutorCommandValues struct {
+type ExecutorCommandsResult struct {
 	SetStopChargeTemp         bool
 	GetStopTemp               int
 	DisableStopChargeTemp     bool
@@ -76,16 +73,10 @@ type ExecutorCommandValues struct {
 	GetCellsTemp              string
 }
 
-func NewExecutor(mk3DT *Mk3DT, p string) *Executor {
+func NewExecutor(mk3DT *Mk3DT) *Executor {
 	this := &Executor{
 		mk3DT:    mk3DT,
 		Commands: &ExecutorCommands{},
-	}
-	if p != "" {
-		err := yaml.Unmarshal(readFileToByteArray(p), &this.Commands)
-		if err != nil {
-			log.Fatalf("YAML Error: %v", err)
-		}
 	}
 	return this
 }
@@ -94,16 +85,16 @@ func (this *Executor) Close() {
 	this.mk3DT.Close()
 }
 
-func (this *Executor) ExecuteCommands() []*ExecutorCommandValues {
-	r := []*ExecutorCommandValues{}
+func (this *Executor) ExecuteCommands() []*ExecutorCommandsResult {
+	r := []*ExecutorCommandsResult{}
 	for addr := 0; addr < 255; addr++ {
-		r = append(r, this.ExecuteCommandsOnAddr(addr))
+		r = append(r, this.ExecuteCommandsAtAddr(addr))
 	}
 	return r
 }
 
-func (this *Executor) ExecuteCommandsOnAddr(addr int) *ExecutorCommandValues {
-	r := &ExecutorCommandValues{}
+func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
+	r := &ExecutorCommandsResult{}
 	if this.Commands.SetStopChargeTemp > 0 {
 		r.SetStopChargeTemp = this.mk3DT.SetStopChargeTemp(addr, this.Commands.SetStopChargeTemp)
 	}
