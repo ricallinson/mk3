@@ -29,7 +29,7 @@ type ExecutorCommands struct {
 	GetMaxVoltage             bool    `yaml:"GetMaxVoltage"`
 	GetMinVoltage             bool    `yaml:"GetMinVoltage"`
 	GetStopChargeUnderVoltage bool    `yaml:"GetStopChargeUnderVoltage"`
-	SetStopChargeUnderVoltage bool    `yaml:"SetStopChargeUnderVoltage"`
+	SetStopChargeUnderVoltage int     `yaml:"SetStopChargeUnderVoltage"`
 	GetRealTimeVoltage        bool    `yaml:"GetRealTimeVoltage"`
 	GetLowVoltage             bool    `yaml:"GetLowVoltage"`
 	SetMaxVoltage             float32 `yaml:"SetMaxVoltage"`
@@ -92,7 +92,7 @@ func NewExecutor(mk3DT *Mk3DT, p string) *Executor {
 
 func (this *Executor) ExecuteCommands() []*ExecutorCommandValues {
 	r := []*ExecutorCommandValues{}
-	for addr := 0; addr <= 0; addr++ {
+	for addr := 0; addr < 255; addr++ {
 		r = append(r, this.ExecuteCommandsOnAddr(addr))
 	}
 	return r
@@ -154,8 +154,12 @@ func (this *Executor) ExecuteCommandsOnAddr(addr int) *ExecutorCommandValues {
 	if this.Commands.GetStopChargeUnderVoltage {
 		r.GetStopChargeUnderVoltage = this.mk3DT.GetStopChargeUnderVoltage(addr)
 	}
-	if this.Commands.SetStopChargeUnderVoltage {
-		r.SetStopChargeUnderVoltage = this.mk3DT.SetStopChargeUnderVoltage(addr, this.Commands.SetStopChargeUnderVoltage)
+	if this.Commands.SetStopChargeUnderVoltage > -1 {
+		v := false
+		if this.Commands.SetStopChargeUnderVoltage == 1 {
+			v = true
+		}
+		r.SetStopChargeUnderVoltage = this.mk3DT.SetStopChargeUnderVoltage(addr, v)
 	}
 	if this.Commands.GetRealTimeVoltage {
 		r.GetRealTimeVoltage = this.mk3DT.GetRealTimeVoltage(addr)

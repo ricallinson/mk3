@@ -16,7 +16,7 @@ TriggerLights: true
 GetMaxVoltage: true
 GetMinVoltage: true
 GetStopChargeUnderVoltage: true
-SetStopChargeUnderVoltage: true
+SetStopChargeUnderVoltage: -1
 GetRealTimeVoltage: true
 GetLowVoltage: true
 SetMaxVoltage: 3.6

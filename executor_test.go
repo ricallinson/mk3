@@ -40,7 +40,7 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(e.Commands.GetMaxVoltage, true)
 			AssertEqual(e.Commands.GetMinVoltage, true)
 			AssertEqual(e.Commands.GetStopChargeUnderVoltage, true)
-			AssertEqual(e.Commands.SetStopChargeUnderVoltage, true)
+			AssertEqual(e.Commands.SetStopChargeUnderVoltage, -1)
 			AssertEqual(e.Commands.GetRealTimeVoltage, true)
 			AssertEqual(e.Commands.GetLowVoltage, true)
 			AssertEqual(e.Commands.SetMaxVoltage, float32(3.6))
@@ -162,6 +162,24 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(r.GetStopChargeUnderVoltage, false)
 		})
 
+		It("should return 'true' from SetStopChargeUnderVoltage", func() {
+			e.Commands.SetStopChargeUnderVoltage = -1
+			r := e.ExecuteCommandsOnAddr(0)
+			AssertEqual(r.SetStopChargeUnderVoltage, false)
+
+			e.Commands.SetStopChargeUnderVoltage = 2
+			r = e.ExecuteCommandsOnAddr(0)
+			AssertEqual(r.SetStopChargeUnderVoltage, false)
+
+			e.Commands.SetStopChargeUnderVoltage = 0
+			r = e.ExecuteCommandsOnAddr(0)
+			AssertEqual(r.SetStopChargeUnderVoltage, false)
+
+			e.Commands.SetStopChargeUnderVoltage = 1
+			r = e.ExecuteCommandsOnAddr(0)
+			AssertEqual(r.SetStopChargeUnderVoltage, true)
+		})
+
 		It("should return '3.4' from GetRealTimeVoltage", func() {
 			e.Commands.GetRealTimeVoltage = true
 			r := e.ExecuteCommandsOnAddr(0)
@@ -226,6 +244,11 @@ func TestExecutor(t *testing.T) {
 			e.Commands.GetCellsTemp = true
 			r := e.ExecuteCommandsOnAddr(0)
 			AssertEqual(r.GetCellsTemp, "Cold")
+		})
+
+		It("should return '255' from ExecuteCommands", func() {
+			r := e.ExecuteCommands()
+			AssertEqual(len(r), 255)
 		})
 	})
 
