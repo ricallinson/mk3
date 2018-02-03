@@ -7,7 +7,7 @@ DisableShunt: true
 EnableShunt: true
 ForceFan: 4 # 0-8
 GetFirstPosition: true
-SetFirstPosition: false
+SetFirstPosition: -1
 GetHighVoltage: true
 ClearMaxVoltageHistory: true
 ClearMinVoltageHistory: true

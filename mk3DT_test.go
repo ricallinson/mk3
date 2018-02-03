@@ -58,12 +58,14 @@ func TestMk3DT(t *testing.T) {
 		})
 
 		It("should return 'true' from GetFirstPosition()", func() {
-			AssertEqual(mk3DT.GetFirstPosition(1), true)
+			AssertEqual(mk3DT.GetFirstPosition(1), false)
 		})
 
 		It("should return 'true' from SetFirstPosition()", func() {
-			AssertEqual(mk3DT.SetFirstPosition(1, false), true)
-			AssertEqual(mk3DT.SetFirstPosition(1, true), true)
+			AssertEqual(mk3DT.SetFirstPosition(1, 0), true)
+			AssertEqual(mk3DT.SetFirstPosition(1, 1), true)
+			AssertEqual(mk3DT.SetFirstPosition(1, -1), false)
+			AssertEqual(mk3DT.SetFirstPosition(1, 2), false)
 		})
 
 		It("should return 'true' from GetHighVoltage()", func() {
@@ -154,7 +156,7 @@ func TestMk3DT(t *testing.T) {
 		})
 
 		It("should return 0 from GetCellsTemp()", func() {
-			AssertEqual(mk3DT.GetCellsTemp(1), 0)
+			AssertEqual(mk3DT.GetCellsTemp(1), "Cold")
 		})
 	})
 

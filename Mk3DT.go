@@ -185,17 +185,16 @@ func (this *Mk3DT) ForceFan(addr int, level int) bool {
 func (this *Mk3DT) GetFirstPosition(addr int) bool {
 	r := this.execCmd(addr, "fi", "")
 	// Return the value as a bool.
-	return r.Value == "0"
+	return r.Value == "1"
 }
 
-func (this *Mk3DT) SetFirstPosition(addr int, value bool) bool {
-	v := "0"
-	if value {
-		v = "1"
+func (this *Mk3DT) SetFirstPosition(addr int, value int) bool {
+	if value < 0 || value > 1 {
+		return false
 	}
-	r := this.execCmd(addr, "fi", v)
+	r := this.execCmd(addr, "fi", strconv.Itoa(value))
 	// Check that the returned value is the same as the sent value.
-	return r.Value == v
+	return r.Value == strconv.Itoa(value)
 }
 
 func (this *Mk3DT) GetHighVoltage(addr int) float32 {
@@ -341,8 +340,8 @@ func (this *Mk3DT) SetFanLowTemp(addr int, temp int) bool {
 	return tempToInt(r.Value) == temp
 }
 
-func (this *Mk3DT) GetCellsTemp(addr int) int {
+func (this *Mk3DT) GetCellsTemp(addr int) string {
 	r := this.execCmd(addr, "x", "")
 	// Return the value as int (or string)?
-	return tempToInt(r.Value)
+	return r.Value
 }

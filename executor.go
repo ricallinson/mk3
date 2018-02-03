@@ -6,7 +6,7 @@ import (
 )
 
 type Executor struct {
-	mk3DT  *Mk3DT
+	mk3DT    *Mk3DT
 	Commands *ExecutorCommands
 }
 
@@ -20,7 +20,7 @@ type ExecutorCommands struct {
 	EnableShunt               bool    `yaml:"EnableShunt"`
 	ForceFan                  int     `yaml:"ForceFan"`
 	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
-	SetFirstPosition          bool    `yaml:"SetFirstPosition"`
+	SetFirstPosition          int     `yaml:"SetFirstPosition"`
 	GetHighVoltage            bool    `yaml:"GetHighVoltage"`
 	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
 	ClearMinVoltageHistory    bool    `yaml:"ClearMinVoltageHistory"`
@@ -73,12 +73,12 @@ type ExecutorCommandValues struct {
 	SetFanMaxTemp             bool
 	SetStopDissipatingTemp    bool
 	SetFanLowTemp             bool
-	GetCellsTemp              int
+	GetCellsTemp              string
 }
 
 func NewExecutor(mk3DT *Mk3DT, p string) *Executor {
 	this := &Executor{
-		mk3DT:  mk3DT,
+		mk3DT:    mk3DT,
 		Commands: &ExecutorCommands{},
 	}
 	if p != "" {
@@ -90,107 +90,105 @@ func NewExecutor(mk3DT *Mk3DT, p string) *Executor {
 	return this
 }
 
-func (this *Executor) Run() {
+func (this *Executor) ExecuteCommands() []*ExecutorCommandValues {
+	r := []*ExecutorCommandValues{}
 	for addr := 0; addr <= 0; addr++ {
-		this.executeToAddr(addr)
+		r = append(r, this.ExecuteCommandsOnAddr(addr))
 	}
+	return r
 }
 
-func (this *Executor) executeToAddr(addr int) {
-	ecv := &ExecutorCommandValues{}
-
-	log.Println(this.Commands.GetStopTemp)
-
+func (this *Executor) ExecuteCommandsOnAddr(addr int) *ExecutorCommandValues {
+	r := &ExecutorCommandValues{}
 	if this.Commands.SetStopChargeTemp > 0 {
-		ecv.SetStopChargeTemp = this.mk3DT.SetStopChargeTemp(addr, this.Commands.SetStopChargeTemp)
+		r.SetStopChargeTemp = this.mk3DT.SetStopChargeTemp(addr, this.Commands.SetStopChargeTemp)
 	}
 	if this.Commands.GetStopTemp {
-		ecv.GetStopTemp = this.mk3DT.GetStopTemp(addr)
+		r.GetStopTemp = this.mk3DT.GetStopTemp(addr)
 	}
 	if this.Commands.DisableStopChargeTemp {
-		ecv.DisableStopChargeTemp = this.mk3DT.DisableStopChargeTemp(addr)
+		r.DisableStopChargeTemp = this.mk3DT.DisableStopChargeTemp(addr)
 	}
 	if this.Commands.ChangeAddr > -1 {
-		ecv.ChangeAddr = this.mk3DT.ChangeAddr(addr, this.Commands.ChangeAddr)
+		r.ChangeAddr = this.mk3DT.ChangeAddr(addr, this.Commands.ChangeAddr)
 	}
 	if this.Commands.GetCommands {
-		ecv.GetCommands = this.mk3DT.GetCommands(addr)
+		r.GetCommands = this.mk3DT.GetCommands(addr)
 	}
 	if this.Commands.DisableShunt {
-		ecv.DisableShunt = this.mk3DT.DisableShunt(addr)
+		r.DisableShunt = this.mk3DT.DisableShunt(addr)
 	}
 	if this.Commands.EnableShunt {
-		ecv.EnableShunt = this.mk3DT.EnableShunt(addr)
+		r.EnableShunt = this.mk3DT.EnableShunt(addr)
 	}
 	if this.Commands.ForceFan > -1 {
-		ecv.ForceFan = this.mk3DT.ForceFan(addr, this.Commands.ForceFan)
+		r.ForceFan = this.mk3DT.ForceFan(addr, this.Commands.ForceFan)
 	}
 	if this.Commands.GetFirstPosition {
-		ecv.GetFirstPosition = this.mk3DT.GetFirstPosition(addr)
+		r.GetFirstPosition = this.mk3DT.GetFirstPosition(addr)
 	}
-	if this.Commands.SetFirstPosition {
-		ecv.SetFirstPosition = this.mk3DT.SetFirstPosition(addr, this.Commands.SetFirstPosition)
+	if this.Commands.SetFirstPosition > -1 {
+		r.SetFirstPosition = this.mk3DT.SetFirstPosition(addr, this.Commands.SetFirstPosition)
 	}
 	if this.Commands.GetHighVoltage {
-		ecv.GetHighVoltage = this.mk3DT.GetHighVoltage(addr)
+		r.GetHighVoltage = this.mk3DT.GetHighVoltage(addr)
 	}
 	if this.Commands.ClearMaxVoltageHistory {
-		ecv.ClearMaxVoltageHistory = this.mk3DT.ClearMaxVoltageHistory(addr)
+		r.ClearMaxVoltageHistory = this.mk3DT.ClearMaxVoltageHistory(addr)
 	}
 	if this.Commands.ClearMinVoltageHistory {
-		ecv.ClearMinVoltageHistory = this.mk3DT.ClearMinVoltageHistory(addr)
+		r.ClearMinVoltageHistory = this.mk3DT.ClearMinVoltageHistory(addr)
 	}
 	if this.Commands.ClearVoltageHistory {
-		ecv.ClearVoltageHistory = this.mk3DT.ClearVoltageHistory(addr)
+		r.ClearVoltageHistory = this.mk3DT.ClearVoltageHistory(addr)
 	}
 	if this.Commands.TriggerLights {
-		ecv.TriggerLights = this.mk3DT.TriggerLights(addr)
+		r.TriggerLights = this.mk3DT.TriggerLights(addr)
 	}
 	if this.Commands.GetMaxVoltage {
-		ecv.GetMaxVoltage = this.mk3DT.GetMaxVoltage(addr)
+		r.GetMaxVoltage = this.mk3DT.GetMaxVoltage(addr)
 	}
 	if this.Commands.GetMinVoltage {
-		ecv.GetMinVoltage = this.mk3DT.GetMinVoltage(addr)
+		r.GetMinVoltage = this.mk3DT.GetMinVoltage(addr)
 	}
 	if this.Commands.GetStopChargeUnderVoltage {
-		ecv.GetStopChargeUnderVoltage = this.mk3DT.GetStopChargeUnderVoltage(addr)
+		r.GetStopChargeUnderVoltage = this.mk3DT.GetStopChargeUnderVoltage(addr)
 	}
 	if this.Commands.SetStopChargeUnderVoltage {
-		ecv.SetStopChargeUnderVoltage = this.mk3DT.SetStopChargeUnderVoltage(addr, this.Commands.SetStopChargeUnderVoltage)
+		r.SetStopChargeUnderVoltage = this.mk3DT.SetStopChargeUnderVoltage(addr, this.Commands.SetStopChargeUnderVoltage)
 	}
 	if this.Commands.GetRealTimeVoltage {
-		ecv.GetRealTimeVoltage = this.mk3DT.GetRealTimeVoltage(addr)
+		r.GetRealTimeVoltage = this.mk3DT.GetRealTimeVoltage(addr)
 	}
 	if this.Commands.GetLowVoltage {
-		ecv.GetLowVoltage = this.mk3DT.GetLowVoltage(addr)
+		r.GetLowVoltage = this.mk3DT.GetLowVoltage(addr)
 	}
 	if this.Commands.SetMaxVoltage > 0 {
-		ecv.SetMaxVoltage = this.mk3DT.SetMaxVoltage(addr, this.Commands.SetMaxVoltage)
+		r.SetMaxVoltage = this.mk3DT.SetMaxVoltage(addr, this.Commands.SetMaxVoltage)
 	}
 	if this.Commands.SetMinVoltage > 0 {
-		ecv.SetMinVoltage = this.mk3DT.SetMinVoltage(addr, this.Commands.SetMinVoltage)
+		r.SetMinVoltage = this.mk3DT.SetMinVoltage(addr, this.Commands.SetMinVoltage)
 	}
 	if this.Commands.SetOverVoltage > 0 {
-		ecv.SetOverVoltage = this.mk3DT.SetOverVoltage(addr, this.Commands.SetOverVoltage)
+		r.SetOverVoltage = this.mk3DT.SetOverVoltage(addr, this.Commands.SetOverVoltage)
 	}
 	if this.Commands.GetStatus {
-		ecv.GetStatus = this.mk3DT.GetStatus(addr)
+		r.GetStatus = this.mk3DT.GetStatus(addr)
 	}
 	if this.Commands.GetAddrTemp > -1 {
-		ecv.GetAddrTemp = this.mk3DT.GetAddrTemp(addr)
+		r.GetAddrTemp = this.mk3DT.GetAddrTemp(addr)
 	}
 	if this.Commands.SetFanMaxTemp > 0 {
-		ecv.SetFanMaxTemp = this.mk3DT.SetFanMaxTemp(addr, this.Commands.SetFanMaxTemp)
+		r.SetFanMaxTemp = this.mk3DT.SetFanMaxTemp(addr, this.Commands.SetFanMaxTemp)
 	}
 	if this.Commands.SetStopDissipatingTemp > 0 {
-		ecv.SetStopDissipatingTemp = this.mk3DT.SetStopDissipatingTemp(addr, this.Commands.SetStopDissipatingTemp)
+		r.SetStopDissipatingTemp = this.mk3DT.SetStopDissipatingTemp(addr, this.Commands.SetStopDissipatingTemp)
 	}
 	if this.Commands.SetFanLowTemp > 0 {
-		ecv.SetFanLowTemp = this.mk3DT.SetFanLowTemp(addr, this.Commands.SetFanLowTemp)
+		r.SetFanLowTemp = this.mk3DT.SetFanLowTemp(addr, this.Commands.SetFanLowTemp)
 	}
 	if this.Commands.GetCellsTemp {
-		ecv.GetCellsTemp = this.mk3DT.GetCellsTemp(addr)
+		r.GetCellsTemp = this.mk3DT.GetCellsTemp(addr)
 	}
-	// b, _ := yaml.Marshal(ecv)
-	// log.Println(string(b))
+	return r
 }
