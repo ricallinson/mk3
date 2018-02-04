@@ -18,7 +18,7 @@ func main() {
 	var dongle string
 	flag.StringVar(&dongle, "dongle", "", "Serial port that's connected to the Dongle Terminator.")
 	var commands string
-	flag.StringVar(&commands, "exe", "", "Path to the YAML configuration file to execute.")
+	flag.StringVar(&commands, "cmd", "", "Path to the YAML configuration file of commands to execute.")
 	var addr int
 	flag.IntVar(&addr, "addr", -1, "The address to which the commands are to be executed. Defult is all.")
 	flag.Parse()
@@ -44,8 +44,11 @@ func main() {
 	}
 	e := NewExecutor(NewMk3DT(serialPort))
 	e.Commands = readYamlFileToExecutorCommands(commands)
-	// e.ExecuteCommands()
-	// e.ExecuteCommandsAtAddr()
+	if addr >= 0 || addr <= 255 {
+		e.ExecuteCommandsAtAddr(addr)
+	} else {
+		e.ExecuteCommands()
+	}
 	e.Close()
 }
 
