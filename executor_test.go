@@ -30,7 +30,7 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(e.Commands.SetStopChargeTemp, 120)
 			AssertEqual(e.Commands.GetStopChargeTemp, true)
 			AssertEqual(e.Commands.DisableStopChargeTemp, true)
-			AssertEqual(e.Commands.ChangeAddr, 1)
+			AssertEqual(e.Commands.ChangeAddr, 0)
 			AssertEqual(e.Commands.DisableShunt, true)
 			AssertEqual(e.Commands.EnableShunt, true)
 			AssertEqual(e.Commands.ForceFan, 4)

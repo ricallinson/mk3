@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/tarm/serial"
 	"log"
 	"time"
@@ -17,6 +18,8 @@ type SerialPort interface {
 func main() {
 	var raw string
 	flag.StringVar(&raw, "raw", "", "Send a raw command to the Dongle Terminator.")
+	var scan bool
+	flag.BoolVar(&scan, "scan", false, "Sacn the bus for addresses.")
 	var dongle string
 	flag.StringVar(&dongle, "dongle", "", "Serial port that's connected to the Dongle Terminator.")
 	var commands string
@@ -41,6 +44,17 @@ func main() {
 	mk3DT := NewMk3DT(serialPort)
 	if raw != "" {
 		log.Println(string(mk3DT.Raw(raw + "\n\r")))
+		return
+	}
+	if scan {
+		for addr := 0; addr <= 255; addr++ {
+			if mk3DT.GetStopChargeTemp(addr) > 0 {
+				fmt.Println(addr)
+			} else {
+				fmt.Print(".")
+			}
+		}
+		fmt.Println("Done")
 		return
 	}
 	if commands == "" {

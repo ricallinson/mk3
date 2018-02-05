@@ -1,7 +1,7 @@
 SetStopChargeTemp: 120 # 32-180
 GetStopChargeTemp: true
 DisableStopChargeTemp: true
-ChangeAddr: 1 # 0-255
+ChangeAddr: 0 # 0-255
 DisableShunt: true
 EnableShunt: true
 ForceFan: 4 # 0-8

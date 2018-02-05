@@ -84,6 +84,16 @@ func (this *Mk3DT) Raw(c string) []byte {
 	return this.readBytes(0)
 }
 
+func (this *Mk3DT) Scan() map[int]bool {
+	r := map[int]bool{}
+	for addr := 0; addr <= 255; addr++ {
+		if this.GetStopChargeTemp(addr) > 0 {
+			r[addr] = true
+		}
+	}
+	return r
+}
+
 // temp 32-180 F
 func (this *Mk3DT) SetStopChargeTemp(addr int, temp int) bool {
 	if temp < 32 || temp > 180 {
