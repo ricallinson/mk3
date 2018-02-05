@@ -50,8 +50,16 @@ func readYamlFileToExecutorCommands(p string) *ExecutorCommands {
 	if p != "" {
 		err := yaml.Unmarshal(readFileToByteArray(p), r)
 		if err != nil {
-			log.Fatalf("YAML Error: %v", err)
+			log.Fatalf("YAML Parse Error: %v", err)
 		}
 	}
 	return r
+}
+
+func interfaceToYaml(i interface{}) []byte {
+	d, err := yaml.Marshal(i)
+	if err != nil {
+		log.Fatalf("YAML Write Error: %v", err)
+	}
+	return d
 }

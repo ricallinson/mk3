@@ -17,6 +17,10 @@ Requires a [Go](https://golang.org/dl/) environment.
 
 	go test -covermode=count -coverprofile=count.out; go tool cover -html=count.out
 
-## Notes
+## Examples
 
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -raw "01l."
+
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./fixtures/get_commands.yaml
+
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./fixtures/trigger_lights.yaml -addr 1

@@ -1,8 +1,7 @@
 SetStopChargeTemp: 120 # 32-180
-GetStopTemp: true
+GetStopChargeTemp: true
 DisableStopChargeTemp: true
 ChangeAddr: 1 # 0-255
-GetCommands: true
 DisableShunt: true
 EnableShunt: true
 ForceFan: 4 # 0-8
@@ -22,7 +21,6 @@ GetLowVoltage: true
 SetMaxVoltage: 3.6
 SetMinVoltage: 2.496
 SetOverVoltage: 3.648
-GetStatus: true
 GetAddrTemp: 1
 SetFanMaxTemp: 151
 SetStopDissipatingTemp: 171

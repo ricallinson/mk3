@@ -28,10 +28,9 @@ func TestExecutor(t *testing.T) {
 			e := NewExecutor(NewMk3DT(NewMockPort()))
 			e.Commands = readYamlFileToExecutorCommands("./fixtures/all_commands.yaml")
 			AssertEqual(e.Commands.SetStopChargeTemp, 120)
-			AssertEqual(e.Commands.GetStopTemp, true)
+			AssertEqual(e.Commands.GetStopChargeTemp, true)
 			AssertEqual(e.Commands.DisableStopChargeTemp, true)
 			AssertEqual(e.Commands.ChangeAddr, 1)
-			AssertEqual(e.Commands.GetCommands, true)
 			AssertEqual(e.Commands.DisableShunt, true)
 			AssertEqual(e.Commands.EnableShunt, true)
 			AssertEqual(e.Commands.ForceFan, 4)
@@ -51,7 +50,6 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(e.Commands.SetMaxVoltage, float32(3.6))
 			AssertEqual(e.Commands.SetMinVoltage, float32(2.496))
 			AssertEqual(e.Commands.SetOverVoltage, float32(3.648))
-			AssertEqual(e.Commands.GetStatus, true)
 			AssertEqual(e.Commands.GetAddrTemp, 1)
 			AssertEqual(e.Commands.SetFanMaxTemp, 151)
 			AssertEqual(e.Commands.SetStopDissipatingTemp, 171)
@@ -65,10 +63,10 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(r.SetStopChargeTemp, true)
 		})
 
-		It("should return '180' from GetStopTemp", func() {
-			e.Commands.GetStopTemp = true
+		It("should return '180' from GetStopChargeTemp", func() {
+			e.Commands.GetStopChargeTemp = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetStopTemp, 180)
+			AssertEqual(r.GetStopChargeTemp, 180)
 		})
 
 		It("should return 'true' from DisableStopChargeTemp", func() {
@@ -81,12 +79,6 @@ func TestExecutor(t *testing.T) {
 			e.Commands.ChangeAddr = 3
 			r := e.ExecuteCommandsAtAddr(0)
 			AssertEqual(r.ChangeAddr, true)
-		})
-
-		It("should return 'Mk3DTCommands' from GetCommands", func() {
-			e.Commands.GetCommands = true
-			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(reflect.TypeOf(r.GetCommands).String(), "main.Mk3DTCommands")
 		})
 
 		It("should return 'true' from DisableShunt", func() {
@@ -143,10 +135,10 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(r.ClearVoltageHistory, true)
 		})
 
-		It("should return 'Mk3DTLightsStatus' from TriggerLights", func() {
+		It("should return 'true' from TriggerLights", func() {
 			e.Commands.TriggerLights = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(reflect.TypeOf(r.TriggerLights).String(), "main.Mk3DTLightsStatus")
+			AssertEqual(r.TriggerLights, true)
 		})
 
 		It("should return '3.971' from GetMaxVoltage", func() {
@@ -215,12 +207,6 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(r.SetOverVoltage, true)
 		})
 
-		It("should return 'Mk3DTStatus' from GetStatus", func() {
-			e.Commands.GetStatus = true
-			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(reflect.TypeOf(r.GetStatus).String(), "main.Mk3DTStatus")
-		})
-
 		It("should return '120' from GetAddrTemp", func() {
 			e.Commands.GetAddrTemp = 1
 			r := e.ExecuteCommandsAtAddr(0)
@@ -248,12 +234,12 @@ func TestExecutor(t *testing.T) {
 		It("should return '120' from GetCellsTemp", func() {
 			e.Commands.GetCellsTemp = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetCellsTemp, "Cold")
+			AssertEqual(r.GetCellsTemp, 0)
 		})
 
 		It("should return '255' from ExecuteCommands", func() {
-			r := e.ExecuteCommands()
-			AssertEqual(len(r), 255)
+			r := e.ExecuteCommands(255)
+			AssertEqual(len(r), 256)
 		})
 	})
 

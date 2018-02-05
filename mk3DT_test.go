@@ -26,8 +26,8 @@ func TestMk3DT(t *testing.T) {
 			AssertEqual(mk3DT.SetStopChargeTemp(1, 170), true)
 		})
 
-		It("should return the sent value of GetStopTemp()", func() {
-			AssertEqual(mk3DT.GetStopTemp(1), 180)
+		It("should return the sent value of GetStopChargeTemp()", func() {
+			AssertEqual(mk3DT.GetStopChargeTemp(1), 180)
 		})
 
 		It("should return 'true' from DisableStopChargeTemp()", func() {
@@ -36,11 +36,6 @@ func TestMk3DT(t *testing.T) {
 
 		It("should return the sent value from ChangeAddr()", func() {
 			AssertEqual(mk3DT.ChangeAddr(1, 100), true)
-		})
-
-		// Todo
-		It("should return the Commands from GetCommands()", func() {
-			AssertEqual(mk3DT.GetCommands(1), true)
 		})
 
 		It("should return 'true' from DisableShunt()", func() {
@@ -84,7 +79,6 @@ func TestMk3DT(t *testing.T) {
 			AssertEqual(mk3DT.ClearVoltageHistory(1), true)
 		})
 
-		// Todo
 		It("should return the LightsStatus from TriggerLights()", func() {
 			AssertEqual(mk3DT.TriggerLights(1), true)
 		})
@@ -128,11 +122,6 @@ func TestMk3DT(t *testing.T) {
 			AssertEqual(mk3DT.SetOverVoltage(1, 3.321), true)
 		})
 
-		// Todo
-		It("should return the Status from GetStatus()", func() {
-			AssertEqual(mk3DT.GetStatus(1), true)
-		})
-
 		It("should return 120 from GetAddrTemp()", func() {
 			AssertEqual(mk3DT.GetAddrTemp(1), 120)
 		})
@@ -156,7 +145,7 @@ func TestMk3DT(t *testing.T) {
 		})
 
 		It("should return 0 from GetCellsTemp()", func() {
-			AssertEqual(mk3DT.GetCellsTemp(1), "Cold")
+			AssertEqual(mk3DT.GetCellsTemp(1), 0)
 		})
 	})
 

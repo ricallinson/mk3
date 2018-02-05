@@ -10,55 +10,6 @@ type Mk3DT struct {
 	serialPort SerialPort
 }
 
-type Mk3DTStatus struct {
-	Type         string
-	Version      string
-	Unit         string
-	SerialNumber string
-}
-
-type Mk3DTCommands struct {
-	Mk3DTStatus
-	SetStopChargeTemp         bool
-	GetStopTemp               bool
-	DisableStopChargeTemp     bool
-	ChangeAddr                bool
-	DisableShunt              bool
-	EnableShunt               bool
-	ForceFan                  bool
-	GetFirstPosition          bool
-	SetFirstPosition          bool
-	GetHighVoltage            bool
-	ClearMaxVoltageHistory    bool
-	ClearMinVoltageHistory    bool
-	ClearVoltageHistory       bool
-	TriggerLights             bool
-	GetMaxVoltage             bool
-	GetMinVoltage             bool
-	SetStopChargeUnderVoltage bool
-	GetRealTimeVoltage        bool
-	GetLowVoltage             bool
-	SetMaxVoltage             bool
-	SetMinVoltage             bool
-	SetOverVoltage            bool
-	GetStatus                 bool
-	GetAddrTemp               bool
-	SetFanMaxTemp             bool
-	SetStopDissipatingTemp    bool
-	SetFanLowTemp             bool
-	GetCellsTemp              bool
-}
-
-type Mk3DTLightsStatus struct {
-	OverTempRegulator bool
-	OverTempCellAddr  int
-	MinVoltageSeen    bool
-	MaxVoltage        bool
-	MinVoltage        bool
-	HighVoltage       bool
-	ShuntDisabled     bool
-}
-
 type Mk3DTResponse struct {
 	Addr    int
 	Command string
@@ -77,12 +28,12 @@ func (this *Mk3DT) Close() {
 }
 
 func (this *Mk3DT) readBytes(delim byte) []byte {
-	limit := 100
+	limit := 1000
 	buff := make([]byte, 1)
 	data := make([]byte, 0)
 	for limit > 0 {
 		i, _ := this.serialPort.Read(buff)
-		if i == 0 {
+		if buff[0] == delim || i == 0 {
 			break
 		}
 		data = append(data, buff[0])
@@ -92,17 +43,16 @@ func (this *Mk3DT) readBytes(delim byte) []byte {
 	return data
 }
 
-func (this *Mk3DT) writeBytes(b []byte) {
-	_, e := this.serialPort.Write(b)
+func (this *Mk3DT) writeBytes(b []byte) int {
+	l, e := this.serialPort.Write(b)
 	if e != nil {
 		log.Println(e)
 	}
-	this.serialPort.Flush()
+	// Do not flush after write. // this.serialPort.Flush()
+	return l
 }
 
 func (this *Mk3DT) execCmd(addr int, cmd string, value string) Mk3DTResponse {
-	// Clear the Dongle Terminator buffer.
-	this.readBytes(0)
 	// Send the command.
 	this.writeBytes([]byte(strconv.Itoa(addr) + cmd + "." + value + "\n\r"))
 	// Read and return a Mk3DTResponse.
@@ -128,50 +78,49 @@ func (this *Mk3DT) execCmd(addr int, cmd string, value string) Mk3DTResponse {
 	return r
 }
 
+func (this *Mk3DT) Raw(c string) []byte {
+	this.writeBytes([]byte(c))
+	return this.readBytes(0)
+}
+
 // temp 32-180 F
 func (this *Mk3DT) SetStopChargeTemp(addr int, temp int) bool {
 	if temp < 32 || temp > 180 {
 		return false
 	}
-	r := this.execCmd(addr, "bt", strconv.Itoa(temp))
+	r := this.execCmd(addr, "btemp", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
 	return tempToInt(r.Value) == temp
 }
 
-func (this *Mk3DT) GetStopTemp(addr int) int {
-	r := this.execCmd(addr, "bt", "")
+func (this *Mk3DT) GetStopChargeTemp(addr int) int {
+	r := this.execCmd(addr, "btemp", "")
 	// Return value as an int.
 	return tempToInt(r.Value)
 }
 
 func (this *Mk3DT) DisableStopChargeTemp(addr int) bool {
-	r := this.execCmd(addr, "btd", "")
+	r := this.execCmd(addr, "btdisable", "")
 	// Check that the returned value equals "DISABLE".
 	return r.Value == "DISABLE"
 }
 
 // addr 0-255
 func (this *Mk3DT) ChangeAddr(addr int, newAddr int) bool {
-	r := this.execCmd(addr, "ch", strconv.Itoa(newAddr))
+	r := this.execCmd(addr, "changead", strconv.Itoa(newAddr))
 	// Check that the returned value is the same as the sent addr.
 	n, _ := strconv.ParseInt(r.Value, 10, 32)
 	return newAddr == int(n)
 }
 
-func (this *Mk3DT) GetCommands(addr int) Mk3DTCommands {
-	this.execCmd(addr, "", "")
-	// Return value as Mk3DTCommands.
-	return Mk3DTCommands{}
-}
-
 func (this *Mk3DT) DisableShunt(addr int) bool {
-	r := this.execCmd(addr, "d", "")
+	r := this.execCmd(addr, "disable", "")
 	// Check that the returned value equals "Disable".
 	return r.Command == "Disable"
 }
 
 func (this *Mk3DT) EnableShunt(addr int) bool {
-	r := this.execCmd(addr, "e", "")
+	r := this.execCmd(addr, "enable", "")
 	// Check that the returned value equals "Enable".
 	return r.Command == "Enable"
 }
@@ -181,14 +130,14 @@ func (this *Mk3DT) ForceFan(addr int, level int) bool {
 	if level < 0 || level > 8 {
 		return false
 	}
-	r := this.execCmd(addr, "f", strconv.Itoa(level))
+	r := this.execCmd(addr, "fan", strconv.Itoa(level))
 	// Check that the returned value is the same as the sent level.
 	l, _ := strconv.ParseInt(r.Value, 10, 32)
 	return level == int(l)
 }
 
 func (this *Mk3DT) GetFirstPosition(addr int) bool {
-	r := this.execCmd(addr, "fi", "")
+	r := this.execCmd(addr, "firstpos", "")
 	// Return the value as a bool.
 	return r.Value == "1"
 }
@@ -197,56 +146,56 @@ func (this *Mk3DT) SetFirstPosition(addr int, value int) bool {
 	if value < 0 || value > 1 {
 		return false
 	}
-	r := this.execCmd(addr, "fi", strconv.Itoa(value))
+	r := this.execCmd(addr, "firstpos", strconv.Itoa(value))
 	// Check that the returned value is the same as the sent value.
 	return r.Value == strconv.Itoa(value)
 }
 
 func (this *Mk3DT) GetHighVoltage(addr int) float32 {
-	r := this.execCmd(addr, "g", "")
+	r := this.execCmd(addr, "gethighv", "")
 	// Return the value as float32.
 	return voltToFloat32(r.Value)
 }
 
 func (this *Mk3DT) ClearMaxVoltageHistory(addr int) bool {
-	this.execCmd(addr, "hma", "")
+	this.execCmd(addr, "hmaclear", "")
 	// Nothing to return.
 	return true
 }
 
 func (this *Mk3DT) ClearMinVoltageHistory(addr int) bool {
-	this.execCmd(addr, "hmi", "")
+	this.execCmd(addr, "hmiclear", "")
 	// Nothing to return.
 	return true
 }
 
 func (this *Mk3DT) ClearVoltageHistory(addr int) bool {
-	this.execCmd(addr, "h", "")
+	this.execCmd(addr, "hstclear", "")
 	// Nothing to return.
 	return true
 }
 
 // todo
-func (this *Mk3DT) TriggerLights(addr int) Mk3DTLightsStatus {
-	this.execCmd(addr, "l", "")
-	// Return value as LightsMk3DTStatus.
-	return Mk3DTLightsStatus{}
+func (this *Mk3DT) TriggerLights(addr int) bool {
+	this.execCmd(addr, "lights", "")
+	// Return value as bool.
+	return true
 }
 
 func (this *Mk3DT) GetMaxVoltage(addr int) float32 {
-	r := this.execCmd(addr, "ma", "")
+	r := this.execCmd(addr, "maxvolts", "")
 	// Return the value as float32.
 	return voltToFloat32(r.Value)
 }
 
 func (this *Mk3DT) GetMinVoltage(addr int) float32 {
-	r := this.execCmd(addr, "mi", "")
+	r := this.execCmd(addr, "minvolts", "")
 	// Return the value as float32.
 	return voltToFloat32(r.Value)
 }
 
 func (this *Mk3DT) GetStopChargeUnderVoltage(addr int) bool {
-	r := this.execCmd(addr, "p", "")
+	r := this.execCmd(addr, "phev", "")
 	// Return the value as bool.
 	return r.Value == "1"
 }
@@ -256,19 +205,19 @@ func (this *Mk3DT) SetStopChargeUnderVoltage(addr int, stop bool) bool {
 	if stop {
 		v = "1"
 	}
-	r := this.execCmd(addr, "p", v)
+	r := this.execCmd(addr, "phev", v)
 	// Return the value as bool.
 	return r.Value == "1"
 }
 
 func (this *Mk3DT) GetRealTimeVoltage(addr int) float32 {
-	r := this.execCmd(addr, "q", "")
+	r := this.execCmd(addr, "querytot", "")
 	// Return the value as float32.
 	return voltToFloat32(r.Value)
 }
 
 func (this *Mk3DT) GetLowVoltage(addr int) float32 {
-	r := this.execCmd(addr, "r", "")
+	r := this.execCmd(addr, "readslow", "")
 	// Return the value as float32.
 	return voltToFloat32(r.Value)
 }
@@ -278,7 +227,7 @@ func (this *Mk3DT) SetMaxVoltage(addr int, volts float32) bool {
 	if volts < 0.000 || volts > 9.999 {
 		return false
 	}
-	r := this.execCmd(addr, "seth", strconv.FormatFloat(float64(volts), 'f', 3, 32))
+	r := this.execCmd(addr, "sethigh", strconv.FormatFloat(float64(volts), 'f', 3, 32))
 	// Check that the returned value is the same as the sent volts.
 	return voltToFloat32(r.Value) == volts
 }
@@ -288,7 +237,7 @@ func (this *Mk3DT) SetMinVoltage(addr int, volts float32) bool {
 	if volts < 0.000 || volts > 9.999 {
 		return false
 	}
-	r := this.execCmd(addr, "setl", strconv.FormatFloat(float64(volts), 'f', 3, 32))
+	r := this.execCmd(addr, "setlow", strconv.FormatFloat(float64(volts), 'f', 3, 32))
 	// Check that the returned value is the same as the sent volts.
 	return voltToFloat32(r.Value) == volts
 }
@@ -298,19 +247,13 @@ func (this *Mk3DT) SetOverVoltage(addr int, volts float32) bool {
 	if volts < 0.000 || volts > 9.999 {
 		return false
 	}
-	r := this.execCmd(addr, "seto", strconv.FormatFloat(float64(volts), 'f', 3, 32))
+	r := this.execCmd(addr, "setover", strconv.FormatFloat(float64(volts), 'f', 3, 32))
 	// Check that the returned value is the same as the sent volts.
 	return voltToFloat32(r.Value) == volts
 }
 
-func (this *Mk3DT) GetStatus(addr int) Mk3DTStatus {
-	this.execCmd(addr, "s", "")
-	// Return the value as Mk3DTStatus.
-	return Mk3DTStatus{}
-}
-
 func (this *Mk3DT) GetAddrTemp(addr int) int {
-	r := this.execCmd(addr, "t", "")
+	r := this.execCmd(addr, "temperat", "")
 	// Return the value as int.
 	return tempToInt(r.Value)
 }
@@ -320,7 +263,7 @@ func (this *Mk3DT) SetFanMaxTemp(addr int, temp int) bool {
 	if temp < 32 || temp > 180 {
 		return false
 	}
-	r := this.execCmd(addr, "temph", strconv.Itoa(temp))
+	r := this.execCmd(addr, "temphot", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
 	return tempToInt(r.Value) == temp
 }
@@ -330,7 +273,7 @@ func (this *Mk3DT) SetStopDissipatingTemp(addr int, temp int) bool {
 	if temp < 32 || temp > 180 {
 		return false
 	}
-	r := this.execCmd(addr, "tempo", strconv.Itoa(temp))
+	r := this.execCmd(addr, "tempoff", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
 	return tempToInt(r.Value) == temp
 }
@@ -340,13 +283,13 @@ func (this *Mk3DT) SetFanLowTemp(addr int, temp int) bool {
 	if temp < 32 || temp > 180 {
 		return false
 	}
-	r := this.execCmd(addr, "tempw", strconv.Itoa(temp))
+	r := this.execCmd(addr, "tempwarm", strconv.Itoa(temp))
 	// Check that the returned value is the same as the sent temp.
 	return tempToInt(r.Value) == temp
 }
 
-func (this *Mk3DT) GetCellsTemp(addr int) string {
-	r := this.execCmd(addr, "x", "")
+func (this *Mk3DT) GetCellsTemp(addr int) int {
+	r := this.execCmd(addr, "xtrntemp", "")
 	// Return the value as int (or string)?
-	return r.Value
+	return tempToInt(r.Value)
 }

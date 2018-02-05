@@ -1,6 +1,8 @@
 package main
 
-import ()
+import (
+// "log"
+)
 
 type Executor struct {
 	mk3DT    *Mk3DT
@@ -9,10 +11,9 @@ type Executor struct {
 
 type ExecutorCommands struct {
 	SetStopChargeTemp         int     `yaml:"SetStopChargeTemp"`
-	GetStopTemp               bool    `yaml:"GetStopTemp"`
+	GetStopChargeTemp         bool    `yaml:"GetStopChargeTemp"`
 	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
 	ChangeAddr                int     `yaml:"ChangeAddr"`
-	GetCommands               bool    `yaml:"GetCommands"`
 	DisableShunt              bool    `yaml:"DisableShunt"`
 	EnableShunt               bool    `yaml:"EnableShunt"`
 	ForceFan                  int     `yaml:"ForceFan"`
@@ -32,7 +33,6 @@ type ExecutorCommands struct {
 	SetMaxVoltage             float32 `yaml:"SetMaxVoltage"`
 	SetMinVoltage             float32 `yaml:"SetMinVoltage"`
 	SetOverVoltage            float32 `yaml:"SetOverVoltage"`
-	GetStatus                 bool    `yaml:"GetStatus"`
 	GetAddrTemp               int     `yaml:"GetAddrTemp"`
 	SetFanMaxTemp             int     `yaml:"SetFanMaxTemp"`
 	SetStopDissipatingTemp    int     `yaml:"SetStopDissipatingTemp"`
@@ -41,36 +41,34 @@ type ExecutorCommands struct {
 }
 
 type ExecutorCommandsResult struct {
-	SetStopChargeTemp         bool
-	GetStopTemp               int
-	DisableStopChargeTemp     bool
-	ChangeAddr                bool
-	GetCommands               Mk3DTCommands
-	DisableShunt              bool
-	EnableShunt               bool
-	ForceFan                  bool
-	GetFirstPosition          bool
-	SetFirstPosition          bool
-	GetHighVoltage            float32
-	ClearMaxVoltageHistory    bool
-	ClearMinVoltageHistory    bool
-	ClearVoltageHistory       bool
-	TriggerLights             Mk3DTLightsStatus
-	GetMaxVoltage             float32
-	GetMinVoltage             float32
-	GetStopChargeUnderVoltage bool
-	SetStopChargeUnderVoltage bool
-	GetRealTimeVoltage        float32
-	GetLowVoltage             float32
-	SetMaxVoltage             bool
-	SetMinVoltage             bool
-	SetOverVoltage            bool
-	GetStatus                 Mk3DTStatus
-	GetAddrTemp               int
-	SetFanMaxTemp             bool
-	SetStopDissipatingTemp    bool
-	SetFanLowTemp             bool
-	GetCellsTemp              string
+	SetStopChargeTemp         bool    `yaml:"SetStopChargeTemp"`
+	GetStopChargeTemp         int     `yaml:"GetStopChargeTemp"`
+	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
+	ChangeAddr                bool    `yaml:"ChangeAddr"`
+	DisableShunt              bool    `yaml:"DisableShunt"`
+	EnableShunt               bool    `yaml:"EnableShunt"`
+	ForceFan                  bool    `yaml:"ForceFan"`
+	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
+	SetFirstPosition          bool    `yaml:"SetFirstPosition"`
+	GetHighVoltage            float32 `yaml:"GetHighVoltage"`
+	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
+	ClearMinVoltageHistory    bool    `yaml:"ClearMinVoltageHistory"`
+	ClearVoltageHistory       bool    `yaml:"ClearVoltageHistory"`
+	TriggerLights             bool    `yaml:"TriggerLights"`
+	GetMaxVoltage             float32 `yaml:"GetMaxVoltage"`
+	GetMinVoltage             float32 `yaml:"GetMinVoltage"`
+	GetStopChargeUnderVoltage bool    `yaml:"GetStopChargeUnderVoltage"`
+	SetStopChargeUnderVoltage bool    `yaml:"SetStopChargeUnderVoltage"`
+	GetRealTimeVoltage        float32 `yaml:"GetRealTimeVoltage"`
+	GetLowVoltage             float32 `yaml:"GetLowVoltage"`
+	SetMaxVoltage             bool    `yaml:"SetMaxVoltage"`
+	SetMinVoltage             bool    `yaml:"SetMinVoltage"`
+	SetOverVoltage            bool    `yaml:"SetOverVoltage"`
+	GetAddrTemp               int     `yaml:"GetAddrTemp"`
+	SetFanMaxTemp             bool    `yaml:"SetFanMaxTemp"`
+	SetStopDissipatingTemp    bool    `yaml:"SetStopDissipatingTemp"`
+	SetFanLowTemp             bool    `yaml:"SetFanLowTemp"`
+	GetCellsTemp              int     `yaml:"GetCellsTemp"`
 }
 
 func NewExecutor(mk3DT *Mk3DT) *Executor {
@@ -85,10 +83,12 @@ func (this *Executor) Close() {
 	this.mk3DT.Close()
 }
 
-func (this *Executor) ExecuteCommands() []*ExecutorCommandsResult {
-	r := []*ExecutorCommandsResult{}
-	for addr := 0; addr < 255; addr++ {
-		r = append(r, this.ExecuteCommandsAtAddr(addr))
+func (this *Executor) ExecuteCommands(to int) map[int]*ExecutorCommandsResult {
+	r := map[int]*ExecutorCommandsResult{}
+	for addr := 0; addr <= to; addr++ {
+		if this.mk3DT.GetStopChargeTemp(addr) > 0 {
+			r[addr] = this.ExecuteCommandsAtAddr(addr)
+		}
 	}
 	return r
 }
@@ -98,17 +98,14 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	if this.Commands.SetStopChargeTemp > 0 {
 		r.SetStopChargeTemp = this.mk3DT.SetStopChargeTemp(addr, this.Commands.SetStopChargeTemp)
 	}
-	if this.Commands.GetStopTemp {
-		r.GetStopTemp = this.mk3DT.GetStopTemp(addr)
+	if this.Commands.GetStopChargeTemp {
+		r.GetStopChargeTemp = this.mk3DT.GetStopChargeTemp(addr)
 	}
 	if this.Commands.DisableStopChargeTemp {
 		r.DisableStopChargeTemp = this.mk3DT.DisableStopChargeTemp(addr)
 	}
 	if this.Commands.ChangeAddr > -1 {
 		r.ChangeAddr = this.mk3DT.ChangeAddr(addr, this.Commands.ChangeAddr)
-	}
-	if this.Commands.GetCommands {
-		r.GetCommands = this.mk3DT.GetCommands(addr)
 	}
 	if this.Commands.DisableShunt {
 		r.DisableShunt = this.mk3DT.DisableShunt(addr)
@@ -170,9 +167,6 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	}
 	if this.Commands.SetOverVoltage > 0 {
 		r.SetOverVoltage = this.mk3DT.SetOverVoltage(addr, this.Commands.SetOverVoltage)
-	}
-	if this.Commands.GetStatus {
-		r.GetStatus = this.mk3DT.GetStatus(addr)
 	}
 	if this.Commands.GetAddrTemp > -1 {
 		r.GetAddrTemp = this.mk3DT.GetAddrTemp(addr)
