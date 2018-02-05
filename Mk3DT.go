@@ -79,6 +79,7 @@ func (this *Mk3DT) execCmd(addr int, cmd string, value string) Mk3DTResponse {
 }
 
 func (this *Mk3DT) Raw(c string) []byte {
+	log.Println(c)
 	this.writeBytes([]byte(c))
 	return this.readBytes(0)
 }

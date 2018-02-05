@@ -40,7 +40,7 @@ func main() {
 	}
 	mk3DT := NewMk3DT(serialPort)
 	if raw != "" {
-		log.Println(string(mk3DT.Raw("1l.\n\r")))
+		log.Println(string(mk3DT.Raw(raw + "\n\r")))
 		return
 	}
 	if commands == "" {
