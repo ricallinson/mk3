@@ -144,11 +144,19 @@ func (this *MockPort) DisableStopChargeTemp(r *mk3DTRequest) {
 // addr 0-255
 func (this *MockPort) ChangeAddr(r *mk3DTRequest) {
 	// Check that the returned value is the same as the sent addr.
-	this.bufferResponse(r.Addr, "BT 00"+r.Value)
+	this.bufferResponse(r.Addr, "00 Now:"+r.Value)
 }
 
 func (this *MockPort) GetCommands(r *mk3DTRequest) {
-	// Return value as Commands.
+	this.bufferResponse(r.Addr, `--RUDMAN MK3X8 REGULATOR
+--V1.28 UNIT:09-12 S/N: 00495
+COMMANDL VOLTAGE  CHANGEAD DISABLE  
+ENABLE   FAN      GETHIGHV HSTCLEAR 
+HMACLEAR HMICLEAR LIGHTS   MINVOLTS 
+MAXVOLTS PHEV     QUERYTOT READLOWV 
+STATUS   SETHIGH  SETLOW   SETOVER  
+TEMPERAT TEMPWARM TEMPHOT  TEMPOFF  
+XTRNTEMP BTEMP    BTDISABL FIRSTPOS`)
 }
 
 func (this *MockPort) DisableShunt(r *mk3DTRequest) {

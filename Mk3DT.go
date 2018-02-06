@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"log"
 	"strconv"
+	"strings"
 )
 
 type Mk3DT struct {
@@ -79,19 +80,8 @@ func (this *Mk3DT) execCmd(addr int, cmd string, value string) Mk3DTResponse {
 }
 
 func (this *Mk3DT) Raw(c string) []byte {
-	log.Println(c)
 	this.writeBytes([]byte(c))
 	return this.readBytes(0)
-}
-
-func (this *Mk3DT) Scan() map[int]bool {
-	r := map[int]bool{}
-	for addr := 0; addr <= 255; addr++ {
-		if this.GetStopChargeTemp(addr) > 0 {
-			r[addr] = true
-		}
-	}
-	return r
 }
 
 // temp 32-180 F
@@ -120,8 +110,48 @@ func (this *Mk3DT) DisableStopChargeTemp(addr int) bool {
 func (this *Mk3DT) ChangeAddr(addr int, newAddr int) bool {
 	r := this.execCmd(addr, "changead", strconv.Itoa(newAddr))
 	// Check that the returned value is the same as the sent addr.
-	n, _ := strconv.ParseInt(r.Value, 10, 32)
+	if len(r.Value) < 5 {
+		return false
+	}
+	n, _ := strconv.ParseInt(r.Value[4:], 10, 32)
 	return newAddr == int(n)
+}
+
+func (this *Mk3DT) GetSerialNum(addr int) int {
+	r := this.execCmd(addr, "", "")
+	// Return the units start and end addresses.
+	start := strings.Index(r.Value, " S/N:") + 6
+	if len(r.Value) < start+5 {
+		return 0
+	}
+	sn, _ := strconv.Atoi(r.Value[start : start+5])
+	return sn
+}
+
+func (this *Mk3DT) GetNumCells(addr int) int {
+	start, end := this.GetCellRange(addr)
+	// Return the units number of cells.
+	if start < 1 && end < 1 {
+		return 0
+	}
+	return end - start + 1
+}
+
+func (this *Mk3DT) GetCellRange(addr int) (int, int) {
+	r := this.execCmd(addr, "", "")
+	// Return the units start and end addresses.
+	start := strings.Index(r.Value, "UNIT:") + 5
+	end := strings.Index(r.Value, " S/N:")
+	if start < 0 || end < 0 {
+		return 0, 0
+	}
+	fromTo := strings.Split(strings.TrimSpace(r.Value[start:end]), "-")
+	if len(fromTo) != 2 {
+		return 0, 0
+	}
+	from, _ := strconv.Atoi(fromTo[0])
+	to, _ := strconv.Atoi(fromTo[1])
+	return from, to
 }
 
 func (this *Mk3DT) DisableShunt(addr int) bool {
