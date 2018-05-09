@@ -23,16 +23,35 @@ func findFirstAddr(mk3DT *Mk3DT) (int, int, int) {
 	return 0, 0, 0
 }
 
+// Walk the bus from 1 to 255 and validate the found serial number against the expected.
+// Map of Serial Numbers and cell count reaming.
 func checkBus(mk3DT *Mk3DT, cards map[int]int) bool {
+	// Sum of the maps values.
+	totalAddrs := 0
+	for v, _ := range cards {
+		totalAddrs = totalAddrs + v
+	}
 	for addr := 1; addr <= 255; addr++ {
 		sn := mk3DT.GetSerialNum(addr)
-		if cards[sn] > 0 {
-			fmt.Println(addr, sn)
-			cards[sn]--
-		} else if sn > 0 && cards[sn] <= 0 {
-			return false
-		} else {
+		if sn == 0 {
+			// Nothing found at address.
 			fmt.Print(".")
+			continue
+		}
+		if _, ok := cards[sn]; !ok {
+			// The serial number found was not in the in the given map.
+			fmt.Printf("\n\rSerial number '%50d' was found on the BMS bus but not registered in the setup process.\n\r", sn)
+			return false
+		}
+		if cards[sn] <= 0 {
+			// The serial number has already had it's cells accounted for.
+			fmt.Printf("\n\rSerial number '%05d' has miss matched cells.\n\r", sn)
+			return false
+		}
+		if cards[sn] > 0 {
+			//
+			fmt.Printf("\n\r%03d S/N: %05d", addr, sn)
+			cards[sn]-- // Reduce the cell count by one.
 		}
 	}
 	return true
@@ -40,6 +59,7 @@ func checkBus(mk3DT *Mk3DT, cards map[int]int) bool {
 
 // Prints to standard out the result.
 func setupBus(mk3DT *Mk3DT) int {
+	fmt.Println("Each MK3 card must be setup individually before they can be connected to the bus.")
 	fmt.Println("Enter the number of MK3 cards you are using for your BMS.")
 	cards, _ := strconv.Atoi(readInput())
 	if cards < 1 || cards > 255 {
@@ -59,7 +79,7 @@ func setupBus(mk3DT *Mk3DT) int {
 			continue
 		}
 		if addr > 0 && mk3DT.ChangeAddr(addr, current) {
-			fmt.Printf("BMS card address was changed from %v to %v.\n\r", addr, current)
+			fmt.Printf("BMS card address was changed from %03d to %03d.\n\r", addr, current)
 			current = current + size
 			used[sn] = size
 			cards--

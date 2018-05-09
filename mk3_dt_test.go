@@ -14,6 +14,10 @@ func TestMk3DT(t *testing.T) {
 		mk3DT = NewMk3DT(NewMockPort())
 	})
 
+	AfterEach(func() {
+		mk3DT.Close()
+	})
+
 	Describe("Mk3DT()", func() {
 
 		It("should return a Mk3DT object", func() {

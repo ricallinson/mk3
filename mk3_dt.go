@@ -5,6 +5,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	// "time"
 )
 
 type Mk3DT struct {
@@ -56,6 +57,7 @@ func (this *Mk3DT) writeBytes(b []byte) int {
 func (this *Mk3DT) execCmd(addr int, cmd string, value string) Mk3DTResponse {
 	// Send the command.
 	this.writeBytes([]byte(strconv.Itoa(addr) + cmd + "." + value + "\n\r"))
+	// time.Sleep(100 * time.Millisecond)
 	// Read and return a Mk3DTResponse.
 	buf := this.readBytes(0)
 	cur := 0

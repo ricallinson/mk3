@@ -2,13 +2,14 @@ package main
 
 import (
 	"bytes"
-	// "log"
+	"fmt"
 	"strconv"
 	"strings"
 )
 
 type MockPort struct {
-	buffer []byte
+	buffer        []byte
+	LastSerialNum int
 }
 
 type mk3DTRequest struct {
@@ -19,6 +20,7 @@ type mk3DTRequest struct {
 
 func NewMockPort() *MockPort {
 	this := &MockPort{}
+	this.LastSerialNum = 255
 	return this
 }
 
@@ -148,8 +150,17 @@ func (this *MockPort) ChangeAddr(r *mk3DTRequest) {
 }
 
 func (this *MockPort) GetCommands(r *mk3DTRequest) {
+	if this.LastSerialNum <= 0 {
+		this.bufferResponse(r.Addr, "")
+		return
+	}
+
+	sn := fmt.Sprintf("%05d", this.LastSerialNum)
+	cells := fmt.Sprintf("%02d-%02d", this.LastSerialNum*8, this.LastSerialNum*8+8)
+	this.LastSerialNum--
+
 	this.bufferResponse(r.Addr, `--RUDMAN MK3X8 REGULATOR
---V1.28 UNIT:09-12 S/N: 00495
+--V1.28 UNIT:`+cells+` S/N: `+sn+`
 COMMANDL VOLTAGE  CHANGEAD DISABLE  
 ENABLE   FAN      GETHIGHV HSTCLEAR 
 HMACLEAR HMICLEAR LIGHTS   MINVOLTS 

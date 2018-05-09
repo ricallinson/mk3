@@ -24,3 +24,10 @@ Requires a [Go](https://golang.org/dl/) environment.
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./fixtures/get_commands.yaml
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./fixtures/trigger_lights.yaml -addr 1
+
+## Bus Setup
+
+The setup option walks through assigning addressess to eack MK3 card and then validates the setup was successful.
+
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -setup
+

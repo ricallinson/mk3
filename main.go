@@ -28,9 +28,15 @@ func main() {
 	var commands string
 	flag.StringVar(&commands, "cmd", "", "Path to the YAML configuration file of commands to execute.")
 	var addr int
-	flag.IntVar(&addr, "addr", -1, "The address to which the commands are to be executed. Defult is all.")
+	flag.IntVar(&addr, "addr", -1, "The address to which the commands are to be executed. Default is all.")
 	var highAddr int
-	flag.IntVar(&highAddr, "highaddr", 255, "The highest address to which the commands are to be executed. Defult is 255.")
+	flag.IntVar(&highAddr, "highaddr", 255, "The highest address to which the commands are to be executed. Default is 255.")
+	var newAddr int
+	flag.IntVar(&newAddr, "newaddr", 0, "Changes the address of the ONLY card on attached to the Dongle.")
+	var volts bool
+	flag.BoolVar(&volts, "volts", false, "Scans the bus and returns the average voltage for all addresses found.")
+	var list bool
+	flag.BoolVar(&list, "list", false, "Scans the bus and returns a list cards detected.")
 	flag.Parse()
 
 	// Create an instance of a Mk3 Dongle Terminator.
@@ -41,6 +47,17 @@ func main() {
 	if raw != "" {
 		sendRawCommand(mk3DT, raw)
 		return
+	}
+	if newAddr > 0 {
+		os.Exit(setAddr(mk3DT, newAddr))
+		return
+	}
+	if volts {
+		os.Exit(getVolts(mk3DT))
+		return
+	}
+	if list {
+		os.Exit(scanBusForCards(mk3DT))
 	}
 	if scan {
 		os.Exit(scanBus(mk3DT))
@@ -110,13 +127,68 @@ func sendRawCommand(mk3DT *Mk3DT, s string) {
 
 // Prints to standard out the result.
 func scanBus(mk3DT *Mk3DT) int {
+	pos := 1
+	lastSn := 0
+	lastEmpty := false
 	for addr := 1; addr <= 255; addr++ {
-		if mk3DT.GetStopChargeTemp(addr) > 0 {
-			fmt.Println(addr)
+		if sn := mk3DT.GetSerialNum(addr); sn > 0 {
+			if sn == lastSn {
+				pos++
+			} else {
+				pos = 1
+			}
+			if lastEmpty {
+				fmt.Println("")
+			}
+			fmt.Printf("Cell %03d on card %d at position %05d\n\r", addr, sn, pos)
+			lastEmpty = false
+			lastSn = sn
 		} else {
-			fmt.Println(".")
+			lastEmpty = true
+			fmt.Print(".")
 		}
 	}
 	fmt.Println("Done")
+	return 0
+}
+
+func setAddr(mk3DT *Mk3DT, newAddr int) int {
+	for addr := 1; addr <= 255; addr++ {
+		fmt.Print(".")
+		if sn := mk3DT.GetSerialNum(addr); sn > 0 {
+			mk3DT.ChangeAddr(addr, newAddr)
+			fmt.Printf("\n\rAddress set to %03d\n\r", newAddr)
+			return 0
+		}
+	}
+	fmt.Println("")
+	return 1
+}
+
+func getVolts(mk3DT *Mk3DT) int {
+	for addr := 1; addr <= 255; addr++ {
+		if v := mk3DT.GetRealTimeVoltage(addr); v > 0 {
+			sn := mk3DT.GetSerialNum(addr)
+			fmt.Printf("Cell %03d at %.2f VDC at position %05d\n\r", addr, v / float32(mk3DT.GetNumCells(addr)), sn)
+		} else {
+			fmt.Print(".")
+		}
+	}
+	fmt.Println("")
+	return 0
+}
+
+func scanBusForCards(mk3DT *Mk3DT) int {
+	lastSn := 0
+	count := 0
+	for addr := 1; addr <= 255; addr++ {
+		sn := mk3DT.GetSerialNum(addr)
+		if sn != lastSn && sn != 0 {
+			fmt.Printf("Starting cell %03d on %05d with %d cells\n\r", addr, sn, mk3DT.GetNumCells(addr))
+			lastSn = sn
+			count++
+		}
+	}
+	fmt.Println(count, "BMS cards found")
 	return 0
 }
