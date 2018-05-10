@@ -17,26 +17,28 @@ type SerialPort interface {
 }
 
 func main() {
-	var raw string
-	flag.StringVar(&raw, "raw", "", "Send a raw command to the Dongle Terminator.")
-	var scan bool
-	flag.BoolVar(&scan, "scan", false, "Scans the bus for addresses.")
-	var setup bool
-	flag.BoolVar(&setup, "setup", false, "Walks through assigning addresses to all cards in the BMS.")
 	var dongle string
 	flag.StringVar(&dongle, "dongle", "", "Serial port that's connected to the Dongle Terminator.")
+	var raw string
+	flag.StringVar(&raw, "raw", "", "Send a raw command to the Dongle Terminator.")
+	var scanCells bool
+	flag.BoolVar(&scanCells, "scan-cells", false, "Scans the bus for cells.")
+	var scanCards bool
+	flag.BoolVar(&scanCards, "scan-cards", false, "Scans the bus for cards.")
+	var setup bool
+	flag.BoolVar(&setup, "setup", false, "Walks through assigning addresses to all cards in the BMS.")
 	var commands string
 	flag.StringVar(&commands, "cmd", "", "Path to the YAML configuration file of commands to execute.")
 	var addr int
 	flag.IntVar(&addr, "addr", -1, "The address to which the commands are to be executed. Default is all.")
-	var highAddr int
-	flag.IntVar(&highAddr, "highaddr", 255, "The highest address to which the commands are to be executed. Default is 255.")
+	var maxAddr int
+	flag.IntVar(&maxAddr, "max-addr", 255, "The highest address to which the commands are to be executed. Default is 255.")
 	var newAddr int
-	flag.IntVar(&newAddr, "newaddr", 0, "Changes the address of the ONLY card on attached to the Dongle.")
+	flag.IntVar(&newAddr, "new-addr", 0, "Changes the address of the ONLY card on attached to the Dongle.")
 	var volts bool
-	flag.BoolVar(&volts, "volts", false, "Scans the bus and returns the average voltage for all addresses found.")
-	var list bool
-	flag.BoolVar(&list, "list", false, "Scans the bus and returns a list cards detected.")
+	flag.BoolVar(&volts, "volts", false, "Scans the bus and returns the average voltage for all cells found.")
+	var temps bool
+	flag.BoolVar(&temps, "temps", false, "Scans the bus and returns the average temperature for all cells found.")
 	flag.Parse()
 
 	// Create an instance of a Mk3 Dongle Terminator.
@@ -48,22 +50,26 @@ func main() {
 		sendRawCommand(mk3DT, raw)
 		return
 	}
+	if scanCells {
+		os.Exit(scanForCells(mk3DT))
+	}
+	if scanCards {
+		os.Exit(scanForCards(mk3DT))
+	}
+	if setup {
+		os.Exit(setupBus(mk3DT))
+	}
 	if newAddr > 0 {
 		os.Exit(setAddr(mk3DT, newAddr))
 		return
 	}
 	if volts {
-		os.Exit(getVolts(mk3DT))
+		os.Exit(listVolts(mk3DT))
 		return
 	}
-	if list {
-		os.Exit(scanBusForCards(mk3DT))
-	}
-	if scan {
-		os.Exit(scanBus(mk3DT))
-	}
-	if setup {
-		os.Exit(setupBus(mk3DT))
+	if temps {
+		os.Exit(listTemps(mk3DT))
+		return
 	}
 	if commands == "" {
 		log.Println("You must provide a path to YAML file with the commands to execute")
@@ -81,7 +87,7 @@ func main() {
 	if addr >= 0 && addr <= 255 {
 		yaml = interfaceToYaml(e.ExecuteCommandsAtAddr(addr))
 	} else {
-		yaml = interfaceToYaml(e.ExecuteCommands(highAddr))
+		yaml = interfaceToYaml(e.ExecuteCommands(maxAddr))
 	}
 	// Prints to standard out the result.
 	log.Println(string(yaml))
@@ -126,7 +132,7 @@ func sendRawCommand(mk3DT *Mk3DT, s string) {
 }
 
 // Prints to standard out the result.
-func scanBus(mk3DT *Mk3DT) int {
+func scanForCells(mk3DT *Mk3DT) int {
 	pos := 1
 	lastSn := 0
 	lastEmpty := false
@@ -140,7 +146,7 @@ func scanBus(mk3DT *Mk3DT) int {
 			if lastEmpty {
 				fmt.Println("")
 			}
-			fmt.Printf("Cell %03d on card %d at position %05d\n\r", addr, sn, pos)
+			fmt.Printf("Cell %03d on card %05d at position %03d\n\r", addr, sn, pos)
 			lastEmpty = false
 			lastSn = sn
 		} else {
@@ -149,6 +155,21 @@ func scanBus(mk3DT *Mk3DT) int {
 		}
 	}
 	fmt.Println("Done")
+	return 0
+}
+
+func scanForCards(mk3DT *Mk3DT) int {
+	lastSn := 0
+	count := 0
+	for addr := 1; addr <= 255; addr++ {
+		sn := mk3DT.GetSerialNum(addr)
+		if sn != lastSn && sn != 0 {
+			fmt.Printf("Starting cell %03d on %05d with %d cells\n\r", addr, sn, mk3DT.GetNumCells(addr))
+			lastSn = sn
+			count++
+		}
+	}
+	fmt.Println(count, "BMS cards found")
 	return 0
 }
 
@@ -165,11 +186,11 @@ func setAddr(mk3DT *Mk3DT, newAddr int) int {
 	return 1
 }
 
-func getVolts(mk3DT *Mk3DT) int {
+func listVolts(mk3DT *Mk3DT) int {
 	for addr := 1; addr <= 255; addr++ {
 		if v := mk3DT.GetRealTimeVoltage(addr); v > 0 {
 			sn := mk3DT.GetSerialNum(addr)
-			fmt.Printf("Cell %03d at %.2f VDC at position %05d\n\r", addr, v / float32(mk3DT.GetNumCells(addr)), sn)
+			fmt.Printf("Cell %03d at %.2f VDC on card %05d\n\r", addr, v/float32(mk3DT.GetNumCells(addr)), sn)
 		} else {
 			fmt.Print(".")
 		}
@@ -178,17 +199,15 @@ func getVolts(mk3DT *Mk3DT) int {
 	return 0
 }
 
-func scanBusForCards(mk3DT *Mk3DT) int {
-	lastSn := 0
-	count := 0
+func listTemps(mk3DT *Mk3DT) int {
 	for addr := 1; addr <= 255; addr++ {
-		sn := mk3DT.GetSerialNum(addr)
-		if sn != lastSn && sn != 0 {
-			fmt.Printf("Starting cell %03d on %05d with %d cells\n\r", addr, sn, mk3DT.GetNumCells(addr))
-			lastSn = sn
-			count++
+		if t := mk3DT.GetCellsTemp(addr); t > 0 {
+			sn := mk3DT.GetSerialNum(addr)
+			fmt.Printf("Cell %03d at %dc on card %05d\n\r", addr, t, sn)
+		} else {
+			fmt.Print(".")
 		}
 	}
-	fmt.Println(count, "BMS cards found")
+	fmt.Println("")
 	return 0
 }

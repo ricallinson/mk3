@@ -25,7 +25,27 @@ Requires a [Go](https://golang.org/dl/) environment.
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./fixtures/trigger_lights.yaml -addr 1
 
-## Bus Setup
+## Options
+
+### Dongle Location (required)
+
+### Path to Commands File
+
+### Bus Address to Execute Commands
+
+### Send Raw Command
+
+### Scan Bus for Cards
+
+### Maximum Bus Address
+
+### Change Cards Bus Address
+
+### List Cell Volts
+
+### List Cell Temperatures
+
+### Setup
 
 The setup option walks through assigning addressess to eack MK3 card and then validates the setup was successful.
 

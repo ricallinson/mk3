@@ -59,8 +59,8 @@ func checkBus(mk3DT *Mk3DT, cards map[int]int) bool {
 
 // Prints to standard out the result.
 func setupBus(mk3DT *Mk3DT) int {
-	fmt.Println("Each MK3 card must be setup individually before they can be connected to the bus.")
-	fmt.Println("Enter the number of MK3 cards you are using for your BMS.")
+	fmt.Println("Each BMS card must be setup individually before they can be connected together.")
+	fmt.Println("Enter the number of BMS cards you are using.")
 	cards, _ := strconv.Atoi(readInput())
 	if cards < 1 || cards > 255 {
 		fmt.Println("There must be at least one card but no more than 255 in the BMS.")
@@ -70,7 +70,7 @@ func setupBus(mk3DT *Mk3DT) int {
 	used := map[int]int{}
 	current := 1
 	for cards > 0 {
-		fmt.Println("Remove the current BMS card and attach the next BMS card to the Dongle Terminator then press enter.")
+		fmt.Println("Remove all BMS cards and attach the next BMS card to the Dongle Terminator then press enter.")
 		readInput()
 		fmt.Println("Scanning Dongle Terminator for BMS card.")
 		addr, sn, size := findFirstAddr(mk3DT)
@@ -85,10 +85,10 @@ func setupBus(mk3DT *Mk3DT) int {
 			cards--
 		} else {
 			if addr == 0 {
-				fmt.Println("Could not find BMS card. Please start again.")
+				fmt.Println("Could not find a BMS card. Please start again.")
 				os.Exit(1)
 			}
-			fmt.Println("Error setting new address for BMS card. Please start again.")
+			fmt.Println("Error setting the new address for the attached BMS card. Please start again.")
 			os.Exit(1)
 		}
 	}
