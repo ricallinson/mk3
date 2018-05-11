@@ -51,10 +51,10 @@ func main() {
 		return
 	}
 	if scanCells {
-		os.Exit(scanForCells(mk3DT))
+		os.Exit(scanForCells(mk3DT, maxAddr))
 	}
 	if scanCards {
-		os.Exit(scanForCards(mk3DT))
+		os.Exit(scanForCards(mk3DT, maxAddr))
 	}
 	if setup {
 		os.Exit(setupBus(mk3DT))
@@ -64,11 +64,11 @@ func main() {
 		return
 	}
 	if volts {
-		os.Exit(listVolts(mk3DT))
+		os.Exit(listVolts(mk3DT, maxAddr))
 		return
 	}
 	if temps {
-		os.Exit(listTemps(mk3DT))
+		os.Exit(listTemps(mk3DT, maxAddr))
 		return
 	}
 	if commands == "" {
@@ -132,11 +132,11 @@ func sendRawCommand(mk3DT *Mk3DT, s string) {
 }
 
 // Prints to standard out the result.
-func scanForCells(mk3DT *Mk3DT) int {
+func scanForCells(mk3DT *Mk3DT, maxAddr int) int {
 	pos := 1
 	lastSn := 0
 	lastEmpty := false
-	for addr := 1; addr <= 255; addr++ {
+	for addr := 1; addr <= maxAddr; addr++ {
 		if sn := mk3DT.GetSerialNum(addr); sn > 0 {
 			if sn == lastSn {
 				pos++
@@ -158,10 +158,10 @@ func scanForCells(mk3DT *Mk3DT) int {
 	return 0
 }
 
-func scanForCards(mk3DT *Mk3DT) int {
+func scanForCards(mk3DT *Mk3DT, maxAddr int) int {
 	lastSn := 0
 	count := 1
-	for addr := 1; addr <= 255; addr++ {
+	for addr := 1; addr <= maxAddr; addr++ {
 		sn := mk3DT.GetSerialNum(addr)
 		if sn != lastSn && sn != 0 {
 			cells := mk3DT.GetNumCells(addr)
@@ -186,8 +186,8 @@ func setAddr(mk3DT *Mk3DT, newAddr int) int {
 	return 1
 }
 
-func listVolts(mk3DT *Mk3DT) int {
-	for addr := 1; addr <= 255; addr++ {
+func listVolts(mk3DT *Mk3DT, maxAddr int) int {
+	for addr := 1; addr <= maxAddr; addr++ {
 		if v := mk3DT.GetRealTimeVoltage(addr); v > 0 {
 			sn := mk3DT.GetSerialNum(addr)
 			fmt.Printf("Cell %03d at %.2f VDC on card %05d\n\r", addr, v/float32(mk3DT.GetNumCells(addr)), sn)
@@ -199,8 +199,8 @@ func listVolts(mk3DT *Mk3DT) int {
 	return 0
 }
 
-func listTemps(mk3DT *Mk3DT) int {
-	for addr := 1; addr <= 255; addr++ {
+func listTemps(mk3DT *Mk3DT, maxAddr int) int {
+	for addr := 1; addr <= maxAddr; addr++ {
 		t := mk3DT.GetCellsTemp(addr)
 		if t == 0 {
 			// If the temp is not found use the card temp.
