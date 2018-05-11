@@ -1,5 +1,7 @@
 # mk3
 
+[![Build Status](https://travis-ci.org/ricallinson/mk3.svg?branch=master)](https://travis-ci.org/ricallinson/mk3)
+
 Command line interface for the Manzanita Micro USB Dongle Terminator. This is an alternative to the [MK3 Digital Perl Scanner Software](http://www.manzanitamicro.com/downloads/category/5-bms2?download=93%3Aperlscanner) provided by Manzanita Micro.
 
 ## Setup Development Environment
