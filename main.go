@@ -160,16 +160,16 @@ func scanForCells(mk3DT *Mk3DT) int {
 
 func scanForCards(mk3DT *Mk3DT) int {
 	lastSn := 0
-	count := 0
+	count := 1
 	for addr := 1; addr <= 255; addr++ {
 		sn := mk3DT.GetSerialNum(addr)
 		if sn != lastSn && sn != 0 {
-			fmt.Printf("Starting cell %03d on %05d with %d cells\n\r", addr, sn, mk3DT.GetNumCells(addr))
+			cells := mk3DT.GetNumCells(addr)
+			fmt.Printf("%02d: S/N %05d with cells %03d-%03d/%d\n\r", count, sn, addr, addr+cells-1, cells)
 			lastSn = sn
 			count++
 		}
 	}
-	fmt.Println(count, "BMS cards found")
 	return 0
 }
 
@@ -201,9 +201,14 @@ func listVolts(mk3DT *Mk3DT) int {
 
 func listTemps(mk3DT *Mk3DT) int {
 	for addr := 1; addr <= 255; addr++ {
-		if t := mk3DT.GetCellsTemp(addr); t > 0 {
+		t := mk3DT.GetCellsTemp(addr)
+		if t == 0 {
+			// If the temp is not found use the card temp.
+			t = mk3DT.GetAddrTemp(addr)
+		}
+		if t > 0 {
 			sn := mk3DT.GetSerialNum(addr)
-			fmt.Printf("Cell %03d at %dc on card %05d\n\r", addr, t, sn)
+			fmt.Printf("Cell %03d at %df on card %05d\n\r", addr, t, sn)
 		} else {
 			fmt.Print(".")
 		}
