@@ -40,7 +40,7 @@ A single bus address to target. The bus address is the number of the first cell 
 
 ### Send Raw Command
 
-Send a command as detailed in the [MK3 Digital Perl User Manual](http://www.manzanitamicro.com/downloads/category/5-bms2?download=93%3Aperlscanner).
+Send a command as detailed in the [MK3 Digital Perl User Manual Command List](http://www.manzanitamicro.com/downloads/category/5-bms2?download=93%3Aperlscanner).
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -raw "01l."
 
@@ -86,10 +86,9 @@ Lists the current temperature of all cells found.
 
 ### Setup
 
-The setup option walks through assigning addresses to each card that will be used in a bus and then validates the setup was successful.
+The setup option walks through assigning addresses to each card that will be used in a bus and then validates the setup was successful. It requires that each card is added and removed as the setup process is followed.
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -setup
-
 
 ## Testing
 
@@ -98,4 +97,3 @@ The setup option walks through assigning addresses to each card that will be use
 ## Coverage
 
 	go test -covermode=count -coverprofile=count.out; go tool cover -html=count.out
-
