@@ -20,9 +20,7 @@ Requires a [Go](https://golang.org/dl/) environment.
 
 ## Options
 
-### Dongle Location
-
-__Required__
+### Dongle Location (required)
 
 The path to the USB port.
 
