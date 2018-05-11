@@ -17,13 +17,14 @@ install:
   - rmdir c:\go /s /q
   - appveyor DownloadFile https://dl.google.com/go/go1.10.2.windows-amd64.msi
   - msiexec /i go%GOVERSION%.windows-amd64.msi /q
-  - choco install bzr
-  - set Path=c:\go\bin;c:\gopath\bin;C:\Program Files (x86)\Bazaar\;C:\Program Files\Mercurial\%Path%
   - go version
-  - go env
+  # Install the dependencies.
+  - go get github.com/tarm/serial
+  - go get gopkg.in/yaml.v2
+  - go get github.com/ricallinson/simplebdd
 
 build: false
 deploy: false
 
 test_script:
-  - dir
+  - go test
