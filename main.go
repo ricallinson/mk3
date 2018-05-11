@@ -39,6 +39,8 @@ func main() {
 	flag.BoolVar(&volts, "volts", false, "Scans the bus and returns the average voltage for all cells found.")
 	var temps bool
 	flag.BoolVar(&temps, "temps", false, "Scans the bus and returns the average temperature for all cells found.")
+	var clear bool
+	flag.BoolVar(&clear, "clear", false, "Clear the history for all cards on the bus.")
 	flag.Parse()
 
 	// Create an instance of a Mk3 Dongle Terminator.
@@ -69,6 +71,10 @@ func main() {
 	}
 	if temps {
 		os.Exit(listTemps(mk3DT, maxAddr))
+		return
+	}
+	if clear {
+		os.Exit(clearCards(mk3DT, maxAddr))
 		return
 	}
 	if commands == "" {
@@ -196,6 +202,13 @@ func listVolts(mk3DT *Mk3DT, maxAddr int) int {
 		}
 	}
 	fmt.Println("")
+	return 0
+}
+
+func clearCards(mk3DT *Mk3DT, maxAddr int) int {
+	for addr := 1; addr <= maxAddr; addr++ {
+		mk3DT.ClearVoltageHistory(addr)
+	}
 	return 0
 }
 

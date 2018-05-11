@@ -84,6 +84,13 @@ Lists the current temperature of all cells found.
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -temps
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -temps -max-addr=50
 
+### Clear History
+
+Removes any voltage or temperature errors recorded by each card.
+
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -clear
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -clear -max-addr=50
+
 ### Setup
 
 The setup option walks through assigning addresses to each card that will be used in a bus and then validates the setup was successful. It requires that each card is added and removed as the setup process is followed.
