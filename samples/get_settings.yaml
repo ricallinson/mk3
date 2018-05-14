@@ -1,0 +1,9 @@
+GetStopChargeTemp: true
+GetHighVoltage: true
+GetMaxVoltage: true
+GetMinVoltage: true
+GetStopChargeUnderVoltage: true
+GetRealTimeVoltage: true
+GetLowVoltage: true
+GetAddrTemp: 1
+GetCellsTemp: true

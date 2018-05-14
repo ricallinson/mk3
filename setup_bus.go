@@ -13,7 +13,7 @@ func readInput() string {
 }
 
 func findFirstAddr(mk3DT *Mk3DT) (int, int, int) {
-	for addr := 1; addr <= 255; addr++ {
+	for addr := 0; addr <= 255; addr++ {
 		if size := mk3DT.GetNumCells(addr); size > 0 {
 			return addr, mk3DT.GetSerialNum(addr), size
 		}
@@ -31,7 +31,7 @@ func checkBus(mk3DT *Mk3DT, cards map[int]int) bool {
 	for v, _ := range cards {
 		totalAddrs = totalAddrs + v
 	}
-	for addr := 1; addr <= 255; addr++ {
+	for addr := 0; addr <= 255; addr++ {
 		sn := mk3DT.GetSerialNum(addr)
 		if sn == 0 {
 			// Nothing found at address.

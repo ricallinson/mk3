@@ -104,24 +104,24 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	if this.Commands.DisableStopChargeTemp {
 		r.DisableStopChargeTemp = this.mk3DT.DisableStopChargeTemp(addr)
 	}
-	if this.Commands.ChangeAddr > -1 {
-		r.ChangeAddr = this.mk3DT.ChangeAddr(addr, this.Commands.ChangeAddr)
-	}
+	// if this.Commands.ChangeAddr > 0 {
+	// 	r.ChangeAddr = this.mk3DT.ChangeAddr(addr, this.Commands.ChangeAddr)
+	// }
 	if this.Commands.DisableShunt {
 		r.DisableShunt = this.mk3DT.DisableShunt(addr)
 	}
 	if this.Commands.EnableShunt {
 		r.EnableShunt = this.mk3DT.EnableShunt(addr)
 	}
-	if this.Commands.ForceFan > -1 {
-		r.ForceFan = this.mk3DT.ForceFan(addr, this.Commands.ForceFan)
-	}
+	// if this.Commands.ForceFan > -1 {
+	// 	r.ForceFan = this.mk3DT.ForceFan(addr, this.Commands.ForceFan)
+	// }
 	if this.Commands.GetFirstPosition {
 		r.GetFirstPosition = this.mk3DT.GetFirstPosition(addr)
 	}
-	if this.Commands.SetFirstPosition > -1 {
-		r.SetFirstPosition = this.mk3DT.SetFirstPosition(addr, this.Commands.SetFirstPosition)
-	}
+	// if this.Commands.SetFirstPosition > -1 {
+	// 	r.SetFirstPosition = this.mk3DT.SetFirstPosition(addr, this.Commands.SetFirstPosition)
+	// }
 	if this.Commands.GetHighVoltage {
 		r.GetHighVoltage = this.mk3DT.GetHighVoltage(addr)
 	}
@@ -148,7 +148,7 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	}
 	if this.Commands.SetStopChargeUnderVoltage > -1 {
 		v := false
-		if this.Commands.SetStopChargeUnderVoltage == 1 {
+		if this.Commands.SetStopChargeUnderVoltage >= 1 {
 			v = true
 		}
 		r.SetStopChargeUnderVoltage = this.mk3DT.SetStopChargeUnderVoltage(addr, v)
@@ -168,7 +168,7 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	if this.Commands.SetOverVoltage > 0 {
 		r.SetOverVoltage = this.mk3DT.SetOverVoltage(addr, this.Commands.SetOverVoltage)
 	}
-	if this.Commands.GetAddrTemp > -1 {
+	if this.Commands.GetAddrTemp > 0 {
 		r.GetAddrTemp = this.mk3DT.GetAddrTemp(addr)
 	}
 	if this.Commands.SetFanMaxTemp > 0 {

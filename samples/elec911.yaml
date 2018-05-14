@@ -1,0 +1,10 @@
+SetStopChargeTemp: 120
+EnableShunt: true
+ForceFan: 0
+SetStopChargeUnderVoltage: -1
+SetMaxVoltage: 3.6
+SetMinVoltage: 2.496
+SetOverVoltage: 3.648
+SetFanMaxTemp: 151
+SetStopDissipatingTemp: 171
+SetFanLowTemp: 120

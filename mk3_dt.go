@@ -5,7 +5,6 @@ import (
 	"log"
 	"strconv"
 	"strings"
-	// "time"
 )
 
 type Mk3DT struct {
