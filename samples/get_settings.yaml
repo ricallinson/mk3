@@ -5,5 +5,5 @@ GetMinVoltage: true
 GetStopChargeUnderVoltage: true
 GetRealTimeVoltage: true
 GetLowVoltage: true
-GetAddrTemp: 1
+GetAddrTemp: true
 GetCellsTemp: true

@@ -33,7 +33,6 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(e.Commands.DisableShunt, true)
 			AssertEqual(e.Commands.EnableShunt, true)
 			AssertEqual(e.Commands.ForceFan, 4)
-			AssertEqual(e.Commands.GetFirstPosition, true)
 			AssertEqual(e.Commands.GetHighVoltage, true)
 			AssertEqual(e.Commands.ClearMaxVoltageHistory, true)
 			AssertEqual(e.Commands.ClearMinVoltageHistory, true)
@@ -48,7 +47,7 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(e.Commands.SetMaxVoltage, float32(3.6))
 			AssertEqual(e.Commands.SetMinVoltage, float32(2.496))
 			AssertEqual(e.Commands.SetOverVoltage, float32(3.648))
-			AssertEqual(e.Commands.GetAddrTemp, 1)
+			AssertEqual(e.Commands.GetAddrTemp, true)
 			AssertEqual(e.Commands.SetFanMaxTemp, 151)
 			AssertEqual(e.Commands.SetStopDissipatingTemp, 171)
 			AssertEqual(e.Commands.SetFanLowTemp, 120)
@@ -89,12 +88,6 @@ func TestExecutor(t *testing.T) {
 			e.Commands.ForceFan = 4
 			r := e.ExecuteCommandsAtAddr(0)
 			AssertEqual(r.ForceFan, true)
-		})
-
-		It("should return 'true' from GetFirstPosition", func() {
-			e.Commands.GetFirstPosition = true
-			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetFirstPosition, false)
 		})
 
 		It("should return '3.9' from GetHighVoltage", func() {
@@ -200,7 +193,7 @@ func TestExecutor(t *testing.T) {
 		})
 
 		It("should return '120' from GetAddrTemp", func() {
-			e.Commands.GetAddrTemp = 1
+			e.Commands.GetAddrTemp = true
 			r := e.ExecuteCommandsAtAddr(0)
 			AssertEqual(r.GetAddrTemp, 120)
 		})
