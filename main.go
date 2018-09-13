@@ -192,7 +192,7 @@ func listRealtimeValues(mk3DT *Mk3DT, maxAddr int) int {
 	for {
 		fmt.Printf("\n\r")
 		fmt.Printf("|------|-------|------|-------|-------|\n\r")
-		fmt.Printf("| CELL | VOLTS | TEMP |  S/N  | CELLS |\n\r")
+		fmt.Printf("| CELL | VOLTS | TEMP |  S/N  |  CCC  |\n\r")
 		for addr := 1; addr <= maxAddr; addr++ {
 			fmt.Printf("|------|-------|------|-------|-------|\n\r")
 			if v := mk3DT.GetRealTimeVoltage(addr); v > 0 {
