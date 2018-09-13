@@ -25,8 +25,6 @@ func main() {
 	flag.BoolVar(&scanCells, "scan-cells", false, "Scans the bus for cells.")
 	var scanCards bool
 	flag.BoolVar(&scanCards, "scan-cards", false, "Scans the bus for cards.")
-	var setup bool
-	flag.BoolVar(&setup, "setup", false, "Walks through assigning addresses to all cards in the BMS.")
 	var commands string
 	flag.StringVar(&commands, "cmd", "", "Path to the YAML configuration file of commands to execute.")
 	var addr int
@@ -35,10 +33,8 @@ func main() {
 	flag.IntVar(&maxAddr, "max-addr", 255, "The highest address to which the commands are to be executed. Default is 255.")
 	var newAddr int
 	flag.IntVar(&newAddr, "new-addr", 0, "Changes the address of the ONLY card on attached to the Dongle.")
-	var volts bool
-	flag.BoolVar(&volts, "volts", false, "Scans the bus and returns the average voltage for all cells found.")
-	var temps bool
-	flag.BoolVar(&temps, "temps", false, "Scans the bus and returns the average temperature for all cells found.")
+	var realtime bool
+	flag.BoolVar(&realtime, "realtime", false, "Constantly scans the bus and returns current volts, current temperature, card serial number and Number of cells on card.")
 	var clear bool
 	flag.BoolVar(&clear, "clear", false, "Clear the history for all cards on the bus.")
 	flag.Parse()
@@ -58,19 +54,12 @@ func main() {
 	if scanCards {
 		os.Exit(scanForCards(mk3DT, maxAddr))
 	}
-	if setup {
-		os.Exit(setupBus(mk3DT))
-	}
 	if newAddr > 0 {
 		os.Exit(setAddr(mk3DT, newAddr))
 		return
 	}
-	if volts {
-		os.Exit(listVolts(mk3DT, maxAddr))
-		return
-	}
-	if temps {
-		os.Exit(listTemps(mk3DT, maxAddr))
+	if realtime {
+		os.Exit(listRealtimeValues(mk3DT, maxAddr))
 		return
 	}
 	if clear {
@@ -192,19 +181,6 @@ func setAddr(mk3DT *Mk3DT, newAddr int) int {
 	return 1
 }
 
-func listVolts(mk3DT *Mk3DT, maxAddr int) int {
-	for addr := 1; addr <= maxAddr; addr++ {
-		if v := mk3DT.GetRealTimeVoltage(addr); v > 0 {
-			sn := mk3DT.GetSerialNum(addr)
-			fmt.Printf("Cell %03d at %.2f VDC on card %05d\n\r", addr, v/float32(mk3DT.GetNumCells(addr)), sn)
-		} else {
-			fmt.Print(".")
-		}
-	}
-	fmt.Println("")
-	return 0
-}
-
 func clearCards(mk3DT *Mk3DT, maxAddr int) int {
 	for addr := 1; addr <= maxAddr; addr++ {
 		mk3DT.ClearVoltageHistory(addr)
@@ -212,20 +188,25 @@ func clearCards(mk3DT *Mk3DT, maxAddr int) int {
 	return 0
 }
 
-func listTemps(mk3DT *Mk3DT, maxAddr int) int {
-	for addr := 1; addr <= maxAddr; addr++ {
-		t := mk3DT.GetCellsTemp(addr)
-		if t == 0 {
-			// If the temp is not found use the card temp.
-			t = mk3DT.GetAddrTemp(addr)
+func listRealtimeValues(mk3DT *Mk3DT, maxAddr int) int {
+	for {
+		fmt.Printf("\n\r")
+		fmt.Printf("|------|-------|------|-------|-------|\n\r")
+		fmt.Printf("| CELL | VOLTS | TEMP |  S/N  | CELLS |\n\r")
+		for addr := 1; addr <= maxAddr; addr++ {
+			fmt.Printf("|------|-------|------|-------|-------|\n\r")
+			if v := mk3DT.GetRealTimeVoltage(addr); v > 0 {
+				fmt.Printf("| % 4d ", addr)
+				fmt.Printf("| % 5.2f ", v/float32(mk3DT.GetNumCells(addr)))
+				fmt.Printf("| % 4d ", mk3DT.GetCellsTemp(addr))
+				fmt.Printf("| %05d ", mk3DT.GetSerialNum(addr))
+				fmt.Printf("| % 5d ", mk3DT.GetNumCells(addr))
+				fmt.Printf("|\n\r")
+			} else {
+				fmt.Printf("| % 4d |       |      |       |       |\n\r", addr)
+			}
 		}
-		if t > 0 {
-			sn := mk3DT.GetSerialNum(addr)
-			fmt.Printf("Cell %03d at %df on card %05d\n\r", addr, t, sn)
-		} else {
-			fmt.Print(".")
-		}
+		fmt.Printf("|------|-------|------|-------|-------|\n\r")
 	}
-	fmt.Println("")
 	return 0
 }

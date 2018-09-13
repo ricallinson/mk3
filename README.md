@@ -11,6 +11,7 @@ Requires a [Go](https://golang.org/dl/) environment.
     go get github.com/tarm/serial
     go get gopkg.in/yaml.v2
     go get github.com/ricallinson/simplebdd
+    go install
 
 ## Examples
 
@@ -72,20 +73,6 @@ Changes the address of the first card found to the one given. This should be use
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -new-addr=5
 
-### List Cell Volts
-
-Lists the current voltage of all cells found.
-
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -volts
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -volts -max-addr=50 
-
-### List Cell Temperatures
-
-Lists the current temperature of all cells found.
-
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -temps
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -temps -max-addr=50
-
 ### Clear History
 
 Removes any voltage or temperature errors recorded by each card.
@@ -93,11 +80,12 @@ Removes any voltage or temperature errors recorded by each card.
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -clear
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -clear -max-addr=50
 
-### Setup
+### Realtime Readings
 
-The setup option walks through assigning addresses to each card that will be used in a bus and then validates the setup was successful. It requires that each card is added and removed as the setup process is followed.
+Prints an ASCII table to the console showing CELL, VOLTS, TEMP, S/N and CELLS. This command loops once it reaches the last cell.
 
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -setup
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -realtime
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -realtime -max-addr=68
 
 ## Testing
 

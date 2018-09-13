@@ -1,8 +1,6 @@
 package main
 
-import (
-// "log"
-)
+import ()
 
 type Executor struct {
 	mk3DT    *Mk3DT
@@ -10,15 +8,17 @@ type Executor struct {
 }
 
 type ExecutorCommands struct {
-	SetStopChargeTemp         int     `yaml:"SetStopChargeTemp"`
-	GetStopChargeTemp         bool    `yaml:"GetStopChargeTemp"`
-	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
-	ChangeAddr                int     `yaml:"ChangeAddr"`
-	DisableShunt              bool    `yaml:"DisableShunt"`
-	EnableShunt               bool    `yaml:"EnableShunt"`
-	ForceFan                  int     `yaml:"ForceFan"`
-	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
-	SetFirstPosition          int     `yaml:"SetFirstPosition"`
+	SetStopChargeTemp     int  `yaml:"SetStopChargeTemp"`
+	GetStopChargeTemp     bool `yaml:"GetStopChargeTemp"`
+	DisableStopChargeTemp bool `yaml:"DisableStopChargeTemp"`
+	// Disabled as change address can only be used on one card at a time.
+	// ChangeAddr                int     `yaml:"ChangeAddr"`
+	DisableShunt     bool `yaml:"DisableShunt"`
+	EnableShunt      bool `yaml:"EnableShunt"`
+	ForceFan         int  `yaml:"ForceFan"`
+	GetFirstPosition bool `yaml:"GetFirstPosition"`
+	// Disabled as set first position can only be used on one card at a time.
+	// SetFirstPosition          int     `yaml:"SetFirstPosition"`
 	GetHighVoltage            bool    `yaml:"GetHighVoltage"`
 	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
 	ClearMinVoltageHistory    bool    `yaml:"ClearMinVoltageHistory"`
@@ -41,15 +41,17 @@ type ExecutorCommands struct {
 }
 
 type ExecutorCommandsResult struct {
-	SetStopChargeTemp         bool    `yaml:"SetStopChargeTemp"`
-	GetStopChargeTemp         int     `yaml:"GetStopChargeTemp"`
-	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
-	ChangeAddr                bool    `yaml:"ChangeAddr"`
-	DisableShunt              bool    `yaml:"DisableShunt"`
-	EnableShunt               bool    `yaml:"EnableShunt"`
-	ForceFan                  bool    `yaml:"ForceFan"`
-	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
-	SetFirstPosition          bool    `yaml:"SetFirstPosition"`
+	SetStopChargeTemp     bool `yaml:"SetStopChargeTemp"`
+	GetStopChargeTemp     int  `yaml:"GetStopChargeTemp"`
+	DisableStopChargeTemp bool `yaml:"DisableStopChargeTemp"`
+	// Disabled as change address can only be used on one card at a time.
+	// ChangeAddr                bool    `yaml:"ChangeAddr"`
+	DisableShunt     bool `yaml:"DisableShunt"`
+	EnableShunt      bool `yaml:"EnableShunt"`
+	ForceFan         bool `yaml:"ForceFan"`
+	GetFirstPosition bool `yaml:"GetFirstPosition"`
+	// Disabled as set first position can only be used on one card at a time.
+	// SetFirstPosition          bool    `yaml:"SetFirstPosition"`
 	GetHighVoltage            float32 `yaml:"GetHighVoltage"`
 	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
 	ClearMinVoltageHistory    bool    `yaml:"ClearMinVoltageHistory"`
@@ -104,6 +106,7 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	if this.Commands.DisableStopChargeTemp {
 		r.DisableStopChargeTemp = this.mk3DT.DisableStopChargeTemp(addr)
 	}
+	// Disabled as change address can only be used on one card at a time.
 	// if this.Commands.ChangeAddr > 0 {
 	// 	r.ChangeAddr = this.mk3DT.ChangeAddr(addr, this.Commands.ChangeAddr)
 	// }
@@ -113,12 +116,13 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	if this.Commands.EnableShunt {
 		r.EnableShunt = this.mk3DT.EnableShunt(addr)
 	}
-	// if this.Commands.ForceFan > -1 {
-	// 	r.ForceFan = this.mk3DT.ForceFan(addr, this.Commands.ForceFan)
-	// }
+	if this.Commands.ForceFan > -1 {
+		r.ForceFan = this.mk3DT.ForceFan(addr, this.Commands.ForceFan)
+	}
 	if this.Commands.GetFirstPosition {
 		r.GetFirstPosition = this.mk3DT.GetFirstPosition(addr)
 	}
+	// Disabled as set first position can only be used on one card at a time.
 	// if this.Commands.SetFirstPosition > -1 {
 	// 	r.SetFirstPosition = this.mk3DT.SetFirstPosition(addr, this.Commands.SetFirstPosition)
 	// }
@@ -146,9 +150,10 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	if this.Commands.GetStopChargeUnderVoltage {
 		r.GetStopChargeUnderVoltage = this.mk3DT.GetStopChargeUnderVoltage(addr)
 	}
-	if this.Commands.SetStopChargeUnderVoltage > -1 {
+	// If -1 turn off. If 1 turn on.
+	if this.Commands.SetStopChargeUnderVoltage == -1 || this.Commands.SetStopChargeUnderVoltage == 1 {
 		v := false
-		if this.Commands.SetStopChargeUnderVoltage >= 1 {
+		if this.Commands.SetStopChargeUnderVoltage == 1 {
 			v = true
 		}
 		r.SetStopChargeUnderVoltage = this.mk3DT.SetStopChargeUnderVoltage(addr, v)

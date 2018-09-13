@@ -30,12 +30,10 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(e.Commands.SetStopChargeTemp, 120)
 			AssertEqual(e.Commands.GetStopChargeTemp, true)
 			AssertEqual(e.Commands.DisableStopChargeTemp, true)
-			AssertEqual(e.Commands.ChangeAddr, 0)
 			AssertEqual(e.Commands.DisableShunt, true)
 			AssertEqual(e.Commands.EnableShunt, true)
 			AssertEqual(e.Commands.ForceFan, 4)
 			AssertEqual(e.Commands.GetFirstPosition, true)
-			AssertEqual(e.Commands.SetFirstPosition, -1)
 			AssertEqual(e.Commands.GetHighVoltage, true)
 			AssertEqual(e.Commands.ClearMaxVoltageHistory, true)
 			AssertEqual(e.Commands.ClearMinVoltageHistory, true)
@@ -44,7 +42,7 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(e.Commands.GetMaxVoltage, true)
 			AssertEqual(e.Commands.GetMinVoltage, true)
 			AssertEqual(e.Commands.GetStopChargeUnderVoltage, true)
-			AssertEqual(e.Commands.SetStopChargeUnderVoltage, -1)
+			AssertEqual(e.Commands.SetStopChargeUnderVoltage, 0)
 			AssertEqual(e.Commands.GetRealTimeVoltage, true)
 			AssertEqual(e.Commands.GetLowVoltage, true)
 			AssertEqual(e.Commands.SetMaxVoltage, float32(3.6))
@@ -75,12 +73,6 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(r.DisableStopChargeTemp, true)
 		})
 
-		It("should return 'true' from ChangeAddr", func() {
-			e.Commands.ChangeAddr = 3
-			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.ChangeAddr, true)
-		})
-
 		It("should return 'true' from DisableShunt", func() {
 			e.Commands.DisableShunt = true
 			r := e.ExecuteCommandsAtAddr(0)
@@ -103,12 +95,6 @@ func TestExecutor(t *testing.T) {
 			e.Commands.GetFirstPosition = true
 			r := e.ExecuteCommandsAtAddr(0)
 			AssertEqual(r.GetFirstPosition, false)
-		})
-
-		It("should return 'true' from SetFirstPosition", func() {
-			e.Commands.SetFirstPosition = 1
-			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetFirstPosition, true)
 		})
 
 		It("should return '3.9' from GetHighVoltage", func() {
@@ -159,21 +145,27 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(r.GetStopChargeUnderVoltage, false)
 		})
 
-		It("should return 'true' from SetStopChargeUnderVoltage", func() {
+		It("should return 'true' from SetStopChargeUnderVoltage -1", func() {
 			e.Commands.SetStopChargeUnderVoltage = -1
 			r := e.ExecuteCommandsAtAddr(0)
 			AssertEqual(r.SetStopChargeUnderVoltage, false)
+		})
 
+		It("should return 'true' from SetStopChargeUnderVoltage 2", func() {
 			e.Commands.SetStopChargeUnderVoltage = 2
-			r = e.ExecuteCommandsAtAddr(0)
+			r := e.ExecuteCommandsAtAddr(0)
 			AssertEqual(r.SetStopChargeUnderVoltage, false)
+		})
 
+		It("should return 'true' from SetStopChargeUnderVoltage 0", func() {
 			e.Commands.SetStopChargeUnderVoltage = 0
-			r = e.ExecuteCommandsAtAddr(0)
+			r := e.ExecuteCommandsAtAddr(0)
 			AssertEqual(r.SetStopChargeUnderVoltage, false)
+		})
 
+		It("should return 'true' from SetStopChargeUnderVoltage 1", func() {
 			e.Commands.SetStopChargeUnderVoltage = 1
-			r = e.ExecuteCommandsAtAddr(0)
+			r := e.ExecuteCommandsAtAddr(0)
 			AssertEqual(r.SetStopChargeUnderVoltage, true)
 		})
 

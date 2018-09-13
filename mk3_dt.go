@@ -110,10 +110,11 @@ func (this *Mk3DT) DisableStopChargeTemp(addr int) bool {
 // addr 0-255
 func (this *Mk3DT) ChangeAddr(addr int, newAddr int) bool {
 	r := this.execCmd(addr, "changead", strconv.Itoa(newAddr))
-	// Check that the returned value is the same as the sent addr.
+	// Make sure the returned value is long enough to split.
 	if len(r.Value) < 5 {
 		return false
 	}
+	// Check that the returned value is the same as the sent addr.
 	n, _ := strconv.ParseInt(r.Value[4:], 10, 32)
 	return newAddr == int(n)
 }
