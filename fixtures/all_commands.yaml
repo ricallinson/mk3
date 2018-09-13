@@ -1,134 +1,25 @@
-# Set the temperature that will activate the 'STOP CHARGING LINE' 
-# when the cell is above the set temperature. The value range is 
-# 32 to 180 where the number represents degrees Fahrenheit.
-# Range 32 to 180.
-# Default is 120.
 SetStopChargeTemp: 120
-
-# Returns the value of a cells stop charging temperature in the range
-# 32 to 180 where the number represents degrees Fahrenheit.
 GetStopChargeTemp: true
-
-# Disables a cells ability to trigger the stop 'STOP CHARGING LINE'
-# once the stop charging temperature is exceeded.
-# This can only be enabled again by setting a stop charging temperature
-# on the cell using 'SetStopChargeTemp'.
-# Default is false.
 DisableStopChargeTemp: true
-
-# Disable a cells ability to shunt which bypasses cell protection and equalization.
-# Default is false.
 DisableShunt: true
-
-# Enable a cells ability to shunt allowing for cell protection and equalization.
-# Default is true.
 EnableShunt: true
-
-# Force a cards fan to run continuously at the give speed. A value of '0' will
-# trigger the fan automatically when the cards temperature is exceeded.
-# Values from 1-8 set the continuous mode where '8' is the fastest.
-# Range 0 to 8.
-# Default is 0.
 ForceFan: 4
-
-# Returns a cards high voltage set point. It will return the same value
-# for all cells on the card as there is only one set point per regulator.
-# Default is false.
 GetHighVoltage: true
-
-# Clears the stored history for the maximum voltage detected on a cell.
-# Default is false.
 ClearMaxVoltageHistory: true
-
-# Clears the stored history for the minimum voltage detected on a cell.
-# Default is false.
 ClearMinVoltageHistory: true
-
-# Clears the stored history for the maximum and minimum voltages detected on a cell.
-# Default is false.
 ClearVoltageHistory: true
-
-# Triggers the LEDs on a cells card. Useful for debugging and pack setup.
-# Default false.
 TriggerLights: true
-
-# Returns the maximum voltage detected for the given cell.
-# Default is false.
 GetMaxVoltage: true
-
-# Returns the minimum voltage detected for the given cell.
-# Default is false.
 GetMinVoltage: true
-
-# Returns the current mode for a cards 'STOP CHARGING LINE' when one of its 
-# cells is under voltage.
-# Default is false.
 GetStopChargeUnderVoltage: true
-
-# Sets the current mode for a cards 'STOP CHARGING LINE' when one of its 
-# cells is under voltage. If enabled the 'STOP CHARGING LINE' is activated
-# whenever the 'UNDERVOLTAGE LINE' is activated. The low voltage is set
-# using 'SetMinVoltage'.
-# Default is 0.
-# -1: disable
-#  1: enable
 SetStopChargeUnderVoltage: 0
-
-# Returns the real-time voltage for the given cell.
-# Default is false.
 GetRealTimeVoltage: true
-
-# Returns the low voltage set point. There is only one setting per regulator
-# so all cells on a given card will return the same value.
-# Default is false.
 GetLowVoltage: true
-
-# Sets the maximum voltage allowed before dissipation begins. There is only 
-# one setting per regulator so all cells on a given card will return the same value.
-# Range 0 to 9.999.
-# Default 3.6.
 SetMaxVoltage: 3.6
-
-# Sets the minimum voltage allowed. There is only one setting per regulator
-# so all cells on a given card will return the same value.
-# Range 0 to 9.999.
-# Default 2.496.
 SetMinVoltage: 2.496
-
-# Sets the maximum voltage allowed before the charger will cut back.
-# There is only one setting per regulator so all cells on a given 
-# card will return the same value. This value must be higher than 'SetMaxVoltage'.
-# Range 0 to 9.999.
-# Default 3.648.
 SetOverVoltage: 3.648
-
-# Set a cards temperature in degrees Fahrenheit that will trigger its fan to stop.
-# The fan will gradually decrease in speed from 'SetFanMaxTemp' to 
-# 'SetFanLowTemp' until it stops.
-# Range 32 to 180.
-# Default is 120.
 SetFanLowTemp: 120
-
-# Set a cards temperature in degrees Fahrenheit that will trigger it fan to run at
-# full speed. The fan will gradually increase in speed from 'SetFanLowTemp' to 
-# 'SetFanMaxTemp' until it's running at maximum speed.
-# Range 32 to 180.
-# Default is 151.
 SetFanMaxTemp: 151
-
-# Set a cards temperature in degrees Fahrenheit at which point it will stop
-# dissipating heat in order to avoid internal damage.
-# Range 32 to 180.
-# Default is 171.
 SetStopDissipatingTemp: 171
-
-# Returns the real-time temperature in degrees Fahrenheit for a cards or its heat sink
-# if it has one. There is only one heat sink per regulator so all cells on a given 
-# card will return the same value.
-# Default is false.
 GetAddrTemp: true
-
-# Returns the real-time temperature in degrees Fahrenheit for the given cell if it 
-# has an optional remote sensor installed.
-# Default is false.
 GetCellsTemp: true

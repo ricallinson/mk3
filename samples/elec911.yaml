@@ -1,6 +1,6 @@
 SetStopChargeTemp: 120
 EnableShunt: true
-ForceFan: -1
+ForceFan: 0
 SetStopChargeUnderVoltage: -1
 SetMaxVoltage: 3.6
 SetMinVoltage: 2.5

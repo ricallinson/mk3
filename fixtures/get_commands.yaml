@@ -1,5 +1,4 @@
 GetStopChargeTemp: true
-GetFirstPosition: true
 GetHighVoltage: true
 GetMaxVoltage: true
 GetMinVoltage: true
