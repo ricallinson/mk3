@@ -89,9 +89,8 @@ func (this *Mk3DT) Raw(c string) []byte {
 func (this *Mk3DT) RealtimeValues(maxAddr int) {
 	for {
 		for addr := 1; addr <= maxAddr; addr++ {
-			fmt.Println(string(GetRealtimeValues(this, addr).ToBytes()))
+			fmt.Println(string(interfaceToYaml(GetRealtimeValues(this, addr))))
 		}
-		return
 	}
 }
 
