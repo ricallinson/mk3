@@ -82,15 +82,19 @@ Prints a JSON object. This command loops once it reaches the last cell and is us
 
 Requires a [Go](https://golang.org/dl/) environment.
 
+	git clone git@github.com:ricallinson/mk3.git $GOPATH/src/git@github.com/ricallinson/mk3
     go get github.com/tarm/serial
     go get gopkg.in/yaml.v2
     go get github.com/ricallinson/simplebdd
+    cd $GOPATH/src/git@github.com/ricallinson/mk3
     go install
 
 ## Testing
 
+	cd $GOPATH/src/git@github.com/ricallinson/mmz
 	go test
 
 ## Coverage
 
+	cd $GOPATH/src/git@github.com/ricallinson/mmz
 	go test -covermode=count -coverprofile=count.out; go tool cover -html=count.out
