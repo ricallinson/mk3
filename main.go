@@ -35,8 +35,6 @@ func main() {
 	flag.IntVar(&newAddr, "new-addr", 0, "Changes the address of the first card found attached to the Dongle.")
 	var realtime bool
 	flag.BoolVar(&realtime, "realtime", false, "Constantly scans the bus and returns current volts, current temperature, card serial number and Number of cells on card.")
-	var clear bool
-	flag.BoolVar(&clear, "clear", false, "Clear the history for all cards on the bus.")
 	flag.Parse()
 
 	// We can't do anything without a serial port.
@@ -66,10 +64,6 @@ func main() {
 	}
 	if realtime {
 		os.Exit(listRealtimeValues(mk3DT, maxAddr))
-		return
-	}
-	if clear {
-		os.Exit(clearCards(mk3DT, maxAddr))
 		return
 	}
 	if commands == "" {
@@ -186,13 +180,6 @@ func setAddr(mk3DT *Mk3DT, newAddr int) int {
 	}
 	fmt.Println("")
 	return 1
-}
-
-func clearCards(mk3DT *Mk3DT, maxAddr int) int {
-	for addr := 1; addr <= maxAddr; addr++ {
-		mk3DT.ClearVoltageHistory(addr)
-	}
-	return 0
 }
 
 func listRealtimeValues(mk3DT *Mk3DT, maxAddr int) int {

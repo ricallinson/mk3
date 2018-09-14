@@ -73,13 +73,6 @@ Changes the address of the first card found to the one given. This should be use
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -new-addr=5
 
-### Clear History
-
-Removes any voltage or temperature errors recorded by each card.
-
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -clear
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -clear -max-addr=50
-
 ### Realtime Readings
 
 Prints an ASCII table to the console showing CELL, VOLTS, TEMP, S/N and CARD CELL COUNT. This command loops once it reaches the last cell and is useful for monitoring when setting up a bus.
