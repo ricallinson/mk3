@@ -71,7 +71,7 @@ Scans the bus for all cells on connected cards.
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -scan-cells
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -scan-cells -max-addr=50 
 
-### Realtime Readings
+### Realtime
 
 Prints a JSON object. This command loops once it reaches the last cell and is useful for monitoring when setting up a pack or as a log output.
 
