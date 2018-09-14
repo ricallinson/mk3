@@ -4,28 +4,26 @@
 
 Command line interface for the Manzanita Micro USB Dongle Terminator. This is an alternative to the [MK3 Digital Perl Scanner Software](http://www.manzanitamicro.com/downloads/category/5-bms2?download=93%3Aperlscanner) provided by Manzanita Micro.
 
-## Setup Development Environment
+## Usage
 
 Requires a [Go](https://golang.org/dl/) environment.
 
-    go get github.com/tarm/serial
-    go get gopkg.in/yaml.v2
-    go get github.com/ricallinson/simplebdd
-    go install
+    go get github.com/ricallinson/mk3
+    go install github.com/ricallinson/mk3
 
 ## Examples
 
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -raw "01l."
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -realtime
 
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./fixtures/get_commands.yaml
+    mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./samples/get_settings.yaml
 
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./fixtures/trigger_lights.yaml -addr 1
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./samples/get_settings.yaml -addr 4
 
 ## Options
 
 ### Dongle Location (required)
 
-The path to the USB port.
+The path to the USB port where the dongle is connected.
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7
 
@@ -33,7 +31,13 @@ The path to the USB port.
 
 The path to the file containing the commands to execute against the bus.
 
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./fixtures/get_commands.yaml
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./samples/get_settings.yaml
+
+### Change a Cards Bus Address
+
+Changes the address of the first card found to the one given. This should be used when only one card is attached to the dongle.
+
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -new-addr=5
 
 ### Bus Address to Execute Commands
 
@@ -45,7 +49,7 @@ A single bus address to target. The bus address is the number of the first cell 
 
 Send a command as detailed in the [MK3 Digital Perl User Manual Command List](http://www.manzanitamicro.com/downloads/category/5-bms2?download=93%3Aperlscanner).
 
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -raw "01l."
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -raw "XXX"
 
 ### Maximum Cell Address
 
@@ -67,18 +71,21 @@ Scans the bus for all cells on connected cards.
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -scan-cells
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -scan-cells -max-addr=50 
 
-### Change Cards Bus Address
-
-Changes the address of the first card found to the one given. This should be used when only one card is attached to the dongle.
-
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -new-addr=5
-
 ### Realtime Readings
 
 Prints a JSON object. This command loops once it reaches the last cell and is useful for monitoring when setting up a pack or as a log output.
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -realtime
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -realtime -max-addr=68
+
+## Setup Development Environment
+
+Requires a [Go](https://golang.org/dl/) environment.
+
+    go get github.com/tarm/serial
+    go get gopkg.in/yaml.v2
+    go get github.com/ricallinson/simplebdd
+    go install
 
 ## Testing
 
