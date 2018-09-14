@@ -18,7 +18,7 @@ type SerialPort interface {
 
 func main() {
 	var dongle string
-	flag.StringVar(&dongle, "dongle", "", "Serial port that's connected to the Dongle Terminator.")
+	flag.StringVar(&dongle, "dongle", "", "Serial port that's connected to the Dongle Terminator (required).")
 	var raw string
 	flag.StringVar(&raw, "raw", "", "Send a raw command to the Dongle Terminator.")
 	var scanCells bool
@@ -32,12 +32,18 @@ func main() {
 	var maxAddr int
 	flag.IntVar(&maxAddr, "max-addr", 255, "The highest address to which the commands are to be executed. Default is 255.")
 	var newAddr int
-	flag.IntVar(&newAddr, "new-addr", 0, "Changes the address of the ONLY card on attached to the Dongle.")
+	flag.IntVar(&newAddr, "new-addr", 0, "Changes the address of the first card found attached to the Dongle.")
 	var realtime bool
 	flag.BoolVar(&realtime, "realtime", false, "Constantly scans the bus and returns current volts, current temperature, card serial number and Number of cells on card.")
 	var clear bool
 	flag.BoolVar(&clear, "clear", false, "Clear the history for all cards on the bus.")
 	flag.Parse()
+
+	// We can't do anything without a serial port.
+	if dongle == "" {
+		log.Println("You must provide the serial port that's connected to the Dongle Terminator")
+		return
+	}
 
 	// Create an instance of a Mk3 Dongle Terminator.
 	mk3DT := newMk3DT(dongle)
@@ -67,6 +73,7 @@ func main() {
 		return
 	}
 	if commands == "" {
+		// If we get to here and there's no commands we can't do anything.
 		log.Println("You must provide a path to YAML file with the commands to execute")
 		return
 	}
