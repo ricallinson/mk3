@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"strconv"
 	"strings"
@@ -83,6 +84,15 @@ func (this *Mk3DT) execCmd(addr int, cmd string, value string) Mk3DTResponse {
 func (this *Mk3DT) Raw(c string) []byte {
 	this.writeBytes([]byte(c))
 	return this.readBytes(0)
+}
+
+func (this *Mk3DT) RealtimeValues(maxAddr int) {
+	for {
+		for addr := 1; addr <= maxAddr; addr++ {
+			fmt.Println(string(GetRealtimeValues(this, addr).ToBytes()))
+		}
+		return
+	}
 }
 
 // temp 32-180 F

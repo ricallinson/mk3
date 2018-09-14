@@ -75,7 +75,7 @@ Changes the address of the first card found to the one given. This should be use
 
 ### Realtime Readings
 
-Prints an ASCII table to the console showing CELL, VOLTS, TEMP, S/N and CARD CELL COUNT. This command loops once it reaches the last cell and is useful for monitoring when setting up a bus.
+Prints a JSON object. This command loops once it reaches the last cell and is useful for monitoring when setting up a pack or as a log output.
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -realtime
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -realtime -max-addr=68

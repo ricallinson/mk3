@@ -37,12 +37,6 @@ func main() {
 	flag.BoolVar(&realtime, "realtime", false, "Constantly scans the bus and returns current volts, current temperature, card serial number and Number of cells on card.")
 	flag.Parse()
 
-	// We can't do anything without a serial port.
-	if dongle == "" {
-		log.Println("You must provide the serial port that's connected to the Dongle Terminator")
-		return
-	}
-
 	// Create an instance of a Mk3 Dongle Terminator.
 	mk3DT := newMk3DT(dongle)
 	defer mk3DT.Close()
@@ -63,7 +57,7 @@ func main() {
 		return
 	}
 	if realtime {
-		os.Exit(listRealtimeValues(mk3DT, maxAddr))
+		mk3DT.RealtimeValues(maxAddr)
 		return
 	}
 	if commands == "" {
@@ -180,27 +174,4 @@ func setAddr(mk3DT *Mk3DT, newAddr int) int {
 	}
 	fmt.Println("")
 	return 1
-}
-
-func listRealtimeValues(mk3DT *Mk3DT, maxAddr int) int {
-	for {
-		fmt.Printf("\n\r")
-		fmt.Printf("|------|-------|------|-------|-------|\n\r")
-		fmt.Printf("| CELL | VOLTS | TEMP |  S/N  |  CCC  |\n\r")
-		for addr := 1; addr <= maxAddr; addr++ {
-			fmt.Printf("|------|-------|------|-------|-------|\n\r")
-			if v := mk3DT.GetRealTimeVoltage(addr); v > 0 {
-				fmt.Printf("| % 4d ", addr)
-				fmt.Printf("| % 5.2f ", v/float32(mk3DT.GetNumCells(addr)))
-				fmt.Printf("| % 4d ", mk3DT.GetCellsTemp(addr))
-				fmt.Printf("| %05d ", mk3DT.GetSerialNum(addr))
-				fmt.Printf("| % 5d ", mk3DT.GetNumCells(addr))
-				fmt.Printf("|\n\r")
-			} else {
-				fmt.Printf("| % 4d |       |      |       |       |\n\r", addr)
-			}
-		}
-		fmt.Printf("|------|-------|------|-------|-------|\n\r")
-	}
-	return 0
 }
