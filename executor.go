@@ -14,6 +14,7 @@ type ExecutorCommands struct {
 	DisableShunt              bool    `yaml:"DisableShunt"`
 	EnableShunt               bool    `yaml:"EnableShunt"`
 	ForceFan                  int     `yaml:"ForceFan"`
+	GetForceFan				  bool    `yaml:"GetForceFan"`
 	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
 	GetHighVoltage            bool    `yaml:"GetHighVoltage"`
 	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
@@ -43,6 +44,7 @@ type ExecutorCommandsResult struct {
 	DisableShunt              bool    `yaml:"DisableShunt"`
 	EnableShunt               bool    `yaml:"EnableShunt"`
 	ForceFan                  bool    `yaml:"ForceFan"`
+	GetForceFan				  int     `yaml:"GetForceFan"`
 	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
 	GetHighVoltage            float32 `yaml:"GetHighVoltage"`
 	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
@@ -106,6 +108,9 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	}
 	if this.Commands.ForceFan >= 0 && this.Commands.ForceFan <= 8 {
 		r.ForceFan = this.mk3DT.ForceFan(addr, this.Commands.ForceFan)
+	}
+	if this.Commands.GetForceFan {
+		r.GetForceFan = this.mk3DT.GetForceFan(addr)
 	}
 	if this.Commands.GetHighVoltage {
 		r.GetHighVoltage = this.mk3DT.GetHighVoltage(addr)

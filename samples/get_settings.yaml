@@ -1,4 +1,9 @@
 GetStopChargeTemp: true
+GetSerialNum: true
+GetNumCells: true
+GetCellRange: true
+GetForceFan: true
+GetFirstPosition: true
 GetHighVoltage: true
 GetMaxVoltage: true
 GetMinVoltage: true

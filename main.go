@@ -29,6 +29,8 @@ func main() {
 	flag.StringVar(&commands, "cmd", "", "Path to the YAML configuration file of commands to execute.")
 	var addr int
 	flag.IntVar(&addr, "addr", -1, "The address to which the commands are to be executed. Default is all.")
+	var minAddr int
+	flag.IntVar(&minAddr, "min-addr", 0, "The lowest address to which the commands are to be executed. Default is 0.")
 	var maxAddr int
 	flag.IntVar(&maxAddr, "max-addr", 255, "The highest address to which the commands are to be executed. Default is 255.")
 	var newAddr int
@@ -47,7 +49,7 @@ func main() {
 		return
 	}
 	if scanCells {
-		os.Exit(scanForCells(mk3DT, maxAddr))
+		os.Exit(scanForCells(mk3DT, minAddr, maxAddr))
 	}
 	if scanCards {
 		os.Exit(scanForCards(mk3DT, maxAddr))
@@ -122,7 +124,7 @@ func sendRawCommand(mk3DT *Mk3DT, s string) {
 }
 
 // Prints to standard out the result.
-func scanForCells(mk3DT *Mk3DT, maxAddr int) int {
+func scanForCells(mk3DT *Mk3DT, minAddr int, maxAddr int) int {
 	pos := 1
 	lastSn := 0
 	lastEmpty := false

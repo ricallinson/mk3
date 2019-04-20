@@ -188,6 +188,12 @@ func (this *Mk3DT) ForceFan(addr int, level int) bool {
 	return level == int(l)
 }
 
+func (this *Mk3DT) GetForceFan(addr int) int {
+	r := this.execCmd(addr, "fan", "")
+	l, _ := strconv.ParseInt(r.Value, 10, 32)
+	return int(l)
+}
+
 func (this *Mk3DT) GetFirstPosition(addr int) bool {
 	r := this.execCmd(addr, "firstpos", "")
 	// Return the value as a bool.
