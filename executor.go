@@ -1,6 +1,8 @@
 package main
 
-import ()
+import (
+	"fmt"
+)
 
 type Executor struct {
 	mk3DT    *Mk3DT
@@ -10,11 +12,14 @@ type Executor struct {
 type ExecutorCommands struct {
 	SetStopChargeTemp         int     `yaml:"SetStopChargeTemp"`
 	GetStopChargeTemp         bool    `yaml:"GetStopChargeTemp"`
+	GetSerialNum              bool    `yaml:"GetSerialNum"`
+	GetNumCells               bool    `yaml:"GetNumCells"`
+	GetCellRange              bool    `yaml:"GetCellRange"`
 	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
 	DisableShunt              bool    `yaml:"DisableShunt"`
 	EnableShunt               bool    `yaml:"EnableShunt"`
 	ForceFan                  int     `yaml:"ForceFan"`
-	GetForceFan				  bool    `yaml:"GetForceFan"`
+	GetForceFan               bool    `yaml:"GetForceFan"`
 	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
 	GetHighVoltage            bool    `yaml:"GetHighVoltage"`
 	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
@@ -40,11 +45,14 @@ type ExecutorCommands struct {
 type ExecutorCommandsResult struct {
 	SetStopChargeTemp         bool    `yaml:"SetStopChargeTemp"`
 	GetStopChargeTemp         int     `yaml:"GetStopChargeTemp"`
+	GetSerialNum              int     `yaml:"GetSerialNum"`
+	GetNumCells               int     `yaml:"GetNumCells"`
+	GetCellRange              string  `yaml:"GetCellRange"`
 	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
 	DisableShunt              bool    `yaml:"DisableShunt"`
 	EnableShunt               bool    `yaml:"EnableShunt"`
 	ForceFan                  bool    `yaml:"ForceFan"`
-	GetForceFan				  int     `yaml:"GetForceFan"`
+	GetForceFan               int     `yaml:"GetForceFan"`
 	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
 	GetHighVoltage            float32 `yaml:"GetHighVoltage"`
 	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
@@ -96,6 +104,16 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	}
 	if this.Commands.GetStopChargeTemp {
 		r.GetStopChargeTemp = this.mk3DT.GetStopChargeTemp(addr)
+	}
+	if this.Commands.GetSerialNum {
+		r.GetSerialNum = this.mk3DT.GetSerialNum(addr)
+	}
+	if this.Commands.GetNumCells {
+		r.GetNumCells = this.mk3DT.GetNumCells(addr)
+	}
+	if this.Commands.GetCellRange {
+		start, end := this.mk3DT.GetCellRange(addr)
+		r.GetCellRange = fmt.Sprintf("%d %d", start, end)
 	}
 	if this.Commands.DisableStopChargeTemp {
 		r.DisableStopChargeTemp = this.mk3DT.DisableStopChargeTemp(addr)
