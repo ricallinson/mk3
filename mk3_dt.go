@@ -165,6 +165,12 @@ func (this *Mk3DT) GetCellRange(addr int) (int, int) {
 	return from, to
 }
 
+func (this *Mk3DT) GetShuntMode(addr int) bool {
+	r := this.execCmd(addr, "status", "")
+	fmt.Printf(">>> %08b /n", r.Command[0])
+	return fmt.Sprintf("%08b", r.Command[0]) == "1"
+}
+
 func (this *Mk3DT) DisableShunt(addr int) bool {
 	r := this.execCmd(addr, "disable", "")
 	// Check that the returned value equals "Disable".

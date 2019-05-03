@@ -16,6 +16,7 @@ type ExecutorCommands struct {
 	GetNumCells               bool    `yaml:"GetNumCells"`
 	GetCellRange              bool    `yaml:"GetCellRange"`
 	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
+	GetShuntMode              bool    `yaml:"GetShuntMode"`
 	DisableShunt              bool    `yaml:"DisableShunt"`
 	EnableShunt               bool    `yaml:"EnableShunt"`
 	ForceFan                  int     `yaml:"ForceFan"`
@@ -49,6 +50,7 @@ type ExecutorCommandsResult struct {
 	GetNumCells               int     `yaml:"GetNumCells"`
 	GetCellRange              string  `yaml:"GetCellRange"`
 	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
+	GetShuntMode              bool    `yaml:"GetShuntMode"`
 	DisableShunt              bool    `yaml:"DisableShunt"`
 	EnableShunt               bool    `yaml:"EnableShunt"`
 	ForceFan                  bool    `yaml:"ForceFan"`
@@ -117,6 +119,9 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	}
 	if this.Commands.DisableStopChargeTemp {
 		r.DisableStopChargeTemp = this.mk3DT.DisableStopChargeTemp(addr)
+	}
+	if this.Commands.GetShuntMode {
+		r.GetShuntMode = this.mk3DT.GetShuntMode(addr)
 	}
 	if this.Commands.DisableShunt {
 		r.DisableShunt = this.mk3DT.DisableShunt(addr)
