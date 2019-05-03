@@ -264,14 +264,16 @@ func (this *Mk3DT) GetStopChargeUnderVoltage(addr int) bool {
 	return r.Value == "1"
 }
 
-func (this *Mk3DT) SetStopChargeUnderVoltage(addr int, stop bool) bool {
-	v := "0"
-	if stop {
-		v = "1"
-	}
-	r := this.execCmd(addr, "phev", v)
+func (this *Mk3DT) SetStopChargeUnderVoltageOn(addr int) bool {
+	r := this.execCmd(addr, "phev", "1")
 	// Return the value as bool.
-	return r.Value == v
+	return r.Value == "1"
+}
+
+func (this *Mk3DT) SetStopChargeUnderVoltageOff(addr int) bool {
+	r := this.execCmd(addr, "phev", "0")
+	// Return the value as bool.
+	return r.Value == "0"
 }
 
 func (this *Mk3DT) GetRealTimeVoltage(addr int) float32 {

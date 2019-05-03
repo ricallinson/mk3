@@ -10,37 +10,38 @@ type Executor struct {
 }
 
 type ExecutorCommands struct {
-	SetStopChargeTemp         int     `yaml:"SetStopChargeTemp"`
-	GetStopChargeTemp         bool    `yaml:"GetStopChargeTemp"`
-	GetSerialNum              bool    `yaml:"GetSerialNum"`
-	GetNumCells               bool    `yaml:"GetNumCells"`
-	GetCellRange              bool    `yaml:"GetCellRange"`
-	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
-	GetShuntMode              bool    `yaml:"GetShuntMode"`
-	DisableShunt              bool    `yaml:"DisableShunt"`
-	EnableShunt               bool    `yaml:"EnableShunt"`
-	SetForceFan               int     `yaml:"SetForceFan"`
-	GetForceFan               bool    `yaml:"GetForceFan"`
-	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
-	GetHighVoltage            bool    `yaml:"GetHighVoltage"`
-	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
-	ClearMinVoltageHistory    bool    `yaml:"ClearMinVoltageHistory"`
-	ClearVoltageHistory       bool    `yaml:"ClearVoltageHistory"`
-	TriggerLights             bool    `yaml:"TriggerLights"`
-	GetMaxVoltageDetected     bool    `yaml:"GetMaxVoltageDetected"`
-	GetMinVoltageDetected     bool    `yaml:"GetMinVoltageDetected"`
-	GetStopChargeUnderVoltage bool    `yaml:"GetStopChargeUnderVoltage"`
-	SetStopChargeUnderVoltage int     `yaml:"SetStopChargeUnderVoltage"`
-	GetRealTimeVoltage        bool    `yaml:"GetRealTimeVoltage"`
-	GetLowVoltage             bool    `yaml:"GetLowVoltage"`
-	SetMaxVoltage             float32 `yaml:"SetMaxVoltage"`
-	SetMinVoltage             float32 `yaml:"SetMinVoltage"`
-	SetOverVoltage            float32 `yaml:"SetOverVoltage"`
-	GetAddrTemp               bool    `yaml:"GetAddrTemp"`
-	SetFanMaxTemp             int     `yaml:"SetFanMaxTemp"`
-	SetStopDissipatingTemp    int     `yaml:"SetStopDissipatingTemp"`
-	SetFanLowTemp             int     `yaml:"SetFanLowTemp"`
-	GetCellsTemp              bool    `yaml:"GetCellsTemp"`
+	SetStopChargeTemp            int     `yaml:"SetStopChargeTemp"`
+	GetStopChargeTemp            bool    `yaml:"GetStopChargeTemp"`
+	GetSerialNum                 bool    `yaml:"GetSerialNum"`
+	GetNumCells                  bool    `yaml:"GetNumCells"`
+	GetCellRange                 bool    `yaml:"GetCellRange"`
+	DisableStopChargeTemp        bool    `yaml:"DisableStopChargeTemp"`
+	GetShuntMode                 bool    `yaml:"GetShuntMode"`
+	DisableShunt                 bool    `yaml:"DisableShunt"`
+	EnableShunt                  bool    `yaml:"EnableShunt"`
+	SetForceFan                  int     `yaml:"SetForceFan"`
+	GetForceFan                  bool    `yaml:"GetForceFan"`
+	GetFirstPosition             bool    `yaml:"GetFirstPosition"`
+	GetHighVoltage               bool    `yaml:"GetHighVoltage"`
+	ClearMaxVoltageHistory       bool    `yaml:"ClearMaxVoltageHistory"`
+	ClearMinVoltageHistory       bool    `yaml:"ClearMinVoltageHistory"`
+	ClearVoltageHistory          bool    `yaml:"ClearVoltageHistory"`
+	TriggerLights                bool    `yaml:"TriggerLights"`
+	GetMaxVoltageDetected        bool    `yaml:"GetMaxVoltageDetected"`
+	GetMinVoltageDetected        bool    `yaml:"GetMinVoltageDetected"`
+	GetStopChargeUnderVoltage    bool    `yaml:"GetStopChargeUnderVoltage"`
+	SetStopChargeUnderVoltageOn  bool    `yaml:"SetStopChargeUnderVoltageOn"`
+	SetStopChargeUnderVoltageOff bool    `yaml:"SetStopChargeUnderVoltageOff"`
+	GetRealTimeVoltage           bool    `yaml:"GetRealTimeVoltage"`
+	GetLowVoltage                bool    `yaml:"GetLowVoltage"`
+	SetMaxVoltage                float32 `yaml:"SetMaxVoltage"`
+	SetMinVoltage                float32 `yaml:"SetMinVoltage"`
+	SetOverVoltage               float32 `yaml:"SetOverVoltage"`
+	GetAddrTemp                  bool    `yaml:"GetAddrTemp"`
+	SetFanMaxTemp                int     `yaml:"SetFanMaxTemp"`
+	SetStopDissipatingTemp       int     `yaml:"SetStopDissipatingTemp"`
+	SetFanLowTemp                int     `yaml:"SetFanLowTemp"`
+	GetCellsTemp                 bool    `yaml:"GetCellsTemp"`
 }
 
 type ExecutorCommandsResult struct {
@@ -68,40 +69,6 @@ type ExecutorCommandsResult struct {
 	CellsTemp              int      `yaml:"CellsTemp"`
 	Commands               []string `yaml:"Commands"`
 }
-
-// type _ExecutorCommandsResult struct {
-// 	SetStopChargeTemp         bool    `yaml:"SetStopChargeTemp"`
-// 	GetStopChargeTemp         int     `yaml:"GetStopChargeTemp"`
-// 	GetSerialNum              int     `yaml:"GetSerialNum"`
-// 	GetNumCells               int     `yaml:"GetNumCells"`
-// 	GetCellRange              string  `yaml:"GetCellRange"`
-// 	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
-// 	GetShuntMode              bool    `yaml:"GetShuntMode"`
-// 	DisableShunt              bool    `yaml:"DisableShunt"`
-// 	EnableShunt               bool    `yaml:"EnableShunt"`
-// 	SetForceFan               bool    `yaml:"SetForceFan"`
-// 	GetForceFan               int     `yaml:"GetForceFan"`
-// 	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
-// 	GetHighVoltage            float32 `yaml:"GetHighVoltage"`
-// 	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
-// 	ClearMinVoltageHistory    bool    `yaml:"ClearMinVoltageHistory"`
-// 	ClearVoltageHistory       bool    `yaml:"ClearVoltageHistory"`
-// 	TriggerLights             bool    `yaml:"TriggerLights"`
-// 	GetMaxVoltage             float32 `yaml:"GetMaxVoltage"`
-// 	GetMinVoltage             float32 `yaml:"GetMinVoltage"`
-// 	GetStopChargeUnderVoltage bool    `yaml:"GetStopChargeUnderVoltage"`
-// 	SetStopChargeUnderVoltage bool    `yaml:"SetStopChargeUnderVoltage"`
-// 	GetRealTimeVoltage        float32 `yaml:"GetRealTimeVoltage"`
-// 	GetLowVoltage             float32 `yaml:"GetLowVoltage"`
-// 	SetMaxVoltage             bool    `yaml:"SetMaxVoltage"`
-// 	SetMinVoltage             bool    `yaml:"SetMinVoltage"`
-// 	SetOverVoltage            bool    `yaml:"SetOverVoltage"`
-// 	GetAddrTemp               int     `yaml:"GetAddrTemp"`
-// 	SetFanMaxTemp             bool    `yaml:"SetFanMaxTemp"`
-// 	SetStopDissipatingTemp    bool    `yaml:"SetStopDissipatingTemp"`
-// 	SetFanLowTemp             bool    `yaml:"SetFanLowTemp"`
-// 	GetCellsTemp              int     `yaml:"GetCellsTemp"`
-// }
 
 func NewExecutor(mk3DT *Mk3DT) *Executor {
 	this := &Executor{
@@ -213,14 +180,14 @@ func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 		r.StopChargeUnderVoltage = this.mk3DT.GetStopChargeUnderVoltage(addr)
 		r.Commands = append(r.Commands, "GetStopChargeUnderVoltage")
 	}
-	// If -1 turn off. If 1 turn on.
-	if this.Commands.SetStopChargeUnderVoltage == -1 || this.Commands.SetStopChargeUnderVoltage == 1 {
-		v := false
-		if this.Commands.SetStopChargeUnderVoltage == 1 {
-			v = true
+	if this.Commands.SetStopChargeUnderVoltageOn {
+		if this.mk3DT.SetStopChargeUnderVoltageOn(addr) {
+			r.Commands = append(r.Commands, "SetStopChargeUnderVoltageOn")
 		}
-		if this.mk3DT.SetStopChargeUnderVoltage(addr, v) {
-			r.Commands = append(r.Commands, "SetStopChargeUnderVoltage")
+	}
+	if this.Commands.SetStopChargeUnderVoltageOff {
+		if this.mk3DT.SetStopChargeUnderVoltageOff(addr) {
+			r.Commands = append(r.Commands, "SetStopChargeUnderVoltageOff")
 		}
 	}
 	if this.Commands.GetRealTimeVoltage {

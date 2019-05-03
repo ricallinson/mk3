@@ -41,7 +41,8 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(e.Commands.GetMaxVoltageDetected, true)
 			AssertEqual(e.Commands.GetMinVoltageDetected, true)
 			AssertEqual(e.Commands.GetStopChargeUnderVoltage, true)
-			AssertEqual(e.Commands.SetStopChargeUnderVoltage, 0)
+			AssertEqual(e.Commands.SetStopChargeUnderVoltageOn, true)
+			AssertEqual(e.Commands.SetStopChargeUnderVoltageOff, true)
 			AssertEqual(e.Commands.GetRealTimeVoltage, true)
 			AssertEqual(e.Commands.GetLowVoltage, true)
 			AssertEqual(e.Commands.SetMaxVoltage, float32(3.6))
@@ -138,28 +139,16 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(r.StopChargeUnderVoltage, false)
 		})
 
-		It("should return command SetStopChargeUnderVoltage -1", func() {
-			e.Commands.SetStopChargeUnderVoltage = -1
+		It("should return command SetStopChargeUnderVoltageOn", func() {
+			e.Commands.SetStopChargeUnderVoltageOn = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(stringInSlice("SetStopChargeUnderVoltage", r.Commands), true)
+			AssertEqual(stringInSlice("SetStopChargeUnderVoltageOn", r.Commands), true)
 		})
 
-		It("should return command SetStopChargeUnderVoltage 2", func() {
-			e.Commands.SetStopChargeUnderVoltage = 2
+		It("should return command SetStopChargeUnderVoltageOff", func() {
+			e.Commands.SetStopChargeUnderVoltageOff = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(stringInSlice("SetStopChargeUnderVoltage", r.Commands), false)
-		})
-
-		It("should return command SetStopChargeUnderVoltage 0", func() {
-			e.Commands.SetStopChargeUnderVoltage = 0
-			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(stringInSlice("SetStopChargeUnderVoltage", r.Commands), false)
-		})
-
-		It("should return command SetStopChargeUnderVoltage 1", func() {
-			e.Commands.SetStopChargeUnderVoltage = 1
-			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(stringInSlice("SetStopChargeUnderVoltage", r.Commands), true)
+			AssertEqual(stringInSlice("SetStopChargeUnderVoltageOff", r.Commands), true)
 		})
 
 		It("should return '3.4' from GetRealTimeVoltage", func() {

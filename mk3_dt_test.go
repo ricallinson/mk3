@@ -99,9 +99,9 @@ func TestMk3DT(t *testing.T) {
 			AssertEqual(mk3DT.GetStopChargeUnderVoltage(1), false)
 		})
 
-		It("should return the sent value from SetChargeUnderVoltage()", func() {
-			AssertEqual(mk3DT.SetStopChargeUnderVoltage(1, false), true)
-			AssertEqual(mk3DT.SetStopChargeUnderVoltage(1, true), true)
+		It("should return the sent value from SetStopChargeUnderVoltage()", func() {
+			AssertEqual(mk3DT.SetStopChargeUnderVoltageOn(1), true)
+			AssertEqual(mk3DT.SetStopChargeUnderVoltageOff(1), true)
 		})
 
 		It("should return 2.432 from GetLowVoltage()", func() {
