@@ -72,7 +72,7 @@ GetStopChargeUnderVoltage: true
 # cells is under voltage. If enabled the 'STOP CHARGING LINE' is activated
 # whenever the 'UNDERVOLTAGE LINE' is activated. The low voltage is set
 # using 'SetMinVoltage'.
-SetStopChargeUnderVoltageOn: true
+SetStopChargeUnderVoltageOn: false
 SetStopChargeUnderVoltageOff: false
 
 # Returns the real-time voltage for the given cell.
