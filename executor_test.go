@@ -32,7 +32,7 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(e.Commands.DisableStopChargeTemp, true)
 			AssertEqual(e.Commands.DisableShunt, true)
 			AssertEqual(e.Commands.EnableShunt, true)
-			AssertEqual(e.Commands.ForceFan, 4)
+			AssertEqual(e.Commands.SetForceFan, 4)
 			AssertEqual(e.Commands.GetHighVoltage, true)
 			AssertEqual(e.Commands.ClearMaxVoltageHistory, true)
 			AssertEqual(e.Commands.ClearMinVoltageHistory, true)
@@ -85,9 +85,9 @@ func TestExecutor(t *testing.T) {
 		})
 
 		It("should return 'true' from ForceFan", func() {
-			e.Commands.ForceFan = 4
+			e.Commands.SetForceFan = 4
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.ForceFan, true)
+			AssertEqual(r.SetForceFan, true)
 		})
 
 		It("should return '3.9' from GetHighVoltage", func() {
