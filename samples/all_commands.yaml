@@ -16,6 +16,9 @@ GetStopChargeTemp: true
 # Default is false.
 DisableStopChargeTemp: true
 
+# Returns the current shunt mode status for the given cell.
+GetShuntMode: true
+
 # Disable a cells ability to shunt which bypasses cell protection and equalization.
 # Default is false.
 DisableShunt: true
@@ -29,7 +32,7 @@ EnableShunt: true
 # Values from 1-8 set the continuous mode where '8' is the fastest.
 # Range 0 to 8.
 # Default is 0.
-ForceFan: 4
+SetForceFan: 4
 
 # Returns a cards high voltage set point. It will return the same value
 # for all cells on the card as there is only one set point per regulator.
@@ -54,11 +57,11 @@ TriggerLights: true
 
 # Returns the maximum voltage detected for the given cell.
 # Default is false.
-GetMaxVoltage: true
+GetMaxVoltageDetected: true
 
 # Returns the minimum voltage detected for the given cell.
 # Default is false.
-GetMinVoltage: true
+GetMinVoltageDetected: true
 
 # Returns the current mode for a cards 'STOP CHARGING LINE' when one of its 
 # cells is under voltage.

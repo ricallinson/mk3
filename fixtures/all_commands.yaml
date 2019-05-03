@@ -9,8 +9,8 @@ ClearMaxVoltageHistory: true
 ClearMinVoltageHistory: true
 ClearVoltageHistory: true
 TriggerLights: true
-GetMaxVoltage: true
-GetMinVoltage: true
+GetMaxVoltageDetected: true
+GetMinVoltageDetected: true
 GetStopChargeUnderVoltage: true
 SetStopChargeUnderVoltage: 0
 GetRealTimeVoltage: true

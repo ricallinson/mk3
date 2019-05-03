@@ -88,11 +88,11 @@ func TestMk3DT(t *testing.T) {
 		})
 
 		It("should return 3.971 from GetMaxVoltage()", func() {
-			AssertEqual(mk3DT.GetMaxVoltage(1), float32(3.971))
+			AssertEqual(mk3DT.GetMaxVoltageDetected(1), float32(3.971))
 		})
 
 		It("should return 2.432 from GetMinVoltage()", func() {
-			AssertEqual(mk3DT.GetMinVoltage(1), float32(2.432))
+			AssertEqual(mk3DT.GetMinVoltageDetected(1), float32(2.432))
 		})
 
 		It("should return 'true' from GetChargeUnderVoltage()", func() {
@@ -100,7 +100,7 @@ func TestMk3DT(t *testing.T) {
 		})
 
 		It("should return the sent value from SetChargeUnderVoltage()", func() {
-			AssertEqual(mk3DT.SetStopChargeUnderVoltage(1, false), false)
+			AssertEqual(mk3DT.SetStopChargeUnderVoltage(1, false), true)
 			AssertEqual(mk3DT.SetStopChargeUnderVoltage(1, true), true)
 		})
 
