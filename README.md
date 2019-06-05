@@ -43,7 +43,7 @@ Changes the address of the first card found to the one given. This should be use
 
 ### Bus Address to Execute Commands
 
-A single bus address to target. The bus address is the number of the first cell a card is reasonable for for.
+A single bus address to target sending the command file to.
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./fixtures/trigger_lights.yaml -addr 1
 
@@ -57,21 +57,21 @@ Send a command as detailed in the [MK3 Digital Perl User Manual Command List](ht
 
 Option to limit the number of cells that will be addressed on the bus. This is useful to stop the program early when you know the maximum number of cells.
 
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./fixtures/get_commands.yaml -max-addr=50 
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./fixtures/get_commands.yaml -max-addr=68 
 
 ### Scan Bus for Cards
 
 Scans the bus for all cards connected.
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -scan-cards
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -scan-cells -max-addr=50 
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -scan-cells -max-addr=68 
 
 ### Scan Bus for Cells
 
 Scans the bus for all cells on connected cards.
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -scan-cells
-	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -scan-cells -max-addr=50 
+	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -scan-cells -max-addr=68 
 
 ### Realtime
 
