@@ -10,71 +10,64 @@ type Executor struct {
 }
 
 type ExecutorCommands struct {
-	SetStopChargeTemp         int     `yaml:"SetStopChargeTemp"`
-	GetStopChargeTemp         bool    `yaml:"GetStopChargeTemp"`
-	GetSerialNum              bool    `yaml:"GetSerialNum"`
-	GetNumCells               bool    `yaml:"GetNumCells"`
-	GetCellRange              bool    `yaml:"GetCellRange"`
-	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
-	GetShuntMode              bool    `yaml:"GetShuntMode"`
-	DisableShunt              bool    `yaml:"DisableShunt"`
-	EnableShunt               bool    `yaml:"EnableShunt"`
-	ForceFan                  int     `yaml:"ForceFan"`
-	GetForceFan               bool    `yaml:"GetForceFan"`
-	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
-	GetHighVoltage            bool    `yaml:"GetHighVoltage"`
-	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
-	ClearMinVoltageHistory    bool    `yaml:"ClearMinVoltageHistory"`
-	ClearVoltageHistory       bool    `yaml:"ClearVoltageHistory"`
-	TriggerLights             bool    `yaml:"TriggerLights"`
-	GetMaxVoltage             bool    `yaml:"GetMaxVoltage"`
-	GetMinVoltage             bool    `yaml:"GetMinVoltage"`
-	GetStopChargeUnderVoltage bool    `yaml:"GetStopChargeUnderVoltage"`
-	SetStopChargeUnderVoltage int     `yaml:"SetStopChargeUnderVoltage"`
-	GetRealTimeVoltage        bool    `yaml:"GetRealTimeVoltage"`
-	GetLowVoltage             bool    `yaml:"GetLowVoltage"`
-	SetMaxVoltage             float32 `yaml:"SetMaxVoltage"`
-	SetMinVoltage             float32 `yaml:"SetMinVoltage"`
-	SetOverVoltage            float32 `yaml:"SetOverVoltage"`
-	GetAddrTemp               bool    `yaml:"GetAddrTemp"`
-	SetFanMaxTemp             int     `yaml:"SetFanMaxTemp"`
-	SetStopDissipatingTemp    int     `yaml:"SetStopDissipatingTemp"`
-	SetFanLowTemp             int     `yaml:"SetFanLowTemp"`
-	GetCellsTemp              bool    `yaml:"GetCellsTemp"`
+	SetStopChargeTemp            int     `yaml:"SetStopChargeTemp"`
+	GetStopChargeTemp            bool    `yaml:"GetStopChargeTemp"`
+	GetSerialNum                 bool    `yaml:"GetSerialNum"`
+	GetNumCells                  bool    `yaml:"GetNumCells"`
+	GetCellRange                 bool    `yaml:"GetCellRange"`
+	DisableStopChargeTemp        bool    `yaml:"DisableStopChargeTemp"`
+	GetShuntMode                 bool    `yaml:"GetShuntMode"`
+	DisableShunt                 bool    `yaml:"DisableShunt"`
+	EnableShunt                  bool    `yaml:"EnableShunt"`
+	SetForceFan                  int     `yaml:"SetForceFan"`
+	GetForceFan                  bool    `yaml:"GetForceFan"`
+	GetFirstPosition             bool    `yaml:"GetFirstPosition"`
+	GetHighVoltage               bool    `yaml:"GetHighVoltage"`
+	ClearMaxVoltageHistory       bool    `yaml:"ClearMaxVoltageHistory"`
+	ClearMinVoltageHistory       bool    `yaml:"ClearMinVoltageHistory"`
+	ClearVoltageHistory          bool    `yaml:"ClearVoltageHistory"`
+	TriggerLights                bool    `yaml:"TriggerLights"`
+	GetMaxVoltageDetected        bool    `yaml:"GetMaxVoltageDetected"`
+	GetMinVoltageDetected        bool    `yaml:"GetMinVoltageDetected"`
+	GetStopChargeUnderVoltage    bool    `yaml:"GetStopChargeUnderVoltage"`
+	SetStopChargeUnderVoltageOn  bool    `yaml:"SetStopChargeUnderVoltageOn"`
+	SetStopChargeUnderVoltageOff bool    `yaml:"SetStopChargeUnderVoltageOff"`
+	GetRealTimeVoltage           bool    `yaml:"GetRealTimeVoltage"`
+	GetLowVoltage                bool    `yaml:"GetLowVoltage"`
+	SetMaxVoltage                float32 `yaml:"SetMaxVoltage"`
+	SetMinVoltage                float32 `yaml:"SetMinVoltage"`
+	SetOverVoltage               float32 `yaml:"SetOverVoltage"`
+	GetAddrTemp                  bool    `yaml:"GetAddrTemp"`
+	SetFanMaxTemp                int     `yaml:"SetFanMaxTemp"`
+	SetStopDissipatingTemp       int     `yaml:"SetStopDissipatingTemp"`
+	SetFanLowTemp                int     `yaml:"SetFanLowTemp"`
+	GetCellsTemp                 bool    `yaml:"GetCellsTemp"`
 }
 
 type ExecutorCommandsResult struct {
-	SetStopChargeTemp         bool    `yaml:"SetStopChargeTemp"`
-	GetStopChargeTemp         int     `yaml:"GetStopChargeTemp"`
-	GetSerialNum              int     `yaml:"GetSerialNum"`
-	GetNumCells               int     `yaml:"GetNumCells"`
-	GetCellRange              string  `yaml:"GetCellRange"`
-	DisableStopChargeTemp     bool    `yaml:"DisableStopChargeTemp"`
-	GetShuntMode              bool    `yaml:"GetShuntMode"`
-	DisableShunt              bool    `yaml:"DisableShunt"`
-	EnableShunt               bool    `yaml:"EnableShunt"`
-	ForceFan                  bool    `yaml:"ForceFan"`
-	GetForceFan               int     `yaml:"GetForceFan"`
-	GetFirstPosition          bool    `yaml:"GetFirstPosition"`
-	GetHighVoltage            float32 `yaml:"GetHighVoltage"`
-	ClearMaxVoltageHistory    bool    `yaml:"ClearMaxVoltageHistory"`
-	ClearMinVoltageHistory    bool    `yaml:"ClearMinVoltageHistory"`
-	ClearVoltageHistory       bool    `yaml:"ClearVoltageHistory"`
-	TriggerLights             bool    `yaml:"TriggerLights"`
-	GetMaxVoltage             float32 `yaml:"GetMaxVoltage"`
-	GetMinVoltage             float32 `yaml:"GetMinVoltage"`
-	GetStopChargeUnderVoltage bool    `yaml:"GetStopChargeUnderVoltage"`
-	SetStopChargeUnderVoltage bool    `yaml:"SetStopChargeUnderVoltage"`
-	GetRealTimeVoltage        float32 `yaml:"GetRealTimeVoltage"`
-	GetLowVoltage             float32 `yaml:"GetLowVoltage"`
-	SetMaxVoltage             bool    `yaml:"SetMaxVoltage"`
-	SetMinVoltage             bool    `yaml:"SetMinVoltage"`
-	SetOverVoltage            bool    `yaml:"SetOverVoltage"`
-	GetAddrTemp               int     `yaml:"GetAddrTemp"`
-	SetFanMaxTemp             bool    `yaml:"SetFanMaxTemp"`
-	SetStopDissipatingTemp    bool    `yaml:"SetStopDissipatingTemp"`
-	SetFanLowTemp             bool    `yaml:"SetFanLowTemp"`
-	GetCellsTemp              int     `yaml:"GetCellsTemp"`
+	StopChargeTemp         int      `yaml:"StopChargeTemp"`
+	SerialNum              int      `yaml:"SerialNum"`
+	NumCells               int      `yaml:"NumCells"`
+	CellRange              string   `yaml:"CellRange"`
+	DisableStopChargeTemp  bool     `yaml:"DisableStopChargeTemp"`
+	ShuntMode              bool     `yaml:"ShuntMode"`
+	ForceFan               int      `yaml:"ForceFan"`
+	FirstPosition          bool     `yaml:"FirstPosition"`
+	HighVoltage            float32  `yaml:"HighVoltage"`
+	MaxVoltageDetected     float32  `yaml:"MaxVoltageDetected"`
+	MinVoltageDetected     float32  `yaml:"MinVoltageDetected"`
+	StopChargeUnderVoltage bool     `yaml:"StopChargeUnderVoltage"`
+	RealTimeVoltage        float32  `yaml:"RealTimeVoltage"`
+	LowVoltage             float32  `yaml:"LowVoltage"`
+	MaxVoltage             float32  `yaml:"MaxVoltage"`
+	MinVoltage             float32  `yaml:"MinVoltage"`
+	OverVoltage            float32  `yaml:"OverVoltage"`
+	AddrTemp               int      `yaml:"AddrTemp"`
+	FanMaxTemp             int      `yaml:"FanMaxTemp"`
+	StopDissipatingTemp    int      `yaml:"StopDissipatingTemp"`
+	FanLowTemp             int      `yaml:"FanLowTemp"`
+	CellsTemp              int      `yaml:"CellsTemp"`
+	Commands               []string `yaml:"Commands"`
 }
 
 func NewExecutor(mk3DT *Mk3DT) *Executor {
@@ -102,100 +95,146 @@ func (this *Executor) ExecuteCommands(to int) map[int]*ExecutorCommandsResult {
 func (this *Executor) ExecuteCommandsAtAddr(addr int) *ExecutorCommandsResult {
 	r := &ExecutorCommandsResult{}
 	if this.Commands.SetStopChargeTemp > 0 {
-		r.SetStopChargeTemp = this.mk3DT.SetStopChargeTemp(addr, this.Commands.SetStopChargeTemp)
+		if this.mk3DT.SetStopChargeTemp(addr, this.Commands.SetStopChargeTemp) {
+			r.Commands = append(r.Commands, "SetStopChargeTemp")
+		}
 	}
 	if this.Commands.GetStopChargeTemp {
-		r.GetStopChargeTemp = this.mk3DT.GetStopChargeTemp(addr)
+		r.StopChargeTemp = this.mk3DT.GetStopChargeTemp(addr)
+		r.Commands = append(r.Commands, "GetStopChargeTemp")
 	}
 	if this.Commands.GetSerialNum {
-		r.GetSerialNum = this.mk3DT.GetSerialNum(addr)
+		r.SerialNum = this.mk3DT.GetSerialNum(addr)
+		r.Commands = append(r.Commands, "GetSerialNum")
 	}
 	if this.Commands.GetNumCells {
-		r.GetNumCells = this.mk3DT.GetNumCells(addr)
+		r.NumCells = this.mk3DT.GetNumCells(addr)
+		r.Commands = append(r.Commands, "GetNumCells")
 	}
 	if this.Commands.GetCellRange {
 		start, end := this.mk3DT.GetCellRange(addr)
-		r.GetCellRange = fmt.Sprintf("%d %d", start, end)
+		r.CellRange = fmt.Sprintf("%d %d", start, end)
+		r.Commands = append(r.Commands, "GetCellRange")
 	}
 	if this.Commands.DisableStopChargeTemp {
-		r.DisableStopChargeTemp = this.mk3DT.DisableStopChargeTemp(addr)
+		if this.mk3DT.DisableStopChargeTemp(addr) {
+			r.Commands = append(r.Commands, "DisableStopChargeTemp")
+		}
 	}
 	if this.Commands.GetShuntMode {
-		r.GetShuntMode = this.mk3DT.GetShuntMode(addr)
+		r.ShuntMode = this.mk3DT.GetShuntMode(addr)
+		r.Commands = append(r.Commands, "GetShuntMode")
 	}
 	if this.Commands.DisableShunt {
-		r.DisableShunt = this.mk3DT.DisableShunt(addr)
+		if this.mk3DT.DisableShunt(addr) {
+			r.Commands = append(r.Commands, "DisableShunt")
+		}
 	}
 	if this.Commands.EnableShunt {
-		r.EnableShunt = this.mk3DT.EnableShunt(addr)
+		if this.mk3DT.EnableShunt(addr) {
+			r.Commands = append(r.Commands, "EnableShunt")
+		}
 	}
-	if this.Commands.ForceFan >= 0 && this.Commands.ForceFan <= 8 {
-		r.ForceFan = this.mk3DT.ForceFan(addr, this.Commands.ForceFan)
+	if this.Commands.SetForceFan >= 0 && this.Commands.SetForceFan <= 8 {
+		if this.mk3DT.ForceFan(addr, this.Commands.SetForceFan) {
+			r.Commands = append(r.Commands, "SetForceFan")
+		}
 	}
 	if this.Commands.GetForceFan {
-		r.GetForceFan = this.mk3DT.GetForceFan(addr)
+		r.ForceFan = this.mk3DT.GetForceFan(addr)
+		r.Commands = append(r.Commands, "GetForceFan")
 	}
 	if this.Commands.GetHighVoltage {
-		r.GetHighVoltage = this.mk3DT.GetHighVoltage(addr)
+		r.HighVoltage = this.mk3DT.GetHighVoltage(addr)
+		r.Commands = append(r.Commands, "GetHighVoltage")
 	}
 	if this.Commands.ClearMaxVoltageHistory {
-		r.ClearMaxVoltageHistory = this.mk3DT.ClearMaxVoltageHistory(addr)
+		if this.mk3DT.ClearMaxVoltageHistory(addr) {
+			r.Commands = append(r.Commands, "ClearMaxVoltageHistory")
+		}
 	}
 	if this.Commands.ClearMinVoltageHistory {
-		r.ClearMinVoltageHistory = this.mk3DT.ClearMinVoltageHistory(addr)
+		if this.mk3DT.ClearMinVoltageHistory(addr) {
+			r.Commands = append(r.Commands, "ClearMinVoltageHistory")
+		}
 	}
 	if this.Commands.ClearVoltageHistory {
-		r.ClearVoltageHistory = this.mk3DT.ClearVoltageHistory(addr)
+		if this.mk3DT.ClearVoltageHistory(addr) {
+			r.Commands = append(r.Commands, "ClearVoltageHistory")
+		}
 	}
 	if this.Commands.TriggerLights {
-		r.TriggerLights = this.mk3DT.TriggerLights(addr)
+		if this.mk3DT.TriggerLights(addr) {
+			r.Commands = append(r.Commands, "TriggerLights")
+		}
 	}
-	if this.Commands.GetMaxVoltage {
-		r.GetMaxVoltage = this.mk3DT.GetMaxVoltage(addr)
+	if this.Commands.GetMaxVoltageDetected {
+		r.MaxVoltageDetected = this.mk3DT.GetMaxVoltageDetected(addr)
+		r.Commands = append(r.Commands, "GetMaxVoltageDetected")
 	}
-	if this.Commands.GetMinVoltage {
-		r.GetMinVoltage = this.mk3DT.GetMinVoltage(addr)
+	if this.Commands.GetMinVoltageDetected {
+		r.MinVoltageDetected = this.mk3DT.GetMinVoltageDetected(addr)
+		r.Commands = append(r.Commands, "GetMinVoltageDetected")
 	}
 	if this.Commands.GetStopChargeUnderVoltage {
-		r.GetStopChargeUnderVoltage = this.mk3DT.GetStopChargeUnderVoltage(addr)
+		r.StopChargeUnderVoltage = this.mk3DT.GetStopChargeUnderVoltage(addr)
+		r.Commands = append(r.Commands, "GetStopChargeUnderVoltage")
 	}
-	// If -1 turn off. If 1 turn on.
-	if this.Commands.SetStopChargeUnderVoltage == -1 || this.Commands.SetStopChargeUnderVoltage == 1 {
-		v := false
-		if this.Commands.SetStopChargeUnderVoltage == 1 {
-			v = true
+	if this.Commands.SetStopChargeUnderVoltageOn {
+		if this.mk3DT.SetStopChargeUnderVoltageOn(addr) {
+			r.Commands = append(r.Commands, "SetStopChargeUnderVoltageOn")
 		}
-		r.SetStopChargeUnderVoltage = this.mk3DT.SetStopChargeUnderVoltage(addr, v)
+	}
+	if this.Commands.SetStopChargeUnderVoltageOff {
+		if this.mk3DT.SetStopChargeUnderVoltageOff(addr) {
+			r.Commands = append(r.Commands, "SetStopChargeUnderVoltageOff")
+		}
 	}
 	if this.Commands.GetRealTimeVoltage {
-		r.GetRealTimeVoltage = this.mk3DT.GetRealTimeVoltage(addr)
+		r.RealTimeVoltage = this.mk3DT.GetRealTimeVoltage(addr)
+		r.Commands = append(r.Commands, "GetRealTimeVoltage")
 	}
 	if this.Commands.GetLowVoltage {
-		r.GetLowVoltage = this.mk3DT.GetLowVoltage(addr)
+		r.LowVoltage = this.mk3DT.GetLowVoltage(addr)
+		r.Commands = append(r.Commands, "GetLowVoltage")
 	}
 	if this.Commands.SetMaxVoltage > 0 {
-		r.SetMaxVoltage = this.mk3DT.SetMaxVoltage(addr, this.Commands.SetMaxVoltage)
+		if this.mk3DT.SetMaxVoltage(addr, this.Commands.SetMaxVoltage) {
+			r.Commands = append(r.Commands, "SetMaxVoltage")
+		}
 	}
 	if this.Commands.SetMinVoltage > 0 {
-		r.SetMinVoltage = this.mk3DT.SetMinVoltage(addr, this.Commands.SetMinVoltage)
+		if this.mk3DT.SetMinVoltage(addr, this.Commands.SetMinVoltage) {
+			r.Commands = append(r.Commands, "SetMinVoltage")
+		}
 	}
 	if this.Commands.SetOverVoltage > 0 {
-		r.SetOverVoltage = this.mk3DT.SetOverVoltage(addr, this.Commands.SetOverVoltage)
+		if this.mk3DT.SetOverVoltage(addr, this.Commands.SetOverVoltage) {
+			r.Commands = append(r.Commands, "SetOverVoltage")
+		}
 	}
 	if this.Commands.GetAddrTemp {
-		r.GetAddrTemp = this.mk3DT.GetAddrTemp(addr)
+		r.AddrTemp = this.mk3DT.GetAddrTemp(addr)
+		r.Commands = append(r.Commands, "GetAddrTemp")
 	}
 	if this.Commands.SetFanMaxTemp > 0 {
-		r.SetFanMaxTemp = this.mk3DT.SetFanMaxTemp(addr, this.Commands.SetFanMaxTemp)
+		if this.mk3DT.SetFanMaxTemp(addr, this.Commands.SetFanMaxTemp) {
+			r.Commands = append(r.Commands, "SetFanMaxTemp")
+		}
 	}
 	if this.Commands.SetStopDissipatingTemp > 0 {
-		r.SetStopDissipatingTemp = this.mk3DT.SetStopDissipatingTemp(addr, this.Commands.SetStopDissipatingTemp)
+		if this.mk3DT.SetStopDissipatingTemp(addr, this.Commands.SetStopDissipatingTemp) {
+			r.Commands = append(r.Commands, "SetStopDissipatingTemp")
+		}
 	}
 	if this.Commands.SetFanLowTemp > 0 {
-		r.SetFanLowTemp = this.mk3DT.SetFanLowTemp(addr, this.Commands.SetFanLowTemp)
+		if this.mk3DT.SetFanLowTemp(addr, this.Commands.SetFanLowTemp) {
+			r.Commands = append(r.Commands, "SetFanLowTemp")
+		}
 	}
 	if this.Commands.GetCellsTemp {
-		r.GetCellsTemp = this.mk3DT.GetCellsTemp(addr)
+		r.CellsTemp = this.mk3DT.GetCellsTemp(addr)
+		r.Commands = append(r.Commands, "GetCellsTemp")
 	}
 	return r
 }

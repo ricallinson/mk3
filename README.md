@@ -75,10 +75,21 @@ Scans the bus for all cells on connected cards.
 
 ### Realtime
 
-Prints a JSON object. This command loops once it reaches the last cell and is useful for monitoring when setting up a pack or as a log output.
+This command loops once it reaches the last cell and is useful for monitoring when setting up a pack or as a log output.
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -realtime
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -realtime -max-addr=68
+
+Outputs YAML to `stdout` with the following structure;
+
+	Timestamp int64
+	Address   int
+	SerialNum int
+	CellCount int
+	Volts     float32
+	MaxVolts  float32
+	MinVolts  float32
+	Temp      int
 
 ## Setup Development Environment
 

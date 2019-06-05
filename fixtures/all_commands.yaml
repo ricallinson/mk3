@@ -3,14 +3,14 @@ GetStopChargeTemp: true
 DisableStopChargeTemp: true
 DisableShunt: true
 EnableShunt: true
-ForceFan: 4
+SetForceFan: 4
 GetHighVoltage: true
 ClearMaxVoltageHistory: true
 ClearMinVoltageHistory: true
 ClearVoltageHistory: true
 TriggerLights: true
-GetMaxVoltage: true
-GetMinVoltage: true
+GetMaxVoltageDetected: true
+GetMinVoltageDetected: true
 GetStopChargeUnderVoltage: true
 SetStopChargeUnderVoltage: 0
 GetRealTimeVoltage: true

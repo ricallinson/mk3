@@ -32,16 +32,17 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(e.Commands.DisableStopChargeTemp, true)
 			AssertEqual(e.Commands.DisableShunt, true)
 			AssertEqual(e.Commands.EnableShunt, true)
-			AssertEqual(e.Commands.ForceFan, 4)
+			AssertEqual(e.Commands.SetForceFan, 4)
 			AssertEqual(e.Commands.GetHighVoltage, true)
 			AssertEqual(e.Commands.ClearMaxVoltageHistory, true)
 			AssertEqual(e.Commands.ClearMinVoltageHistory, true)
 			AssertEqual(e.Commands.ClearVoltageHistory, true)
 			AssertEqual(e.Commands.TriggerLights, true)
-			AssertEqual(e.Commands.GetMaxVoltage, true)
-			AssertEqual(e.Commands.GetMinVoltage, true)
+			AssertEqual(e.Commands.GetMaxVoltageDetected, true)
+			AssertEqual(e.Commands.GetMinVoltageDetected, true)
 			AssertEqual(e.Commands.GetStopChargeUnderVoltage, true)
-			AssertEqual(e.Commands.SetStopChargeUnderVoltage, 0)
+			AssertEqual(e.Commands.SetStopChargeUnderVoltageOn, false)
+			AssertEqual(e.Commands.SetStopChargeUnderVoltageOff, false)
 			AssertEqual(e.Commands.GetRealTimeVoltage, true)
 			AssertEqual(e.Commands.GetLowVoltage, true)
 			AssertEqual(e.Commands.SetMaxVoltage, float32(3.6))
@@ -54,172 +55,160 @@ func TestExecutor(t *testing.T) {
 			AssertEqual(e.Commands.GetCellsTemp, true)
 		})
 
-		It("should return 'true' from SetStopChargeTemp", func() {
+		It("should return command SetStopChargeTemp", func() {
 			e.Commands.SetStopChargeTemp = 116
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetStopChargeTemp, true)
+			AssertEqual(stringInSlice("SetStopChargeTemp", r.Commands), true)
 		})
 
 		It("should return '180' from GetStopChargeTemp", func() {
 			e.Commands.GetStopChargeTemp = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetStopChargeTemp, 180)
+			AssertEqual(r.StopChargeTemp, 180)
 		})
 
-		It("should return 'true' from DisableStopChargeTemp", func() {
+		It("should return command DisableStopChargeTemp", func() {
 			e.Commands.DisableStopChargeTemp = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.DisableStopChargeTemp, true)
+			AssertEqual(stringInSlice("DisableStopChargeTemp", r.Commands), true)
 		})
 
-		It("should return 'true' from DisableShunt", func() {
+		It("should return command DisableShunt", func() {
 			e.Commands.DisableShunt = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.DisableShunt, true)
+			AssertEqual(stringInSlice("DisableShunt", r.Commands), true)
 		})
 
-		It("should return 'true' from EnableShunt", func() {
+		It("should return command EnableShunt", func() {
 			e.Commands.EnableShunt = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.EnableShunt, true)
+			AssertEqual(stringInSlice("EnableShunt", r.Commands), true)
 		})
 
-		It("should return 'true' from ForceFan", func() {
-			e.Commands.ForceFan = 4
+		It("should return command SetForceFan", func() {
+			e.Commands.SetForceFan = 4
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.ForceFan, true)
+			AssertEqual(stringInSlice("SetForceFan", r.Commands), true)
 		})
 
 		It("should return '3.9' from GetHighVoltage", func() {
 			e.Commands.GetHighVoltage = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetHighVoltage, float32(3.9))
+			AssertEqual(r.HighVoltage, float32(3.9))
 		})
 
-		It("should return 'true' from ClearMaxVoltageHistory", func() {
+		It("should return command ClearMaxVoltageHistory", func() {
 			e.Commands.ClearMaxVoltageHistory = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.ClearMaxVoltageHistory, true)
+			AssertEqual(stringInSlice("ClearMaxVoltageHistory", r.Commands), true)
 		})
 
-		It("should return 'true' from ClearMinVoltageHistory", func() {
+		It("should return command ClearMinVoltageHistory", func() {
 			e.Commands.ClearMinVoltageHistory = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.ClearMinVoltageHistory, true)
+			AssertEqual(stringInSlice("ClearMinVoltageHistory", r.Commands), true)
 		})
 
-		It("should return 'true' from ClearVoltageHistory", func() {
+		It("should return command ClearVoltageHistory", func() {
 			e.Commands.ClearVoltageHistory = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.ClearVoltageHistory, true)
+			AssertEqual(stringInSlice("ClearVoltageHistory", r.Commands), true)
 		})
 
-		It("should return 'true' from TriggerLights", func() {
+		It("should return command TriggerLights", func() {
 			e.Commands.TriggerLights = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.TriggerLights, true)
+			AssertEqual(stringInSlice("TriggerLights", r.Commands), true)
 		})
 
 		It("should return '3.971' from GetMaxVoltage", func() {
-			e.Commands.GetMaxVoltage = true
+			e.Commands.GetMaxVoltageDetected = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetMaxVoltage, float32(3.971))
+			AssertEqual(r.MaxVoltageDetected, float32(3.971))
 		})
 
 		It("should return '2.432' from GetMinVoltage", func() {
-			e.Commands.GetMinVoltage = true
+			e.Commands.GetMinVoltageDetected = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetMinVoltage, float32(2.432))
+			AssertEqual(r.MinVoltageDetected, float32(2.432))
 		})
 
 		It("should return 'true' from GetStopChargeUnderVoltage", func() {
 			e.Commands.GetStopChargeUnderVoltage = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetStopChargeUnderVoltage, false)
+			AssertEqual(r.StopChargeUnderVoltage, false)
 		})
 
-		It("should return 'true' from SetStopChargeUnderVoltage -1", func() {
-			e.Commands.SetStopChargeUnderVoltage = -1
+		It("should return command SetStopChargeUnderVoltageOn", func() {
+			e.Commands.SetStopChargeUnderVoltageOn = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetStopChargeUnderVoltage, false)
+			AssertEqual(stringInSlice("SetStopChargeUnderVoltageOn", r.Commands), true)
 		})
 
-		It("should return 'true' from SetStopChargeUnderVoltage 2", func() {
-			e.Commands.SetStopChargeUnderVoltage = 2
+		It("should return command SetStopChargeUnderVoltageOff", func() {
+			e.Commands.SetStopChargeUnderVoltageOff = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetStopChargeUnderVoltage, false)
-		})
-
-		It("should return 'true' from SetStopChargeUnderVoltage 0", func() {
-			e.Commands.SetStopChargeUnderVoltage = 0
-			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetStopChargeUnderVoltage, false)
-		})
-
-		It("should return 'true' from SetStopChargeUnderVoltage 1", func() {
-			e.Commands.SetStopChargeUnderVoltage = 1
-			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetStopChargeUnderVoltage, true)
+			AssertEqual(stringInSlice("SetStopChargeUnderVoltageOff", r.Commands), true)
 		})
 
 		It("should return '3.4' from GetRealTimeVoltage", func() {
 			e.Commands.GetRealTimeVoltage = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetRealTimeVoltage, float32(3.4))
+			AssertEqual(r.RealTimeVoltage, float32(3.4))
 		})
 
 		It("should return '2.432' from GetLowVoltage", func() {
 			e.Commands.GetLowVoltage = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetLowVoltage, float32(2.432))
+			AssertEqual(r.LowVoltage, float32(2.432))
 		})
 
-		It("should return 'true' from SetMaxVoltage", func() {
+		It("should return command SetMaxVoltage", func() {
 			e.Commands.SetMaxVoltage = 3.654
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetMaxVoltage, true)
+			AssertEqual(stringInSlice("SetMaxVoltage", r.Commands), true)
 		})
 
-		It("should return 'true' from SetMinVoltage", func() {
+		It("should return command SetMinVoltage", func() {
 			e.Commands.SetMinVoltage = 2.9
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetMinVoltage, true)
+			AssertEqual(stringInSlice("SetMinVoltage", r.Commands), true)
 		})
 
-		It("should return 'true' from SetOverVoltage", func() {
+		It("should return command SetOverVoltage", func() {
 			e.Commands.SetOverVoltage = 3.7
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetOverVoltage, true)
+			AssertEqual(stringInSlice("SetOverVoltage", r.Commands), true)
 		})
 
 		It("should return '120' from GetAddrTemp", func() {
 			e.Commands.GetAddrTemp = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetAddrTemp, 120)
+			AssertEqual(r.AddrTemp, 120)
 		})
 
-		It("should return 'true' from SetFanMaxTemp", func() {
+		It("should return command SetFanMaxTemp", func() {
 			e.Commands.SetFanMaxTemp = 151
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetFanMaxTemp, true)
+			AssertEqual(stringInSlice("SetFanMaxTemp", r.Commands), true)
 		})
 
-		It("should return 'true' from SetStopDissipatingTemp", func() {
+		It("should return command SetStopDissipatingTemp", func() {
 			e.Commands.SetStopDissipatingTemp = 171
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetStopDissipatingTemp, true)
+			AssertEqual(stringInSlice("SetStopDissipatingTemp", r.Commands), true)
 		})
 
-		It("should return 'true' from SetFanLowTemp", func() {
+		It("should return command SetFanLowTemp", func() {
 			e.Commands.SetFanLowTemp = 120
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.SetFanLowTemp, true)
+			AssertEqual(stringInSlice("SetFanLowTemp", r.Commands), true)
 		})
 
 		It("should return '120' from GetCellsTemp", func() {
 			e.Commands.GetCellsTemp = true
 			r := e.ExecuteCommandsAtAddr(0)
-			AssertEqual(r.GetCellsTemp, 0)
+			AssertEqual(r.CellsTemp, 0)
 		})
 
 		It("should return '255' from ExecuteCommands", func() {
