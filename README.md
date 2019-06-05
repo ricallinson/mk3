@@ -37,7 +37,7 @@ The path to the file containing the commands to execute against the bus.
 
 ### Change a Cards Bus Address
 
-Changes the address of the first card found to the one given. This should be used when only one card is attached to the dongle.
+Changes the address of the first card found to the one given. This should be used when only one card is attached to the dongle. If more than one card is connect the first card found will be given the new address.
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -new-addr=5
 
