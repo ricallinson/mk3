@@ -2,18 +2,15 @@
 
 [![Build Status](https://travis-ci.org/ricallinson/mk3.svg?branch=master)](https://travis-ci.org/ricallinson/mk3) [![Build status](https://ci.appveyor.com/api/projects/status/fukrjc3xponxntry/branch/master?svg=true)](https://ci.appveyor.com/project/ricallinson/mk3/branch/master)
 
-__UNSTABLE__
-
 Command line interface for the Manzanita Micro USB Dongle Terminator. This is an alternative to the [MK3 Digital Perl Scanner Software](http://www.manzanitamicro.com/downloads/category/5-bms2?download=93%3Aperlscanner) provided by Manzanita Micro.
 
 ## Usage
 
-Requires a [Go](https://golang.org/dl/) environment.
+Download the executable for your chosen platform from the [releases](https://github.com/ricallinson/mk3/releases/tag/v1.0) page. Feel free to rename the executable to `mk3` or `mk3.exe` depending on your chosen platform.
 
-    go get github.com/ricallinson/mk3
-    go install github.com/ricallinson/mk3
+You will need to know the location of the USB serial port which the dongle is plugged into. The [MK3 Digital Perl Scanner Software](http://www.manzanitamicro.com/downloads/category/5-bms2?download=93%3Aperlscanner) documentation describes how to find this for Windows as a COM port number. For Unix based systems you can use [dmesg | grep tty](https://www.cyberciti.biz/faq/find-out-linux-serial-ports-with-setserial/) as described in the link.
 
-## Examples
+### Examples
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -realtime
 
