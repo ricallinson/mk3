@@ -1,39 +1,27 @@
 language: go
-
 matrix:
   include:
-    - go: 1.x
-      env: LATEST=true
+  - go: 1.x
+    env: LATEST=true
   allow_failures:
-    - tip
-
-# install:
-# - go get github.com/tarm/serial
-# - go get gopkg.in/yaml.v2
-# - go get github.com/ricallinson/simplebdd
-
+  - tip
 before_install:
-  # gox simplifies building for multiple architectures
-  - go get github.com/mitchellh/gox
-
+- go get github.com/mitchellh/gox
 install:
-  - # skip
-
+- 
 script:
-  - go get -t -v ./...
-  - diff -u <(echo -n) <(gofmt -d .)
-  - go vet $(go list ./... | grep -v /vendor/)
-  - go test -v -race ./...
-  # Only build binaries from the latest Go release.
-  - if [ "${LATEST}" = "true" ]; then gox -os="linux windows" -arch="amd64" -output="mk3.." -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...; fi
-
+- go get -t -v ./...
+- diff -u <(echo -n) <(gofmt -d .)
+- go vet $(go list ./... | grep -v /vendor/)
+- go test -v -race ./...
+- if [ "${LATEST}" = "true" ]; then gox -os="linux windows" -arch="amd64" -output="mk3.."
+  -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...; fi
 deploy:
   provider: releases
   api_key:
-    secure: T3de41FJt/MRy6qGMPH+axuLH7tQ1Db0/VQe5SSLdL3i/BJrPqC1+GgIi7RBTFU0TBiUAYT/gC7pG2FR+Pg5Yn/fBVGBhA7R9wZ97thT3WJhUO7P/LRGVvpO72scifeg/5x+22mBe2mc+m6wBV6EoeF8lSrhsU2AB/d7yxo3+BE2kmsqy997YcxFbo6q7Al8Z5FCZy6i+r2Q2R+7Yde93sLnZTEGupbd6KPlvSz2jUxbMrVtFgz2sGnOe+T5NRk2MhdYLc5bqk/ToJ3tOlNlCM+NB5lktNnRZ9d1VhfezUt0EMOVp/HqUV/erU9KHqgh5br72nIVq6jVAu9lLClNpAXQgObdVyS/75axduC6TlcBwVNIrfYObOsdhJMwzXKQhmT0fBcBTmD0JuwwoH9oSjaDFUf5rjaA0J/RlurP6cZHpb2T1LdF2Bf/vYcayQ6Q0cqNHCAVxJxfVm+HPty9f/j2QLyS/TD9oCKqaVpMXW6Ntjb7ha9043lsfo+Z1lp2WikadPvTuRyMijMMKnRxuvaFvlxO/1z+B4if3YnHAIdh4w+AwyjPSXNpnjaTFD96PC2K8NgxdQThPCA0528WNwQYKnKg//7foSTK83qnOYaizXy348fPdG0X/52F1ajR3SjqWO2Xwbrm/+/ghcrY1Z2ZW3SAcxzqAWtpbsxHXOY=
-  file:
-    - mk3.windows.amd64.exe
-    # - mk3.darwin.amd64
+    secure: G4wG5EllIA+2Uz+FALRXL/RRouF21HXP3bxA+DDSnnNuvaIUONJk/UgIWtQP9hGhVPj8QRZW/33yNGpzEvs7K752tY6NiKYUfbZGj++6OrJqx77Qfe8uC5jfFAkFPfrd2YYV7len91VMGUA+YKrhkzrE7FliWDE7nJTjCsmIQFMlm5EH/sGZtblHIv53P3IlD1WaoenRedACIJVC6gDXvJ1ToJvzW81WjPSVjC5bhQtoupWIYVsCPkx1hFujtmRKfyaKcf4B3LCb6WNT3rAfuYZ1tCM7ABId5oOe65wzNnaOKKBeyD9AV64s3sKAVWYu0HYQGxrrIPCWB99gnemiM7M1LT4oe6q8diuDJD3A53i2wiFWezGX6pto6yApqvmNiTIG8xmGvReOzta64Jwt965nGldaWG7Z5QjMYGzDP0GbWTcPAS1U4nC5l9PkpZfRkRI69NbLRukhUMmHKCpXFsexZIPVyYvj28sf1oDyJiYui0OYAB0A1gbc2DdujWSUa8H3RIGBNXspBh7sRrDyRIOwWuOnwPB+ZvEeR0OvXFxzqB5PhyhNxVOrgFelrii5AxhfcxeJd791hoKlI7N7ZmSZHdhyDeOpcXv/EXTcKCXmf2KDCZplePAdXQUzWcO1e+y/xlNg9w5QzL7B86nWMUgobzJrentBqYjb+G4N6ik=
+  file:\
     - mk3.linux.amd64
+    - mk3.windows.amd64.exe
   on:
     repo: ricallinson/mk3
