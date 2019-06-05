@@ -41,4 +41,4 @@ deploy:
     branches:
       only:
         - master
-    tags: false
+    tags: true
