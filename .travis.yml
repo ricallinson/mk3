@@ -14,7 +14,7 @@ script:
 - diff -u <(echo -n) <(gofmt -d .)
 - go vet $(go list ./... | grep -v /vendor/)
 - go test -v -race ./...
-- if [ "${LATEST}" = "true" ]; then gox -os="linux darwin windows" -output="bin/{{.Dir}}_{{.OS}}_{{.Arch}}"
+- if [ "${LATEST}" = "true" ]; then gox -os="linux windows" -osarch="darwin/amd64" -output="bin/{{.Dir}}_{{.OS}}_{{.Arch}}"
   -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...; fi
 deploy:
   overwrite: true
@@ -22,17 +22,7 @@ deploy:
   api_key:
     secure: G4wG5EllIA+2Uz+FALRXL/RRouF21HXP3bxA+DDSnnNuvaIUONJk/UgIWtQP9hGhVPj8QRZW/33yNGpzEvs7K752tY6NiKYUfbZGj++6OrJqx77Qfe8uC5jfFAkFPfrd2YYV7len91VMGUA+YKrhkzrE7FliWDE7nJTjCsmIQFMlm5EH/sGZtblHIv53P3IlD1WaoenRedACIJVC6gDXvJ1ToJvzW81WjPSVjC5bhQtoupWIYVsCPkx1hFujtmRKfyaKcf4B3LCb6WNT3rAfuYZ1tCM7ABId5oOe65wzNnaOKKBeyD9AV64s3sKAVWYu0HYQGxrrIPCWB99gnemiM7M1LT4oe6q8diuDJD3A53i2wiFWezGX6pto6yApqvmNiTIG8xmGvReOzta64Jwt965nGldaWG7Z5QjMYGzDP0GbWTcPAS1U4nC5l9PkpZfRkRI69NbLRukhUMmHKCpXFsexZIPVyYvj28sf1oDyJiYui0OYAB0A1gbc2DdujWSUa8H3RIGBNXspBh7sRrDyRIOwWuOnwPB+ZvEeR0OvXFxzqB5PhyhNxVOrgFelrii5AxhfcxeJd791hoKlI7N7ZmSZHdhyDeOpcXv/EXTcKCXmf2KDCZplePAdXQUzWcO1e+y/xlNg9w5QzL7B86nWMUgobzJrentBqYjb+G4N6ik=
   file:
-    - mk3_linux_386
-    - mk3_linux_amd64
-    - mk3_linux_arm
-    - mk3_linux_arm64
-    - mk3_linux_mips
-    - mk3_linux_mips64
-    - mk3_linux_mips64le
-    - mk3_linux_mipsie
-    - mk3_linux_ppc64
-    - mk3_linux_ppc64le
-    - mk3_linux_s390x
+    - bin/mk3_darwin_amd64
   on:
     repo: ricallinson/mk3
     branches:
