@@ -4,6 +4,3 @@ count.*
 
 # OSX system files
 .DS_Store
-
-# Local Builds
-mk3
