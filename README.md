@@ -28,7 +28,7 @@ The path to the USB port where the dongle is connected.
 
 ### Path to Commands File
 
-The path to the file containing the commands to execute against the bus.
+The path to the file containing the commands to execute against the bus. Available commands are listed in the [all_commands.yaml](https://github.com/ricallinson/mk3/blob/master/samples/all_commands.yaml) file.
 
 	mk3 -dongle /dev/tty.usbserial-A904RBQ7 -cmd ./samples/get_settings.yaml
 
