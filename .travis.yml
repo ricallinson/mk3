@@ -22,19 +22,12 @@ deploy:
     secure: G4wG5EllIA+2Uz+FALRXL/RRouF21HXP3bxA+DDSnnNuvaIUONJk/UgIWtQP9hGhVPj8QRZW/33yNGpzEvs7K752tY6NiKYUfbZGj++6OrJqx77Qfe8uC5jfFAkFPfrd2YYV7len91VMGUA+YKrhkzrE7FliWDE7nJTjCsmIQFMlm5EH/sGZtblHIv53P3IlD1WaoenRedACIJVC6gDXvJ1ToJvzW81WjPSVjC5bhQtoupWIYVsCPkx1hFujtmRKfyaKcf4B3LCb6WNT3rAfuYZ1tCM7ABId5oOe65wzNnaOKKBeyD9AV64s3sKAVWYu0HYQGxrrIPCWB99gnemiM7M1LT4oe6q8diuDJD3A53i2wiFWezGX6pto6yApqvmNiTIG8xmGvReOzta64Jwt965nGldaWG7Z5QjMYGzDP0GbWTcPAS1U4nC5l9PkpZfRkRI69NbLRukhUMmHKCpXFsexZIPVyYvj28sf1oDyJiYui0OYAB0A1gbc2DdujWSUa8H3RIGBNXspBh7sRrDyRIOwWuOnwPB+ZvEeR0OvXFxzqB5PhyhNxVOrgFelrii5AxhfcxeJd791hoKlI7N7ZmSZHdhyDeOpcXv/EXTcKCXmf2KDCZplePAdXQUzWcO1e+y/xlNg9w5QzL7B86nWMUgobzJrentBqYjb+G4N6ik=
   file:
     - builds/mk3.darwin_amd64
-    - builds/mk3.windows_amd64.exe
     - builds/mk3.windows_386.exe
-    - builds/mk3.linux_ppc64le
+    - builds/mk3.windows_amd64.exe
     - builds/mk3.linux_386
     - builds/mk3.linux_amd64
     - builds/mk3.linux_arm
     - builds/mk3.linux_arm64
-    - builds/mk3.linux_ppc64
-    - builds/mk3.linux_mips64le
-    - builds/mk3.linux_s390x
-    - builds/mk3.linux_mips64
-    - builds/mk3.linux_mipsle
-    - builds/mk3.linux_mips
 
   on:
     repo: ricallinson/mk3
