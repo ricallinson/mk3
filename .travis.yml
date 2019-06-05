@@ -14,7 +14,7 @@ script:
 - diff -u <(echo -n) <(gofmt -d .)
 - go vet $(go list ./... | grep -v /vendor/)
 - go test -v -race ./...
-- if [ "${LATEST}" = "true" ]; then gox -os="linux windows" -osarch="darwin/amd64" -output="builds/{{.OS}}/{{.Arch}}/{{.Dir}}"
+- if [ "${LATEST}" = "true" ]; then gox -os="linux windows" -output="builds/{{.OS}}/{{.Arch}}/{{.Dir}}"
   -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...; fi
 deploy:
   overwrite: true
