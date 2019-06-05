@@ -26,6 +26,7 @@ deploy:
     - mk3.windows.amd64.exe
   on:
     repo: ricallinson/mk3
-    branches:    # ← new!
-      only:      # ← new!
-        - master # ← new!
+    branches:
+      only:
+        - master
+    tags: true
