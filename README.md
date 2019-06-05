@@ -93,10 +93,8 @@ Outputs YAML to `stdout` with the following structure;
 Requires a [Go](https://golang.org/dl/) environment.
 
 	git clone git@github.com:ricallinson/mk3.git $GOPATH/src/git@github.com/ricallinson/mk3
-    go get github.com/tarm/serial
-    go get gopkg.in/yaml.v2
-    go get github.com/ricallinson/simplebdd
     cd $GOPATH/src/git@github.com/ricallinson/mk3
+    go get ./...
     go install
 
 ## Testing
