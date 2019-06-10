@@ -1,6 +1,6 @@
 # mk3
 
-[![Build Status](https://travis-ci.org/ricallinson/mk3.svg?branch=master)](https://travis-ci.org/ricallinson/mk3) [![Build status](https://ci.appveyor.com/api/projects/status/fukrjc3xponxntry/branch/master?svg=true)](https://ci.appveyor.com/project/ricallinson/mk3/branch/master)
+[![Build Status](https://travis-ci.org/ricallinson/mk3.svg?branch=master)](https://travis-ci.org/ricallinson/mk3) [![Build status](https://ci.appveyor.com/api/projects/status/fukrjc3xponxntry/branch/master?svg=true)](https://ci.appveyor.com/project/ricallinson/mk3/branch/master) [![Coverage Status](https://coveralls.io/repos/github/ricallinson/mk3/badge.svg?branch=master)](https://coveralls.io/github/ricallinson/mk3?branch=master)
 
 Command line interface for the Manzanita Micro USB Dongle Terminator. This is an alternative to the [MK3 Digital Perl Scanner Software](http://www.manzanitamicro.com/downloads/category/5-bms2?download=93%3Aperlscanner) provided by Manzanita Micro.
 

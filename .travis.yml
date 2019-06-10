@@ -8,30 +8,36 @@ matrix:
 before_install:
 - go get github.com/mitchellh/gox
 install:
-- 
+- go get golang.org/x/tools/cmd/cover
+- go get github.com/mattn/goveralls
 script:
 - go get -t -v ./...
 - diff -u <(echo -n) <(gofmt -d .)
 - go vet $(go list ./... | grep -v /vendor/)
-- go test -v -race ./...
-- if [ "${LATEST}" = "true" ]; then gox -os="linux windows" -output="builds/{{.Dir}}.{{.OS}}_{{.Arch}}" -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...; fi
+- go test -v -covermode=count -coverprofile=coverage.out ./...
+- "$HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken
+  $COVERALLS_TOKEN"
+- if [ "${LATEST}" = "true" ]; then gox -os="linux windows" -output="builds/{{.Dir}}.{{.OS}}_{{.Arch}}"
+  -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...; fi
 deploy:
   overwrite: true
   provider: releases
   api_key:
     secure: G4wG5EllIA+2Uz+FALRXL/RRouF21HXP3bxA+DDSnnNuvaIUONJk/UgIWtQP9hGhVPj8QRZW/33yNGpzEvs7K752tY6NiKYUfbZGj++6OrJqx77Qfe8uC5jfFAkFPfrd2YYV7len91VMGUA+YKrhkzrE7FliWDE7nJTjCsmIQFMlm5EH/sGZtblHIv53P3IlD1WaoenRedACIJVC6gDXvJ1ToJvzW81WjPSVjC5bhQtoupWIYVsCPkx1hFujtmRKfyaKcf4B3LCb6WNT3rAfuYZ1tCM7ABId5oOe65wzNnaOKKBeyD9AV64s3sKAVWYu0HYQGxrrIPCWB99gnemiM7M1LT4oe6q8diuDJD3A53i2wiFWezGX6pto6yApqvmNiTIG8xmGvReOzta64Jwt965nGldaWG7Z5QjMYGzDP0GbWTcPAS1U4nC5l9PkpZfRkRI69NbLRukhUMmHKCpXFsexZIPVyYvj28sf1oDyJiYui0OYAB0A1gbc2DdujWSUa8H3RIGBNXspBh7sRrDyRIOwWuOnwPB+ZvEeR0OvXFxzqB5PhyhNxVOrgFelrii5AxhfcxeJd791hoKlI7N7ZmSZHdhyDeOpcXv/EXTcKCXmf2KDCZplePAdXQUzWcO1e+y/xlNg9w5QzL7B86nWMUgobzJrentBqYjb+G4N6ik=
   file:
-    - builds/mk3.darwin_amd64
-    - builds/mk3.windows_386.exe
-    - builds/mk3.windows_amd64.exe
-    - builds/mk3.linux_386
-    - builds/mk3.linux_amd64
-    - builds/mk3.linux_arm
-    - builds/mk3.linux_arm64
-
+  - builds/mk3.darwin_amd64
+  - builds/mk3.windows_386.exe
+  - builds/mk3.windows_amd64.exe
+  - builds/mk3.linux_386
+  - builds/mk3.linux_amd64
+  - builds/mk3.linux_arm
+  - builds/mk3.linux_arm64
   on:
     repo: ricallinson/mk3
     branches:
       only:
-        - master
+      - master
     tags: true
+env:
+  global:
+    secure: qNC68ii38u260z37fukZwF4vuYEUbh6fcCX3hD6wPJiUrsy1cDYbzZswUu0jLZQeqR0h+9HC2zXeWexd3mf3Ox6JC5xhyS7xi8YTlEnEERyRQftXYcaXpV3Xc2BWyrQ+41drn6U9hQPnFjEGp4dZoKRILPIHYR2nr6IGHkvC7HkhbZf4j49Mov2UWBOk0w0TATwf95SDXsKvzHE2G6Izz8Mqfs1YKS3jVLgcDZ0NWHJ7v1zTyk+DJNxLE3wcn7Xj6VPMcWs4/RTs2l+X/HYIidaGTHk61cCYDQbv6AcA6MBSyT68i9GbIEWJgixxLSVxaeg9dqV20fKyxAOZNPTQy1KE1PBpizH3lMMSNIICPMN7/+EBic6Yay01tqrtvoH28SKrify2QNsAyRZIPMQXn3NzIskxiuGgiur3SveS8qYd6QWbWlxBeFC0uytSf3lbx6txtKmjrAa7rIqrDBIZ6abycBbYjOcwO/vDQCszQ5o3Voswm2nitZOZASa6FMFxPmLsWWwX/MV+fO5h/VTEZye0pd4XIEscyo+wS6iadYnCpGzkw/bixs136l35YbPDlECcGbifAiuPUEBH0t6R9fjEdy7lnYYGyvXZUJJa39hy5qu+OUPCYYzUugKt1+MDWV+ttqu1qwTw8DxHzEUbe0A2trXwWHI5b88jGbRVulg=
